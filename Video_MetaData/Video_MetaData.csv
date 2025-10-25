@@ -1,0 +1,2449 @@
+id,title,description,publishedAt,tags,categoryId,defaultLanguage,defaultAudioLanguage,thumbnail_default,thumbnail_high,duration,viewCount,likeCount,commentCount,privacyStatus,channel_id,channel_title,channel_description,channel_country,channel_thumbnail,channel_subscriberCount,channel_videoCount
+02FucbYPpP0,#23 Match in Python,"In this video, we’ll explore the ⁠ match ⁠ statement in Python, which works just like a switch-case statement in other programming languages such as C or Java.
+
+We’ll start by discussing when the match-case feature was introduced in Python and how it has become a cleaner and more readable way to handle multiple conditions.
+
+Next, we’ll look at how switch-case syntax works in C and Java, and then compare it with Python’s ⁠ match-case ⁠ syntax.
+To make it easier to understand, we’ll convert our previous video’s ⁠ elif ⁠ example into a ⁠ match-case ⁠ version, so you can clearly see the difference in readability and efficiency.
+
+Finally, we’ll discuss why Python’s match-case syntax is more powerful and flexible than the traditional switch-case in C.
+
+By the end of this video, you’ll have a solid understanding of how to use match-case statements effectively in Python with real examples.
+Check out our courses:
+
+Master Spring Boot & Spring AI: Live Course : https://go.telusko.com/master-spring-ai
+Coupon: TELUSKO10   (10% Discount)
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-10-20T10:30:01Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/02FucbYPpP0/default.jpg,https://i.ytimg.com/vi/02FucbYPpP0/hqdefault.jpg,PT4M20S,1304,45,8,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+jY0MMsMxyX0,#22 elif in Python,"In this video, we’ll learn about the ⁠ elif ⁠ statement in Python and how it helps make our conditional logic more efficient and readable.
+
+We’ll start with a simple number input and text printing example to understand how using only ⁠ if ⁠ statements causes multiple unnecessary checks.
+Then, we’ll see how to optimize the code using ⁠ elif ⁠ for better performance and cleaner logic.
+
+You’ll also learn how to use a combination of ⁠ if ⁠, ⁠ elif ⁠, and ⁠ else ⁠ to handle multiple conditions effectively.
+After that, we’ll explore a nested if example to understand how conditions can be placed inside other conditions.
+
+Finally, we’ll go through everything step-by-step using the debugger, so you can clearly see how Python executes each condition behind the scenes.
+
+This video will help you build a strong foundation in Python conditional statements and write smarter, optimized code.
+
+Check out our courses:
+
+Master Spring Boot & Spring AI: Live Course : https://go.telusko.com/master-spring-ai
+Coupon: TELUSKO10   (10% Discount)
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-10-19T10:30:33Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/jY0MMsMxyX0/default.jpg,https://i.ytimg.com/vi/jY0MMsMxyX0/hqdefault.jpg,PT6M45S,1768,52,6,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+CllLqPwCjD4,Getting Structured Output in JSON format,"In this video, we’ll explore how to generate structured output in JSON format using LLMs (Large Language Models).
+
+We’ll start by discussing the benefits of structured data — how it ensures data consistency, enables easy software integration, and makes database storage and management more efficient. 
+
+Next, we’ll take a real-world example by generating iPhone 17 details in JSON format and observe how the model sometimes produces inconsistent or varying structures.
+
+To solve this issue, we’ll learn how to generate an exact JSON structure with only the properties we need — such as name, price, features, and specifications.
+
+By the end of this video, you’ll understand how to guide AI models to produce clean, structured, and predictable outputs — ideal for API development, database storage, and real-world AI integrations.
+
+Check out our courses:
+
+Master Spring Boot & Spring AI: Live Course : https://go.telusko.com/master-spring-ai
+Coupon: TELUSKO10   (10% Discount)
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-10-16T14:16:55Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/CllLqPwCjD4/default.jpg,https://i.ytimg.com/vi/CllLqPwCjD4/hqdefault.jpg,PT9M15S,5732,166,13,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+gBwNFjZkJN0,#21 Nested if in Python,"In this video, we’ll learn about Nested ⁠ if ⁠ statements in Python, which allow you to check multiple conditions one inside another.
+This helps you build programs that make more detailed and logical decisions based on different layers of conditions.
+
+What You'll Learn:
+
+•⁠  ⁠What is Nested if – Understanding how to place one if statement inside another
+•⁠  ⁠Syntax and Structure – How indentation defines the logic in nested ⁠ if ⁠ blocks
+•⁠  ⁠Multiple Conditions – How nested ⁠ if ⁠ statements are used for complex decision-making
+•⁠  ⁠Practical Examples – Real-world cases like checking whether a number is even or odd, and then verifying salary-based conditions (e.g., “Great Job” or “Better luck next time”)
+
+By the end of this video, you’ll understand how to use Nested if statements to handle multiple conditions efficiently and make your Python programs more logical and flexible.
+
+Check out our courses:
+
+Master Spring Boot & Spring AI: Live Course : https://go.telusko.com/master-spring-ai
+Coupon: TELUSKO10   (10% Discount)
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-10-16T10:30:36Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/gBwNFjZkJN0/default.jpg,https://i.ytimg.com/vi/gBwNFjZkJN0/hqdefault.jpg,PT2M8S,1042,43,4,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+n0VpK1RfYGA,Prompt Engineering,"In this video, we’ll explore the fascinating world of Prompt Engineering — the art of communicating effectively with AI models to get accurate and meaningful results.
+
+Prompt Engineering is a vast topic, so in this session, we’ll focus only on the most important and practical concepts that every AI enthusiast and developer should know.
+
+What You’ll Learn in This Video:
+
+🔹 Understanding Prompt Engineering:
+What is a prompt, and how do we differentiate between a good prompt and a bad prompt to guide AI responses better.
+
+🔹 Zero-Shot Prompting:
+How to make an AI model perform tasks without providing any examples — just using clear and concise instructions.
+
+🔹 Few-Shot Prompting:
+How giving a few examples helps the model understand the pattern better — we’ll demonstrate this by generating Git commit messages.
+
+🔹 Chain of Thought (COT):
+Learn how AI models can reason step-by-step by solving a simple mathematical problem — like calculating web server disk space.
+
+🔹 Role Prompting:
+Discover how to assign specific roles to the AI model, such as “Act as a teacher” or “Act as a software developer,” to make responses more context-aware.
+
+🔹 Structured Output Prompting:
+Learn how to make the model return clean, predictable formats such as JSON, tables, or lists — essential for AI-powered applications.
+
+This video gives you a practical, beginner-friendly introduction to the core techniques of Prompt Engineering, explained in simple terms with real examples. Perfect for anyone looking to master AI communication and enhance their projects!
+
+Check out our courses:
+
+Master Spring Boot & Spring AI: Live Course : https://go.telusko.com/master-spring-ai
+Coupon: TELUSKO10   (10% Discount)
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-10-15T13:03:46Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/n0VpK1RfYGA/default.jpg,https://i.ytimg.com/vi/n0VpK1RfYGA/hqdefault.jpg,PT17M14S,10202,324,6,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+JNO5Sfj8ucg,#20 else and Debugging in Python,"In this video, we’ll learn about the ⁠ else ⁠ statement in Python and understand how debugging helps fix errors in programs.
+The ⁠ else ⁠ statement is used with ⁠ if ⁠ statements to define what should happen when a condition is false.
+Debugging, on the other hand, is the process of identifying and correcting code errors to make your program run smoothly.
+
+What You'll Learn:
+
+•⁠  ⁠What is an ⁠ else ⁠ Statement – How to use ⁠ else ⁠ with ⁠ if ⁠ for decision-making
+•⁠  ⁠Syntax and Structure – Writing ⁠ if-else ⁠ statements correctly with proper indentation
+•⁠  ⁠Combining ⁠ if ⁠ and ⁠ else ⁠ – How to control program flow based on true or false conditions
+•⁠  ⁠Introduction to Debugging – What debugging means and why it’s important
+•⁠  ⁠Using Print Statements – The simplest way to trace errors and variable values
+•⁠  ⁠Common Errors – Understanding syntax and logic errors in Python
+•⁠  ⁠Practical Examples – Real-world programs showing how to use ⁠ if-else ⁠ and debug effectively
+
+By the end of this video, you’ll know how to use ⁠ if-else ⁠ statements correctly and debug your Python programs to make them more error-free and efficient.
+
+Check out our courses:
+
+Master Spring Boot & Spring AI: Live Course : https://go.telusko.com/master-spring-ai
+Coupon: TELUSKO10   (10% Discount)
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-10-14T10:30:19Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/JNO5Sfj8ucg/default.jpg,https://i.ytimg.com/vi/JNO5Sfj8ucg/hqdefault.jpg,PT8M6S,1836,47,3,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+kcD_gClL95Q,#19 if in Python,"In this video, we’ll learn about the ⁠ if ⁠ statement in Python, which allows your program to make decisions based on conditions.
+The ⁠ if ⁠ statement helps control the flow of execution — only running a block of code when a certain condition is true.
+
+What You'll Learn:
+
+•⁠  ⁠What is an ⁠ if ⁠ Statement – The concept of conditional statements in Python
+•⁠  ⁠Syntax and Structure – How to write and use ⁠ if ⁠ statements correctly with proper indentation
+•⁠  ⁠Boolean Expressions – How conditions like ⁠ num % 2 == 0 ⁠ are evaluated
+•⁠  ⁠Nested ⁠ if ⁠ Statements – Using ⁠ if ⁠ statements inside another for advanced logic
+•⁠  ⁠Practical Examples – Real-world programs such as checking odd or even numbers and displaying conditional outputs
+•⁠  ⁠Best Practices – Writing clean and readable conditional logic
+
+By the end of this tutorial, you’ll understand how to use ⁠ if ⁠ statements in Python to make your programs more dynamic and logic-driven.
+
+Check out our courses:
+
+Master Spring Boot & Spring AI: Live Course : https://go.telusko.com/master-spring-ai
+Coupon: TELUSKO10   (10% Discount)
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-10-13T10:30:35Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/kcD_gClL95Q/default.jpg,https://i.ytimg.com/vi/kcD_gClL95Q/hqdefault.jpg,PT9M25S,1374,38,5,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+Ye3vV4QQ_js,#18 User Input in Python,"In this video, we’ll learn how to take input from users in Python to make your programs interactive.
+Instead of hardcoding values, we can use the ⁠ input() ⁠ function to collect data from the user and process it dynamically.
+
+What You'll Learn:
+
+•⁠  ⁠What is ⁠ input() ⁠? – The basic concept of taking input in Python
+•⁠  ⁠Default Behavior – Understanding that ⁠ input() ⁠ always returns a string
+•⁠  ⁠Type Conversion – Converting user input into integers, floats, or other data types
+•⁠  ⁠Multiple Inputs – Taking multiple values from the user in a single line
+•⁠  ⁠Practical Examples – Simple programs like calculators, name inputs, and data processing
+
+By the end of this tutorial, you’ll be able to confidently use the ⁠ input() ⁠ function in Python to make your programs more interactive and user-friendly.
+
+Check out our courses:
+
+Master Spring Boot & Spring AI: Live Course : https://go.telusko.com/master-spring-ai
+Coupon: TELUSKO10   (10% Discount)
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-10-12T10:30:22Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/Ye3vV4QQ_js/default.jpg,https://i.ytimg.com/vi/Ye3vV4QQ_js/hqdefault.jpg,PT5M38S,3002,59,5,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+sioSarg0-nU,#17 Swapping of Variables in Python,"In this video, we’ll learn about different ways to swap (or exchange) the values of two variables in Python.
+Swapping is one of the most basic yet essential programming concepts that helps you understand variable handling and logic building.
+
+What You'll Learn:
+
+•⁠  ⁠Using a Temporary Variable – The traditional method of swapping values using a third variable
+•⁠  ⁠Without Using a Temporary Variable – Swapping values using arithmetic operations like addition–subtraction or multiplication–division
+•⁠  ⁠Pythonic Way – The clean and elegant method using tuple unpacking (⁠ a ⁠,⁠ b ⁠ = ⁠ b ⁠,⁠ a ⁠)
+•⁠  ⁠Best Practice – Which method is the most efficient and when to use it
+
+By the end of this video, you’ll have a clear understanding of multiple ways to swap variables in Python and know which approach is best depending on your use case.
+
+Check out our courses:
+
+Master Spring Boot & Spring AI: Live Course : https://go.telusko.com/master-spring-ai
+Coupon: TELUSKO10   (10% Discount)
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-10-11T11:01:08Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/sioSarg0-nU/default.jpg,https://i.ytimg.com/vi/sioSarg0-nU/hqdefault.jpg,PT6M59S,1435,34,8,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+vPLaFFNGe7A,#16 Working with Module with Math in Python,"In this video, we’ll learn about the math module in Python, which provides a wide range of built-in mathematical functions and constants. The math module allows you to perform complex calculations easily without writing extra code from scratch.
+
+What You'll Learn:
+• What is a Module? – Understanding what modules are and how to import them
+• Using the math Module – How to use functions like sqrt(), pow(), factorial(), floor(), and ceil()
+• Math Constants – Exploring constants like math.pi and math.e
+• Practical Examples – Real-world use cases such as area calculation, rounding numbers, and performing advanced mathematical operations
+• Best Practices – When to use full imports vs selective imports for cleaner and more efficient code
+
+By the end of this video, you’ll be confident in using the math module to perform mathematical operations and enhance your Python programs efficiently.
+
+Check out our courses:
+
+Master Spring Boot & Spring AI: Live Course : https://go.telusko.com/master-spring-ai
+Coupon: TELUSKO10   (10% Discount)
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-10-10T10:30:43Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/vPLaFFNGe7A/default.jpg,https://i.ytimg.com/vi/vPLaFFNGe7A/hqdefault.jpg,PT10M50S,1562,54,11,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+T3j-YeVplE0,#15 Introduction to function in Python,"In this video, we’ll learn about Functions in Python, one of the most important concepts that make your code cleaner, reusable, and more efficient.
+Functions allow you to group related code into blocks that can be executed multiple times without rewriting the same logic.
+
+What You'll Learn:
+
+•⁠  ⁠What is a Function? – Understanding functions as reusable blocks of code
+•⁠  ⁠Defining Functions – Using the ⁠ def ⁠ keyword to create your own functions
+•⁠  ⁠Parameters & Arguments – How to pass data into functions for flexibility
+•⁠  ⁠Calling Functions – Executing functions and using their outputs
+•⁠  ⁠Return Statement – Sending results back from a function
+•⁠  ⁠Indentation in Functions – The importance of correct indentation for function structure
+•⁠  ⁠Real-Life Examples – How functions make code simpler and more organized
+
+By the end of this video, you’ll have a strong understanding of functions in Python and be able to write modular, reusable, and well-organized programs.
+
+Check out our courses:
+
+Master Spring Boot & Spring AI: Live Course : https://go.telusko.com/master-spring-ai
+Coupon: TELUSKO10   (10% Discount)
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-10-09T10:30:17Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/T3j-YeVplE0/default.jpg,https://i.ytimg.com/vi/T3j-YeVplE0/hqdefault.jpg,PT17M45S,2567,71,8,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+Q9VBfj_LzUI,#14 Operators in Python,"In this video, we’ll explore one of the most important topics in Python — Operators.
+Operators are special symbols used to perform operations on variables and values.
+Understanding operators will help you write clear, logical, and efficient code.
+
+What You'll Learn:
+
+•⁠  ⁠Arithmetic Operators – Perform basic math operations like +, -, *, /, //, and %
+•⁠  ⁠Assignment Operators – Assign and update variable values using =, +=, -=, *=, /= etc.
+•⁠  ⁠Relational (Comparison) Operators – Compare values using less than, greater than, less than or equal to, greater than or equal to, equal to, and not equal to
+•⁠  ⁠Logical Operators – Combine conditions with and, or, and not
+•⁠  ⁠Practical Examples – Learn how these operators are used in real-world programs
+
+By the end of this tutorial, you’ll have a complete understanding of Python operators and be able to apply them effectively in your projects.
+
+Check out our courses:
+
+Master Spring Boot & Spring AI: Live Course : https://go.telusko.com/master-spring-ai
+Coupon: TELUSKO10   (10% Discount)
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-10-08T14:23:16Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/Q9VBfj_LzUI/default.jpg,https://i.ytimg.com/vi/Q9VBfj_LzUI/hqdefault.jpg,PT12M4S,1391,50,9,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+pvJfQ1KiVpQ,#13 Data Types in Python,"In this video, we’ll learn about the different Data Types in Python, which are the basic building blocks for storing and managing data in your programs.
+Data types define what kind of values a variable can hold — whether it’s a number, text, or a Boolean value.
+
+What You'll Learn:
+
+•⁠  ⁠What are Data Types? – Why data types are important in Python programming
+•⁠  ⁠Numeric Types – 'int' (integers), 'float' (decimal numbers), and 'complex' numbers
+•⁠  ⁠String ('str') – How to store and manipulate text data
+•⁠  ⁠Boolean ('bool') – Understanding 'True' and 'False' values and their logical use
+•⁠  ⁠Type Conversion – Converting data between types using functions like 'int()', 'float()', and 'str()'
+•⁠  ⁠Sequence Types – A short overview of 'lists', 'tuples', 'sets', and 'dictionaries'
+•⁠  ⁠Type Checking – Using the 'type()' function to check data types
+
+By the end of this video, you’ll have a clear understanding of Python data types and how to use them effectively in your programs.
+
+Check out our courses:
+
+Master Spring Boot & Spring AI: Live Course : https://go.telusko.com/master-spring-ai
+Coupon: TELUSKO10   (10% Discount)
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-10-07T10:30:40Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/pvJfQ1KiVpQ/default.jpg,https://i.ytimg.com/vi/pvJfQ1KiVpQ/hqdefault.jpg,PT9M16S,1660,50,5,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+nEfoSZKp3S8,#12 Variable Storage in Python,"In this video, we’ll explore how Python stores and manages variables in memory.
+A solid understanding of variable storage helps you write smarter, optimized, and more efficient code. You’ll also learn why, in Python, everything is treated as an object and how variables actually reference these objects in memory.
+
+What You'll Learn:
+
+•⁠  ⁠Variables as References – Understanding that variables don’t store values directly but point to objects in memory
+•⁠  ⁠The ⁠ id() ⁠ Function – Checking the unique memory address of objects and how Python sometimes reuses them
+•⁠  ⁠Memory Optimization – How Python saves space by reusing small integers and immutable objects
+•⁠  ⁠String Interning – Why frequently used strings like ⁠ ""Navin"" ⁠ are reused for efficiency
+•⁠  ⁠Garbage Collection – Python’s automatic system that frees memory by removing unused objects
+
+By the end of this tutorial, you’ll have a strong understanding of Python’s variable storage and memory management, helping you write more reliable and efficient code.
+
+Check out our courses:
+
+Master Spring Boot & Spring AI: Live Course : https://go.telusko.com/master-spring-ai
+Coupon: TELUSKO10   (10% Discount)
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-10-06T10:30:34Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/nEfoSZKp3S8/default.jpg,https://i.ytimg.com/vi/nEfoSZKp3S8/hqdefault.jpg,PT8M54S,1586,64,10,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+_vl4dNCS5bY,#11 Dictionary in Python,"In this video, we’ll explore Python Dictionaries, one of the most powerful and flexible data structures in Python.
+A dictionary stores data in the form of key-value pairs, making it fast, efficient, and perfect for real-world applications where data needs to be mapped and retrieved quickly.
+
+What You'll Learn:
+
+•⁠  ⁠What is a Dictionary? – Concept of key-value pairs and why dictionaries are important
+•⁠  ⁠Creating Dictionaries – Different ways to define dictionaries in Python
+•⁠  ⁠Accessing & Updating Data – Using keys to read, add, or update values
+•⁠  ⁠Dictionary Methods – Useful methods like ⁠ zip() ⁠, ⁠ get() ⁠, ⁠ pop() ⁠ and more
+•⁠  ⁠Nested Dictionaries – How to store complex data inside dictionaries
+•⁠  ⁠Use Cases – Real-world examples like storing user details, configurations, and mappings
+
+By the end of this tutorial, you’ll have a clear understanding of how to use dictionaries in Python and be able to apply them in your own programs for efficient data handling.
+
+Check out our courses:
+
+Master Spring Boot & Spring AI: Live Course : https://go.telusko.com/master-spring-ai
+Coupon: TELUSKO10   (10% Discount)
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-10-05T10:30:23Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/_vl4dNCS5bY/default.jpg,https://i.ytimg.com/vi/_vl4dNCS5bY/hqdefault.jpg,PT9M52S,2033,75,10,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+_-j9Q2PQvfM,#10 Set in Python,"In this video, we’ll dive into Python Sets, a powerful data structure that stores unordered, unique elements.
+Unlike lists or tuples, sets do not allow duplicates and are optimized for operations like membership tests, unions, and intersections.
+
+What You'll Learn:
+
+•⁠  ⁠What is a Set? – Concept of sets and their key properties (unordered, unique, mutable)
+•⁠  ⁠Creating Sets – Different ways to define a set in Python
+•⁠  ⁠Accessing Elements – Why sets don’t support indexing or slicing
+•⁠  ⁠Set Operations – Union, intersection, and difference with practical examples
+•⁠  ⁠Use Cases – Real-world examples where sets are most efficient (e.g., removing duplicates, fast membership testing)
+
+By the end of this tutorial, you’ll understand how to use sets in Python effectively and when to prefer them over lists or tuples.
+
+Check out our courses:
+
+Master Spring Boot & Spring AI: Live Course : https://go.telusko.com/master-spring-ai
+Coupon: TELUSKO10   (10% Discount)
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-10-04T10:30:32Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/_-j9Q2PQvfM/default.jpg,https://i.ytimg.com/vi/_-j9Q2PQvfM/hqdefault.jpg,PT7M48S,1864,55,15,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+TQqDBeHq7IU,#9 Tuple in List,"In this video, we’ll explore Python Tuples, an ordered collection similar to lists but with one key difference — tuples are immutable (you cannot change them after creation).
+Tuples are lightweight and faster, making them very useful in certain scenarios.
+
+What You'll Learn:
+
+•⁠  ⁠What is a Tuple? – Understanding the concept of tuples and how they differ from lists
+•⁠  ⁠Creating Tuples – Different ways to define tuples (with and without parentheses)
+•⁠  ⁠Accessing Elements – Using indexing and slicing with tuples
+•⁠  ⁠Tuple Immutability – Why tuples cannot be modified and how this can be an advantage
+•⁠  ⁠Tuple Methods – Common functions like ⁠ count() ⁠ and ⁠ index() ⁠
+•⁠  ⁠Tuple vs List – When to use a list and when a tuple is better
+•⁠  ⁠Use Cases – Real-world scenarios where tuples are most effective
+
+By the end of this tutorial, you’ll have a clear understanding of Python Tuples and be able to confidently decide when to use lists and when to use tuples in your programs.
+
+Check out our courses:
+
+Master Spring Boot & Spring AI: Live Course : https://go.telusko.com/master-spring-ai
+Coupon: TELUSKO10   (10% Discount)
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-10-03T10:30:19Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/TQqDBeHq7IU/default.jpg,https://i.ytimg.com/vi/TQqDBeHq7IU/hqdefault.jpg,PT9M49S,2061,64,10,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+DeriNSJ7Ev0,#8 List in Python,"In this video, we’ll dive into Python Lists, one of the most powerful and commonly used data structures.
+A list allows you to store multiple items in a single variable, making your code cleaner, more flexible, and more efficient.
+
+What You'll Learn:
+
+•⁠  ⁠What is a List? – The concept of lists in Python and their key properties (ordered & mutable)
+•⁠  ⁠Creating Lists – Different ways to define a list and how to create empty lists
+•⁠  ⁠Accessing & Updating Items – Using indexing and slicing to read or modify list elements
+•⁠  ⁠List Functions & Methods – Essential methods like ⁠ append() ⁠, ⁠ remove() ⁠, ⁠ insert() ⁠, ⁠ pop() ⁠, and ⁠ sort() ⁠
+•⁠  ⁠Nested Lists – How to handle lists within lists
+•⁠  ⁠Use Cases – Real-world scenarios where lists are most useful
+
+By the end of this tutorial, you’ll be confident in working with Python lists and able to use them effectively in your programs.
+
+Check out our courses:
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Java Spring Boot AI Live Course: https://go.telusko.com/JavaSpringBootAI
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-10-02T11:29:50Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/DeriNSJ7Ev0/default.jpg,https://i.ytimg.com/vi/DeriNSJ7Ev0/hqdefault.jpg,PT17M22S,2532,80,17,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+z-RbovDmtW8,#7 More on String in Python,"Unlock the power of string manipulation in Python with this comprehensive tutorial!
+Whether you’re a beginner or looking to sharpen your skills, this video covers all the essential techniques for working with text data.
+
+ 👉 What You’ll Learn:
+
+  ► String Concatenation: How to join strings with the ⁠ + ⁠  operator, and the unique behavior of placing string literals side by side.
+
+  ► String Indexing: Access individual characters using both positive and negative indices, retrieving characters from the beginning or end of a string.
+
+  ► String Slicing: Extract substrings using ⁠ [start:end] ⁠ syntax, and understand why Python includes the start index but excludes the end.
+
+  ► String Immutability: Why strings can’t be changed in place, and how to create new strings by combining existing ones.
+
+  ► Essential Functions: Use ⁠ len() ⁠ to count characters, and create clean, readable multiline strings with triple quotes ("""""") or parentheses.
+
+This tutorial is packed with practical examples and clear explanations to help you build a strong foundation in Python string manipulation.
+
+Check out our courses:
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Java Spring Boot AI Live Course: https://go.telusko.com/JavaSpringBootAI
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-09-30T10:30:45Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/z-RbovDmtW8/default.jpg,https://i.ytimg.com/vi/z-RbovDmtW8/hqdefault.jpg,PT13M55S,2609,78,22,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+C6EHlfn6kv0,#6 Working With String in Python,"In this comprehensive tutorial, we dive deep into working with text data (strings) in Python.
+Whether you’re just starting out or revisiting your basics, this video explains key concepts with clear, practical examples.
+
+👉 What You’ll Learn:
+
+  ► What strings are in programming and why they’re called “text.”
+
+  ► How to define strings using single (' ') and double ("" "") quotes.
+
+  ► Using the print() function for clean string output.
+
+  ► Handling quotes inside strings and using escape characters for special symbols.
+
+  ► Escape sequences like \ for special characters and \\ for backslashes.
+
+  ► Multiplying strings using * to repeat text.
+
+By the end of this tutorial, you’ll have a solid foundation in string manipulation, one of the most essential skills for every Python developer.
+
+Check out our courses:
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Java Spring Boot AI Live Course: https://go.telusko.com/JavaSpringBootAI
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-09-29T10:30:08Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/C6EHlfn6kv0/default.jpg,https://i.ytimg.com/vi/C6EHlfn6kv0/hqdefault.jpg,PT9M49S,3119,92,15,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+ji56CpaOFf4,#5 Python IDLE and Exploring Number Operations,"In this video, we’ll explore how to perform number operations in Python using IDLE (Integrated Development and Learning Environment).
+This beginner-friendly tutorial is designed to help you build a solid foundation in Python programming.
+
+What You’ll Learn:
+
+  ► What is Python IDLE? Its role as a REPL (Read–Eval–Print Loop) and how it instantly executes commands.
+
+  ► Command Prompt vs. IDLE: Why Python IDLE is better for handling math operations.
+
+  ► Basic Arithmetic: Addition (+), Subtraction (−), Multiplication (*), and Division (/).
+
+  ► Floats vs. Integers: The difference between whole numbers and decimal results.
+
+  ► Advanced Division: How to use // for integer division and % for modulus.
+
+  ► Order of Operations (BODMAS): How Python follows math rules, and how to use parentheses () to control precedence.
+ 
+  ► Exponentiation (* *): Learn how to calculate powers.
+
+  ► Variables & Symbols: Store results in variables and reuse your last output.
+
+This video lays the foundation for working with numerical operations in Python. Stay tuned for upcoming lessons on strings and data types!
+
+Check out our courses:
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Java Spring Boot AI Live Course: https://go.telusko.com/JavaSpringBootAI
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-09-28T10:30:35Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/ji56CpaOFf4/default.jpg,https://i.ytimg.com/vi/ji56CpaOFf4/hqdefault.jpg,PT12M22S,2837,98,21,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+kBjlr-JHttY,#4 IDEs Installation in Python,"Level up your Python coding workflow!
+In this tutorial, you’ll learn how to set up and use the best development environments for Python—including VS Code, PyCharm, and Jupyter Notebook—to boost your productivity.
+
+What You’ll Learn:
+
+  ► VS Code: How to install and configure Microsoft’s open-source IDE for Python, including the must-have Python extension to run code directly.
+
+  ► PyCharm: Step-by-step setup for both the Community and Professional editions from JetBrains, and how to create and run Python projects with it.
+
+  ► Jupyter Notebook: A beginner-friendly introduction to this powerful tool widely used in AI, ML, and data science—both online and offline.
+
+IDEs are essential for writing, running, debugging, documenting, and packaging code. This video is perfect for beginners who want to improve their Python development workflow using professional tools.
+
+Check out our courses:
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Java Spring Boot AI Live Course: https://go.telusko.com/JavaSpringBootAI
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-09-27T14:18:58Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/kBjlr-JHttY/default.jpg,https://i.ytimg.com/vi/kBjlr-JHttY/hqdefault.jpg,PT13M33S,3707,126,9,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+KcBd4fyHJvg,#3 Python Setup,"Ready to set up Python on your computer? This step-by-step tutorial will walk you through downloading, installing, and running Python on your system. Perfect for beginners starting their coding journey!
+
+What You’ll Learn:
+
+  ► How to download and install the latest stable Python version (e.g., 3.13.5) from the official website and pick the right installer for Windows.
+
+  ► How to verify if Python is already installed using the ⁠ python --version ⁠ command, and confirm installation by reopening the terminal.
+
+  ► How to run your first simple code using the Python interpreter, and write multi-line Python scripts saved as ⁠ .py ⁠ files in Notepad.
+
+  ► Why file extensions matter, and why saving your code with ⁠ .py ⁠ instead of ⁠ .txt ⁠ is crucial for future tasks like importing files and working with IDEs.
+
+  ► This video is a must-watch for anyone looking to set up their local Python development environment the right way!
+
+Check out our courses:
+
+Master Spring Boot & Spring AI: Live Course : https://go.telusko.com/master-spring-ai
+Coupon: TELUSKO10   (10% Discount)
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-09-26T10:30:22Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/KcBd4fyHJvg/default.jpg,https://i.ytimg.com/vi/KcBd4fyHJvg/hqdefault.jpg,PT9M8S,3612,121,26,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+koL06y7HpKo,#2 First Code in Python,"Are you ready to write your very first Python program? In this video, we’ll learn how just a single line of code can print “Hello World” — marking the start of your coding journey!
+
+We’ll begin by understanding the purpose of software development — how data processing and applications make our lives easier. Then, we’ll look at the evolution of programming languages: from binary (0s and 1s) and assembly language to high-level languages like Python, which is close to English and one of the most beginner-friendly options.
+
+In this tutorial, you’ll discover why Python is considered the easiest first language to learn, how one line of code produces output, the role of the interpreter in converting your code into machine language, how to use OnlineGDB to run code, and the benefits of installing Python locally for coding.
+
+This tutorial is specially designed for beginners, so you can take your very first confident step into the world of Python programming!
+
+Check out our courses:
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Java Spring Boot AI Live Course: https://go.telusko.com/JavaSpringBootAI
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-09-25T11:12:51Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/koL06y7HpKo/default.jpg,https://i.ytimg.com/vi/koL06y7HpKo/hqdefault.jpg,PT4M,4890,168,37,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+1u1osfIvVpw,Gradle Tutorial for Java and Spring Boot,"00:00 - Introduction to Gradle and Build Tools  
+03:48 - Gradle Installation  
+05:58 - Gradle Java First Project  
+11:20 - Understanding Gradle Wrapper and Project Structure  
+16:24 - Gradle Build Script  
+20:00 - Spring Boot Gradle App in IDE
+
+In this video, we’ll explore how to get started with Gradle for Java and Spring Boot development. From installing and setting up Gradle to using the Gradle Wrapper and writing build scripts, this tutorial covers all the essentials you need to streamline your development workflow.
+
+You’ll learn how Gradle simplifies project builds, dependency management, and automation—making it one of the most powerful tools for modern Java developers. By the end of this video, you’ll be ready to use Gradle effectively in your Spring Boot projects.
+
+Instructor: Hyder Abbas
+
+Check out our courses:
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Java Spring Boot AI Live Course: https://go.telusko.com/JavaSpringBootAI
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-09-24T05:45:22Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/1u1osfIvVpw/default.jpg,https://i.ytimg.com/vi/1u1osfIvVpw/hqdefault.jpg,PT31M7S,2968,105,4,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+YZkyL-f-YXY,#1 Python Tutorial 2025,"This introductory Python tutorial is perfect for those stepping into the world of programming for the very first time. In this video, you’ll learn about Python’s origin story — launched in 1991 (before Java!) — and why it has become so popular in the last 15 years.
+
+You’ll understand why Python is considered the simplest and most versatile language. With just a single line of code, you can print “Hello World,” whereas in C or Java, the same task is a bit more complicated. We’ll also explore why Python plays such a big role in AI development — its easy syntax and strong ecosystem of libraries make it incredibly powerful.
+
+To begin this journey, all you need is a computer and some basic usage skills — prior programming knowledge is absolutely not required! This video is the perfect Python introduction to kickstart your coding journey.
+
+Check out our courses:
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Java Spring Boot AI Live Course: https://go.telusko.com/JavaSpringBootAI
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-09-23T12:31:03Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/YZkyL-f-YXY/default.jpg,https://i.ytimg.com/vi/YZkyL-f-YXY/hqdefault.jpg,PT5M21S,10868,409,39,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+uYSkzYbvcwQ,Data Engineering Talk with Deepesh,"Ever wondered what really happens behind the scenes when data flows through apps, websites, and AI systems? In this episode, we chat with Deepesh about the world of Data Engineering – the backbone of today’s digital universe.
+
+From handling massive datasets to building pipelines, from tools that engineers swear by to the real challenges they face daily – this conversation is packed with stories, insights, and practical wisdom. If you’re curious about tech careers or just want to understand how companies actually use data, this talk is for you.
+
+So grab a coffee ☕ and join us for an easy-going but insightful discussion on everything Data Engineering.
+
+Check out our courses:
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Java Spring Boot AI Live Course: https://go.telusko.com/JavaSpringBootAI
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-09-22T14:19:12Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/uYSkzYbvcwQ/default.jpg,https://i.ytimg.com/vi/uYSkzYbvcwQ/hqdefault.jpg,PT35M17S,6321,232,17,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+rRc5UBgaX1w,AI is Scary,#ai  #artificialintelligence  #scaryai  #futureofai  #aidangers  #technology  #aitalks  #generativeai  #machinelearning  #aivshuman  #techfuture  #aitoday,2025-09-20T13:07:38Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/rRc5UBgaX1w/default.jpg,https://i.ytimg.com/vi/rRc5UBgaX1w/hqdefault.jpg,PT56S,133803,3143,77,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+ua48VlHkf7E,Saturday Live Pre Quiz,Gen AI Quiz at 6pm on Telusko Courses page : https://go.telusko.com/techquiz,2025-09-20T12:00:05Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/ua48VlHkf7E/default.jpg,https://i.ytimg.com/vi/ua48VlHkf7E/hqdefault.jpg,PT43M31S,8788,194,1,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+BOErAo3MJvM,Java 25 is here,"Java 25 LTS release, with lot of improvements.
+
+Check out our courses:
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Java Spring Boot AI Live Course: https://go.telusko.com/JavaSpringBootAI
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-09-17T14:35:12Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/BOErAo3MJvM/default.jpg,https://i.ytimg.com/vi/BOErAo3MJvM/hqdefault.jpg,PT14M36S,50417,1505,122,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+dMYTzRweUPU,Ansible Crash Course for Beginners,"Learn Ansible fundamentals in this concise tutorial! We cover Playbooks, Ad-hoc Commands, Variables, Ansible Vault, Tags, and Tag Names with clear examples. Perfect for beginners looking to master automation!
+Covered: Playbooks, Ad-hoc Commands, Variables, Vault, Tags, Examples
+
+00:00:00 - Ansible Introduction
+05:46:18 - Ansible Architecture
+10:54:18 - More on Ansible Architecture
+13:22:18 -  Ansible Configuration part 1
+29:34:02 -  Ansible Configuration part 2
+34:03:27 - Ansible Configuration part 3
+40:30:11 -  Ansible Adhoc commands
+44:13:11 -  Ansible Playbook yaml basics
+51:30:15 -  Ansible First Playbook
+56:49:27 - Ansible File creation playbook
+08:03:01 -  Ansible git installation playbook
+13:25:19 - Ansible Java maven playbook
+17:35:09 - Ansible Playbook Static website hosting
+27:01:08 - Ansible Variables ( Runtime and playbook variables)
+34:27:22 - Ansible Vault
+01:39:50:09 -  Ansible Tags
+
+Check out our courses:
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Java Spring Boot AI Live Course: https://go.telusko.com/JavaSpringBootAI
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-09-11T16:07:49Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/dMYTzRweUPU/default.jpg,https://i.ytimg.com/vi/dMYTzRweUPU/hqdefault.jpg,PT1H46M20S,5197,158,13,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+Lu8lXXlstvM,FastAPI for Beginners - Python Web Framework,"Learn how to build a complete full-stack web application using FastAPI, a modern, fast, web framework for building APIs with Python 3.7+. This comprehensive tutorial covers everything you need to know, from setting up your development environment in VS Code to deploying a full-stack web app.
+
+What you will learn:
+Setting up your FastAPI project in VS Code
+
+Building a server and creating GET, POST, PUT, and DELETE API endpoints
+Using Pydantic for data validation and fetching all products
+Integrating a database with SQLAlchemy
+Creating, updating, and deleting data in the database
+Deploying and running a full-stack web application
+
+This video is perfect for beginners and intermediate developers looking to master FastAPI and build robust, high-performance web applications.
+
+00:00:00 -  Intro to FastAPI
+00:06:48 -  FastApi Setup in VS Code
+00:19:46 -  Building the Server and Get API
+00:34:14 -  Pydantic and Fetching all products
+00:46:21 -  Fetch by ID and post request
+00:54:56 -  Update and Delete data in FastAPI
+01:04:33 -  SQLAlchemy
+01:12:48 -  Database Config
+01:21:46 -  SQL Alchemy Model Creation
+01:28:38 -  Initialize Data
+01:35:14 -  Dependency Injection and fetch from db
+01:42:38 -  Create, Update and  delete with Database
+01:52:59 -  Running Full Stack Web App
+
+Project Code : https://github.com/navinreddy20/fastapi-demo
+(explore different branches)
+
+Check out our courses:
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Java Spring Boot AI Live Course: https://go.telusko.com/JavaSpringBootAI
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-08-28T12:59:18Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/Lu8lXXlstvM/default.jpg,https://i.ytimg.com/vi/Lu8lXXlstvM/hqdefault.jpg,PT2H2M41S,53222,1158,82,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+LUaPqGpmwBw,AI made Developers Slower,"How much AI is improving your productivity?
+
+METR research link : https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/
+
+Check out our courses:
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Java Spring Boot AI Live Course: https://go.telusko.com/JavaSpringBootAI
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+Udemy Courses:
+
+Java Spring:- https://go.telusko.com/Udemyjavaspring
+Java:- https://go.telusko.com/udemyteluskojava
+Spring: https://go.telusko.com/udemyteluskospring
+Java For Programmers:- https://go.telusko.com/javaProgrammers
+Python : https://go.telusko.com/udemyteluskopython
+Git : https://go.telusko.com/udemyteluskogit
+Docker : https://go.telusko.com/udemyteluskodocker
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-08-26T13:32:17Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/LUaPqGpmwBw/default.jpg,https://i.ytimg.com/vi/LUaPqGpmwBw/hqdefault.jpg,PT9M25S,27039,711,70,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+IR_EqMAlJZE,#13 FastAPI-Running Full Stack Web App,"Check out our courses:
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Java Spring Boot AI Live Course: https://go.telusko.com/JavaSpringBootAI
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+Udemy Courses:
+
+Java Spring:- https://go.telusko.com/Udemyjavaspring
+Java:- https://go.telusko.com/udemyteluskojava
+Spring: https://go.telusko.com/udemyteluskospring
+Java For Programmers:- https://go.telusko.com/javaProgrammers
+Python : https://go.telusko.com/udemyteluskopython
+Git : https://go.telusko.com/udemyteluskogit
+Docker : https://go.telusko.com/udemyteluskodocker
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-08-26T11:46:21Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/IR_EqMAlJZE/default.jpg,https://i.ytimg.com/vi/IR_EqMAlJZE/hqdefault.jpg,PT9M42S,3052,58,10,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+FN_BvbOwur0,"#12 FastAPI – Create, Update and  Delete with Database","Check out our courses:
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Java Spring Boot AI Live Course: https://go.telusko.com/JavaSpringBootAI
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+Udemy Courses:
+
+Java Spring:- https://go.telusko.com/Udemyjavaspring
+Java:- https://go.telusko.com/udemyteluskojava
+Spring: https://go.telusko.com/udemyteluskospring
+Java For Programmers:- https://go.telusko.com/javaProgrammers
+Python : https://go.telusko.com/udemyteluskopython
+Git : https://go.telusko.com/udemyteluskogit
+Docker : https://go.telusko.com/udemyteluskodocker
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-08-26T11:45:57Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/FN_BvbOwur0/default.jpg,https://i.ytimg.com/vi/FN_BvbOwur0/hqdefault.jpg,PT10M24S,2087,42,3,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+TzXQwHBDEPc,#11 FastAPI-Dependency Injection and Fetch from DB,"Check out our courses:
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Java Spring Boot AI Live Course: https://go.telusko.com/JavaSpringBootAI
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+Udemy Courses:
+
+Java Spring:- https://go.telusko.com/Udemyjavaspring
+Java:- https://go.telusko.com/udemyteluskojava
+Spring: https://go.telusko.com/udemyteluskospring
+Java For Programmers:- https://go.telusko.com/javaProgrammers
+Python : https://go.telusko.com/udemyteluskopython
+Git : https://go.telusko.com/udemyteluskogit
+Docker : https://go.telusko.com/udemyteluskodocker
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-08-26T11:34:29Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/TzXQwHBDEPc/default.jpg,https://i.ytimg.com/vi/TzXQwHBDEPc/hqdefault.jpg,PT7M31S,2663,51,4,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+lm0uRxLMwb8,#10 FastAPI-Initialize Data,"Check out our courses:
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Java Spring Boot AI Live Course: https://go.telusko.com/JavaSpringBootAI
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+Udemy Courses:
+
+Java Spring:- https://go.telusko.com/Udemyjavaspring
+Java:- https://go.telusko.com/udemyteluskojava
+Spring: https://go.telusko.com/udemyteluskospring
+Java For Programmers:- https://go.telusko.com/javaProgrammers
+Python : https://go.telusko.com/udemyteluskopython
+Git : https://go.telusko.com/udemyteluskogit
+Docker : https://go.telusko.com/udemyteluskodocker
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-08-26T11:21:26Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/lm0uRxLMwb8/default.jpg,https://i.ytimg.com/vi/lm0uRxLMwb8/hqdefault.jpg,PT6M40S,2857,64,5,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+V0FUealWanc,#9 FastAPI - SQLAlchemy Model Creation,"Check out our courses:
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Java Spring Boot AI Live Course: https://go.telusko.com/JavaSpringBootAI
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+Udemy Courses:
+
+Java Spring:- https://go.telusko.com/Udemyjavaspring
+Java:- https://go.telusko.com/udemyteluskojava
+Spring: https://go.telusko.com/udemyteluskospring
+Java For Programmers:- https://go.telusko.com/javaProgrammers
+Python : https://go.telusko.com/udemyteluskopython
+Git : https://go.telusko.com/udemyteluskogit
+Docker : https://go.telusko.com/udemyteluskodocker
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-08-26T11:21:06Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/V0FUealWanc/default.jpg,https://i.ytimg.com/vi/V0FUealWanc/hqdefault.jpg,PT6M57S,2941,52,5,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+WCOOFySgmnQ,#8 FastAPI-Database Config,"Check out our courses:
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Java Spring Boot AI Live Course: https://go.telusko.com/JavaSpringBootAI
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+Udemy Courses:
+
+Java Spring:- https://go.telusko.com/Udemyjavaspring
+Java:- https://go.telusko.com/udemyteluskojava
+Spring: https://go.telusko.com/udemyteluskospring
+Java For Programmers:- https://go.telusko.com/javaProgrammers
+Python : https://go.telusko.com/udemyteluskopython
+Git : https://go.telusko.com/udemyteluskogit
+Docker : https://go.telusko.com/udemyteluskodocker
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-08-26T07:44:00Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/WCOOFySgmnQ/default.jpg,https://i.ytimg.com/vi/WCOOFySgmnQ/hqdefault.jpg,PT9M2S,3974,91,4,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+uy4TPngK-8c,#7  FastAPI - SQLAlchemy,"Check out our courses:
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Java Spring Boot AI Live Course: https://go.telusko.com/JavaSpringBootAI
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+Udemy Courses:
+
+Java Spring:- https://go.telusko.com/Udemyjavaspring
+Java:- https://go.telusko.com/udemyteluskojava
+Spring: https://go.telusko.com/udemyteluskospring
+Java For Programmers:- https://go.telusko.com/javaProgrammers
+Python : https://go.telusko.com/udemyteluskopython
+Git : https://go.telusko.com/udemyteluskogit
+Docker : https://go.telusko.com/udemyteluskodocker
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-08-25T13:23:19Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/uy4TPngK-8c/default.jpg,https://i.ytimg.com/vi/uy4TPngK-8c/hqdefault.jpg,PT8M19S,4682,110,5,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+XMoK33jsgcs,#6 FastAPI - Update and Delete Data,"Check out our courses:
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Java Spring Boot AI Live Course: https://go.telusko.com/JavaSpringBootAI
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+Udemy Courses:
+
+Java Spring:- https://go.telusko.com/Udemyjavaspring
+Java:- https://go.telusko.com/udemyteluskojava
+Spring: https://go.telusko.com/udemyteluskospring
+Java For Programmers:- https://go.telusko.com/javaProgrammers
+Python : https://go.telusko.com/udemyteluskopython
+Git : https://go.telusko.com/udemyteluskogit
+Docker : https://go.telusko.com/udemyteluskodocker
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-08-25T10:44:48Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/XMoK33jsgcs/default.jpg,https://i.ytimg.com/vi/XMoK33jsgcs/hqdefault.jpg,PT9M45S,3863,90,6,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+2NfTEi1CyYs,#5 FastAPI : Fetch by ID and Post Request,"Check out our courses:
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Java Spring Boot AI Live Course: https://go.telusko.com/JavaSpringBootAI
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+Udemy Courses:
+
+Java Spring:- https://go.telusko.com/Udemyjavaspring
+Java:- https://go.telusko.com/udemyteluskojava
+Spring: https://go.telusko.com/udemyteluskospring
+Java For Programmers:- https://go.telusko.com/javaProgrammers
+Python : https://go.telusko.com/udemyteluskopython
+Git : https://go.telusko.com/udemyteluskogit
+Docker : https://go.telusko.com/udemyteluskodocker
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-08-25T07:49:53Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/2NfTEi1CyYs/default.jpg,https://i.ytimg.com/vi/2NfTEi1CyYs/hqdefault.jpg,PT8M42S,4111,83,3,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+M-DzoNzmJI0,#4 FastAPI - Pydantic and Fetching all products,"Check out our courses:
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Java Spring Boot AI Live Course: https://go.telusko.com/JavaSpringBootAI
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+Udemy Courses:
+
+Java Spring:- https://go.telusko.com/Udemyjavaspring
+Java:- https://go.telusko.com/udemyteluskojava
+Spring: https://go.telusko.com/udemyteluskospring
+Java For Programmers:- https://go.telusko.com/javaProgrammers
+Python : https://go.telusko.com/udemyteluskopython
+Git : https://go.telusko.com/udemyteluskogit
+Docker : https://go.telusko.com/udemyteluskodocker
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-08-24T15:53:25Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/M-DzoNzmJI0/default.jpg,https://i.ytimg.com/vi/M-DzoNzmJI0/hqdefault.jpg,PT12M14S,6710,163,6,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+Fmw1i1cBYq4,#3 FastAPI : Building the Server and Get API,"Check out our courses:
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Java Spring Boot AI Live Course: https://go.telusko.com/JavaSpringBootAI
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+Udemy Courses:
+
+Java Spring:- https://go.telusko.com/Udemyjavaspring
+Java:- https://go.telusko.com/udemyteluskojava
+Spring: https://go.telusko.com/udemyteluskospring
+Java For Programmers:- https://go.telusko.com/javaProgrammers
+Python : https://go.telusko.com/udemyteluskopython
+Git : https://go.telusko.com/udemyteluskogit
+Docker : https://go.telusko.com/udemyteluskodocker
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-08-23T14:00:56Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/Fmw1i1cBYq4/default.jpg,https://i.ytimg.com/vi/Fmw1i1cBYq4/hqdefault.jpg,PT14M34S,9285,233,10,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+2TWCEdezzqI,AI-Powered DevOps with AWS-Live Course V2,"Check out our courses:
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-08-21T05:36:02Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/2TWCEdezzqI/default.jpg,https://i.ytimg.com/vi/2TWCEdezzqI/hqdefault.jpg,PT8M6S,2739,81,15,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+Rf9jbnzt2UU,#2 FastAPI Setup in VS Code,"Getting ready for FastAPI
+
+Github link : https://github.com/navinreddy20/fastapi-demo.git
+
+Check out our courses:
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Java Spring Boot AI Live Course: https://go.telusko.com/JavaSpringBootAI
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+Udemy Courses:
+
+Java Spring:- https://go.telusko.com/Udemyjavaspring
+Java:- https://go.telusko.com/udemyteluskojava
+Spring: https://go.telusko.com/udemyteluskospring
+Java For Programmers:- https://go.telusko.com/javaProgrammers
+Python : https://go.telusko.com/udemyteluskopython
+Git : https://go.telusko.com/udemyteluskogit
+Docker : https://go.telusko.com/udemyteluskodocker
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-08-20T14:59:07Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/Rf9jbnzt2UU/default.jpg,https://i.ytimg.com/vi/Rf9jbnzt2UU/hqdefault.jpg,PT13M2S,12255,247,32,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+02dzgC_Ba70,#1 FastAPI - Python Web Framework,"FastAPI is a modern, high-performance web framework for building APIs with Python 🐍
+
+Check out our courses:
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Java Spring Boot AI Live Course: https://go.telusko.com/JavaSpringBootAI
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+Udemy Courses:
+
+Java Spring:- https://go.telusko.com/Udemyjavaspring
+Java:- https://go.telusko.com/udemyteluskojava
+Spring: https://go.telusko.com/udemyteluskospring
+Java For Programmers:- https://go.telusko.com/javaProgrammers
+Python : https://go.telusko.com/udemyteluskopython
+Git : https://go.telusko.com/udemyteluskogit
+Docker : https://go.telusko.com/udemyteluskodocker
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-08-20T05:56:24Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/02dzgC_Ba70/default.jpg,https://i.ytimg.com/vi/02dzgC_Ba70/hqdefault.jpg,PT6M55S,24609,519,19,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+304i_BWgXNc,AI basics for AI Engineering,"Al ML DL
+Neural Network
+
+
+Check out our courses:
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Java Spring Boot AI Live Course: https://go.telusko.com/JavaSpringBootAI
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+Udemy Courses:
+
+Java Spring:- https://go.telusko.com/Udemyjavaspring
+Java:- https://go.telusko.com/udemyteluskojava
+Spring: https://go.telusko.com/udemyteluskospring
+Java For Programmers:- https://go.telusko.com/javaProgrammers
+Python : https://go.telusko.com/udemyteluskopython
+Git : https://go.telusko.com/udemyteluskogit
+Docker : https://go.telusko.com/udemyteluskodocker
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-08-19T03:48:47Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/304i_BWgXNc/default.jpg,https://i.ytimg.com/vi/304i_BWgXNc/hqdefault.jpg,PT10M8S,11799,481,30,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+cp0_xWxLGaI,What is AI Engineering,"introduction to AI Engineer.
+
+Check out our courses:
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Java Spring Boot AI Live Course: https://go.telusko.com/JavaSpringBootAI
+Coupon: TELUSKO20   (20% Discount)
+
+Master Java Spring Development : https://go.telusko.com/masterjava
+Coupon: TELUSKO20   (20% Discount)
+
+Udemy Courses:
+
+Java Spring:- https://go.telusko.com/Udemyjavaspring
+Java:- https://go.telusko.com/udemyteluskojava
+Spring: https://go.telusko.com/udemyteluskospring
+Java For Programmers:- https://go.telusko.com/javaProgrammers
+Python : https://go.telusko.com/udemyteluskopython
+Git : https://go.telusko.com/udemyteluskogit
+Docker : https://go.telusko.com/udemyteluskodocker
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-08-14T14:08:47Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/cp0_xWxLGaI/default.jpg,https://i.ytimg.com/vi/cp0_xWxLGaI/hqdefault.jpg,PT11M59S,55622,1464,115,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
+e8aWaQAb574,New AI-Powered DevOps with AWS Live Course V2,"Check out our courses:
+
+AI-Powered DevOps with AWS Live Course V2: https://go.telusko.com/ai-devops-v2
+Coupon: TELUSKO20   (20% Discount)
+
+Know More : https://youtu.be/2TWCEdezzqI
+
+For More Queries WhatsApp or Call on  :  +919008963671
+
+website : https://courses.telusko.com/
+
+Instagram : https://www.instagram.com/navinreddyofficial/
+Linkedin : https://in.linkedin.com/in/navinreddy20
+TELUSKO Android App : https://go.telusko.com/TELUSKOAPP
+TELUSKO IOS App : https://apple.co/3SsgmU2
+Discord : https://discord.gg/D8hWe9BqfF",2025-08-13T14:15:03Z,"telusko, navin, reddy, tutorial, Java",28,en,en,https://i.ytimg.com/vi/e8aWaQAb574/default.jpg,https://i.ytimg.com/vi/e8aWaQAb574/hqdefault.jpg,PT2M14S,580990,443,33,public,UC59K-uG2A5ogwIrHw4bmlEg,Telusko,"Hey Aliens 
+
+Welcome to Telusko! We create technical tutorials that take you from beginner to advanced level.
+
+You’ll find content on:
+Core Programming: Java (Beginner to Advanced), Python, C Programming, Kotlin, Scala, JavaScript
+Frameworks & Tools: Spring Framework, Hibernate, REST API, Android, Blockchain, Spring AI, AI Engineering
+Computer Science Essentials: Data Structures, Networking, System Design, and more
+Trending Tech: Cloud, Microservices, and beyond
+
+Alongside technical tutorials, we also share motivational videos and host sessions with leading industry experts.
+
+We don’t just stop at free tutorials—we also provide paid courses (live and recorded) and corporate training to help professionals and organizations upskill.
+
+So, whether you’re just starting out or sharpening your professional skills, there’s always something here for you.
+
+📩 Business Inquiries: connect@telusko.com
+🎓 Explore Live & Recorded Courses: https://telusko.com/
+",IN,https://yt3.ggpht.com/0nsZM3NF0C9bFr2IFXicMJ1w82ldRaZvGKFnezBe2lpW7F9gI92FaLubcTghnNNt4Ld8DfRvEMo=s800-c-k-c0x00ffffff-no-rj,2680000,2100
