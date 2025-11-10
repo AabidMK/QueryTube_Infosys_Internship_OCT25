@@ -8,6 +8,14 @@ env/
 chroma_videos_db/
 *.chromadb/
 chroma/
+vectors/chroma_videos_db/
+
+# Vector and embedding files
+*.pkl
+*.pickle
+*.npy
+*.npz
+vectors/metadata_mapping.pkl
 
 # Python cache and build files
 __pycache__/
@@ -43,3 +51,12 @@ wheels/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Log files
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
