@@ -5,8 +5,21 @@ from chromadb.utils import embedding_functions
 import ast, io, os
 from tqdm import tqdm
 from typing import List
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+
+
 
 app = FastAPI(title="🎬 Multi-DB Chroma Manager (Dynamic, String-Based)")
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # React's default port
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 DB_PATH = "./chroma_db"
 
@@ -212,15 +225,42 @@ async def delete_records(collection_name: str = Query(..., description="Enter DB
 # 🩺 Health Endpoint
 # ---------------------------------------------------
 @app.get("/health")
-def health_check():
+async def health_check():
     """List all databases and record counts."""
     client = get_client()
     collections = client.list_collections()
-    status = []
-    for c in collections:
+    result = []
+    for collection in collections:
         try:
-            count = client.get_collection(c.name).count()
-        except:
-            count = "Error"
-        status.append({"db_name": c.name, "records": count})
-    return {"status": "ok", "databases": status}
+            count = collection.count()
+            result.append({
+                "name": collection.name,
+                "record_count": count
+            })
+        except Exception as e:
+            print(f"Error getting count for {collection.name}: {e}")
+            result.append({
+                "name": collection.name,
+                "record_count": 0,
+                "error": str(e)
+            })
+    return {"databases": result}
+
+
+
+
+@app.delete("/delete_db")
+async def delete_db(collection_name: str = Query(..., description="Name of the database to delete")):
+    """Delete a database collection."""
+    try:
+        client = get_client()
+        client.delete_collection(collection_name)
+        return JSONResponse(
+            status_code=200,
+            content={"status": "success", "message": f"Database '{collection_name}' deleted successfully"}
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to delete database: {str(e)}"
+        )
