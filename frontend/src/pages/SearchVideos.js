@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
 import {
   Container,
   Typography,
@@ -413,12 +415,20 @@ function SearchVideos() {
             </Alert>
           ) : (
             <Box sx={{ mt: 1, maxHeight: '60vh', overflowY: 'auto' }}>
-              <Typography 
-                variant="body1" 
-                component="div" 
-                sx={{ 
-                  whiteSpace: 'pre-line',
-                  lineHeight: 1.6,
+              <ReactMarkdown
+                components={{
+                  p: ({node, ...props}) => <Typography paragraph {...props} sx={{ mb: 2, lineHeight: 1.6 }} />,
+                  h1: ({node, ...props}) => <Typography variant="h4" gutterBottom {...props} />,
+                  h2: ({node, ...props}) => <Typography variant="h5" gutterBottom {...props} />,
+                  h3: ({node, ...props}) => <Typography variant="h6" gutterBottom {...props} />,
+                  li: ({node, ...props}) => <li {...props} style={{marginBottom: 8}} />,
+                  a: ({node, ...props}) => <a {...props} target="_blank" rel="noopener noreferrer" style={{color: '#1976d2'}} />
+                }}
+                sx={{
+                  '& > *': {
+                    mb: 2,
+                    '&:last-child': { mb: 0 }
+                  },
                   '& ul, & ol': {
                     pl: 3,
                     mb: 2
@@ -429,7 +439,7 @@ function SearchVideos() {
                 }}
               >
                 {summaryDialog.summary}
-              </Typography>
+              </ReactMarkdown>
             </Box>
           )}
         </DialogContent>
