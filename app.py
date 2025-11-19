@@ -1,12 +1,16 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException, Query
+from fastapi import FastAPI, UploadFile, File, HTTPException, Query, Depends
 import pandas as pd
 import chromadb
 from chromadb.utils import embedding_functions
 import ast, io, os
 from tqdm import tqdm
-from typing import List
+from typing import List, Optional
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel
+
+# Import summarization functionality
+from summarize import get_transcript_from_db, summarize_text
 
 
 
@@ -220,6 +224,44 @@ async def delete_records(collection_name: str = Query(..., description="Enter DB
 
     return {"status": "deleted", "collection": collection_name,
             "records_deleted": len(ids), "backup": backup_file}
+
+# ---------------------------------------------------
+# 📝 Summarize Video Transcript
+# ---------------------------------------------------
+class SummaryRequest(BaseModel):
+    video_id: str
+    collection_name: str
+    transcript: Optional[str] = None  # Make transcript optional
+
+@app.post("/summarize")
+async def summarize_video(request: SummaryRequest):
+    """Always fetch transcript from database, ignore request.transcript."""
+
+    try:
+        # Always fetch transcript from DB
+        transcript = get_transcript_from_db(
+            request.video_id,
+            request.collection_name
+        )
+
+        # Validate
+        if not transcript or transcript.strip() == "":
+            raise HTTPException(
+                status_code=404,
+                detail="Transcript not found in the database"
+            )
+
+        # Summarize
+        summary = summarize_text(transcript)
+
+        return {"summary": summary}
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error generating summary: {str(e)}"
+        )
+
 
 # ---------------------------------------------------
 # 🩺 Health Endpoint

@@ -18,9 +18,17 @@ import {
   Paper,
   Divider,
   Chip,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  IconButton,
+  Tooltip,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import SummarizeIcon from '@mui/icons-material/Summarize';
+import CloseIcon from '@mui/icons-material/Close';
 import api from '../api';
 
 // Helper function to format duration
@@ -38,6 +46,13 @@ function SearchVideos() {
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [summaryDialog, setSummaryDialog] = useState({
+    open: false,
+    videoId: null,
+    summary: '',
+    loading: false,
+    error: null,
+  });
 
   // Fetch available databases
   useEffect(() => {
@@ -82,6 +97,62 @@ function SearchVideos() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSummarize = async (result) => {
+  console.log('Summarize clicked for video:', result.video_id || result.id);
+  
+  if (!result || !selectedDb) {
+    console.error('Missing video data or selected database');
+    return;
+  }
+
+  setSummaryDialog({
+    open: true,
+    videoId: result.video_id || result.id,
+    loading: true,
+    summary: '',
+    error: null
+  });
+
+  try {
+    console.log('Sending request to summarize...');
+    const response = await api.post('/summarize', {
+      video_id: result.video_id || result.id,
+      collection_name: selectedDb
+      // Don't send the transcript, let backend fetch it
+    });
+    
+    console.log('Received summary:', response.data);
+    setSummaryDialog(prev => ({
+      ...prev,
+      summary: response.data.summary || 'No summary available',
+      loading: false
+    }));
+  } catch (err) {
+    console.error('Summarization error:', err);
+    const errorMessage = err.response?.data?.detail || err.message || 'Failed to generate summary';
+    console.error('Error details:', errorMessage);
+    
+    setSummaryDialog(prev => ({
+      ...prev,
+      error: errorMessage,
+      loading: false,
+      summary: ''
+    }));
+  }
+};
+
+      
+  
+  const handleCloseSummary = () => {
+    setSummaryDialog({
+      open: false,
+      videoId: null,
+      summary: '',
+      loading: false,
+      error: null,
+    });
   };
 
   return (
@@ -236,7 +307,26 @@ function SearchVideos() {
                         </Typography>
                       )}
                     </CardContent>
-                    <Box sx={{ p: 2, pt: 0, display: 'flex', justifyContent: 'flex-end' }}>
+                    <Box sx={{ p: 2, pt: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      
+                          <Tooltip title="Generate summary">
+                            <span> {/* Wrapper span for tooltip to work properly */}
+                              <Button
+                                size="small"
+                                color="secondary"
+                                variant="outlined"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  handleSummarize(result);
+                                }}
+                                startIcon={<SummarizeIcon />}
+                                sx={{ whiteSpace: 'nowrap' }}
+                              >
+                                Summarize
+                              </Button>
+                            </span>
+                          </Tooltip>
                       <Button
                         size="small"
                         color="primary"
@@ -244,7 +334,7 @@ function SearchVideos() {
                         onClick={() => window.open(`https://www.youtube.com/watch?v=${result.video_id || result.id}`, '_blank')}
                         startIcon={<PlayArrowIcon />}
                       >
-                        Watch on YouTube
+                        Watch
                       </Button>
                     </Box>
                   </Box>
@@ -265,6 +355,94 @@ function SearchVideos() {
           </Typography>
         </Box>
       )}
+
+      {/* Summary Dialog */}
+      <Dialog 
+        open={summaryDialog.open} 
+        onClose={handleCloseSummary}
+        maxWidth="md"
+        fullWidth
+        aria-labelledby="summary-dialog-title"
+        aria-describedby="summary-dialog-description"
+      >
+        <DialogTitle id="summary-dialog-title">
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Typography variant="h6" component="span">
+              Video Summary
+            </Typography>
+            <IconButton 
+              onClick={handleCloseSummary} 
+              size="small"
+              aria-label="close"
+              sx={{ ml: 2 }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </Box>
+        </DialogTitle>
+        <DialogContent>
+          {summaryDialog.loading ? (
+            <Box display="flex" justifyContent="center" my={4} flexDirection="column" alignItems="center">
+              <CircularProgress />
+              <Typography variant="body1" sx={{ mt: 2 }}>
+                Generating summary...
+              </Typography>
+              <Typography variant="caption" color="textSecondary" sx={{ mt: 1 }}>
+                This may take a few moments.
+              </Typography>
+            </Box>
+          ) : summaryDialog.error ? (
+            <Alert 
+              severity="error" 
+              sx={{ my: 2 }}
+              action={
+                <IconButton
+                  aria-label="close"
+                  color="inherit"
+                  size="small"
+                  onClick={handleCloseSummary}
+                >
+                  <CloseIcon fontSize="inherit" />
+                </IconButton>
+              }
+            >
+              <Box>
+                <Typography variant="subtitle2">Error generating summary</Typography>
+                <Typography variant="body2">{summaryDialog.error}</Typography>
+              </Box>
+            </Alert>
+          ) : (
+            <Box sx={{ mt: 1, maxHeight: '60vh', overflowY: 'auto' }}>
+              <Typography 
+                variant="body1" 
+                component="div" 
+                sx={{ 
+                  whiteSpace: 'pre-line',
+                  lineHeight: 1.6,
+                  '& ul, & ol': {
+                    pl: 3,
+                    mb: 2
+                  },
+                  '& p': {
+                    mb: 2
+                  }
+                }}
+              >
+                {summaryDialog.summary}
+              </Typography>
+            </Box>
+          )}
+        </DialogContent>
+        <DialogActions sx={{ p: 2 }}>
+          <Button 
+            onClick={handleCloseSummary} 
+            color="primary"
+            variant="outlined"
+          >
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 }
