@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload CSV</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='upload.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+<header>
+    <h2 style="color:white"><b>QueryTube Semantic Search</b></h2>
+    <nav>
+        <a href="{{ url_for('home') }}">Home</a>
+        <a href="{{ url_for('upload') }}">Upload</a>
+    </nav>
+</header>
+
+<section class="upload-container">
+    <h1>Upload CSV to Vector Database</h1>
+    <p class="subtext">Select a CSV file that contains <b>id, embeddings</b> etc.</p>
+
+    <div class="upload-box">
+
+        <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+        <br>
+        <label class="custom-file-upload">
+            <input id="csvFile" type="file" accept=".csv">
+            <span id="fileLabel">Choose CSV File</span>
+        </label>
+        <br>
+        <button class="upload-btn" onclick="uploadCSV()">Upload</button>
+
+        <p id="status-msg"></p>
+    </div>
+</section>
+
+<script>
+document.getElementById("csvFile").addEventListener("change", function () {
+    const fileLabel = document.getElementById("fileLabel");
+    fileLabel.textContent = this.files.length > 0 ? this.files[0].name : "Choose CSV File";
+});
+
+async function uploadCSV() {
+    const fileInput = document.getElementById("csvFile");
+    const statusMsg = document.getElementById("status-msg");
+
+    if (fileInput.files.length === 0) {
+        alert("Please select a CSV file!");
+        return;
+    }
+
+    let file = fileInput.files[0];
+    let formData = new FormData();
+    formData.append("file", file);
+
+    statusMsg.innerHTML = "Uploading... please wait";
+
+    try {
+        let response = await fetch("http://127.0.0.1:5000/upload_csv", {
+            method: "POST",
+            body: formData
+        });
+
+        let data = await response.json();
+
+        if (data.error) {
+            statusMsg.style.color = "red";
+            statusMsg.innerHTML = "❌ " + data.error;
+        } else {
+            statusMsg.style.color = "green";
+            statusMsg.innerHTML = `Upload Complete <br>Added: ${data.added}, Skipped: ${data.skipped}`;
+        }
+
+    } catch (error) {
+        statusMsg.style.color = "red";
+        statusMsg.innerHTML = "❌ Upload failed: " + error;
+    }
+}
+</script>
+
+</body>
+</html>
