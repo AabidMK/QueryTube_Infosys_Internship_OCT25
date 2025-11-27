@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+pandas
+numpy
+faiss-cpu
+scikit-learn
+python-multipart
