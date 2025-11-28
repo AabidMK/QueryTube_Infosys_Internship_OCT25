@@ -4,7 +4,7 @@ from google import genai
 from google.genai.errors import APIError
 
 
-%env GEMINI_API_KEY=AIzaSyBJvh2HjCThwscdBxHk33NDDiKESZLIUus
+%env GEMINI_API_KEY="API_KEY"
 
 
 
@@ -110,4 +110,5 @@ if __name__ == "__main__":
             print(f"Title: {VIDEO_TITLE}")
             print("="*50)
             print(summary)
+
             print("="*50)
