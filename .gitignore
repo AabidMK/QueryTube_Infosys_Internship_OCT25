@@ -3,12 +3,22 @@ sentence_fix_env/
 venv/
 env/
 *.venv/
+langchain_env_312/
 
-# ChromaDB vector database
+# Vector databases
 chroma_videos_db/
 *.chromadb/
 chroma/
 vectors/chroma_videos_db/
+
+# FAISS vector database files
+*.faiss
+*.index
+vectors/faiss_index/
+*.bin
+*.ivf
+*.pq
+*.nlist
 
 # Vector and embedding files
 *.pkl
@@ -16,6 +26,13 @@ vectors/chroma_videos_db/
 *.npy
 *.npz
 vectors/metadata_mapping.pkl
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # Python cache and build files
 __pycache__/
@@ -40,16 +57,27 @@ wheels/
 *.egg
 
 # Jupyter notebooks
-.ipynb_checkpoints
+.ipynb_checkpoints/
+*.ipynb_checkpoints
 
 # IDE files
 .vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
 .idea/
 *.swp
 *.swo
 
 # OS files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 
 # Log files
@@ -60,3 +88,38 @@ logs/
 *.tmp
 *.temp
 .cache/
+.temp/
+
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Large data files (adjust based on your needs)
+*.csv
+*.json
+*.parquet
+*.feather
+!small_config_files.json  # Use ! to include specific small config files
+
+# API keys and sensitive data
+*.key
+*.pem
+secrets.yaml
+config.yaml
+credentials.json
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+
+# Documentation
+docs/_build/

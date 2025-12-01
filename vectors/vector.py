@@ -1,5 +1,5 @@
 import pandas as pd
-import chromadb
+import faiss
 import uuid
 import numpy as np
 import re
@@ -60,6 +60,137 @@ def validate_embedding(embedding):
         return False
     return True
 
+class FAISSVectorDB:
+    def __init__(self, db_path="./faiss_videos_db"):
+        self.db_path = db_path
+        self.index_file = os.path.join(db_path, "faiss.index")
+        self.metadata_file = os.path.join(db_path, "metadata.pkl")
+        self.index = None
+        self.metadata = []
+        self.documents = []
+        
+        os.makedirs(db_path, exist_ok=True)
+        self._load_or_create_index()
+    
+    def _load_or_create_index(self):
+        """Load existing FAISS index or create new one"""
+        try:
+            if os.path.exists(self.index_file) and os.path.exists(self.metadata_file):
+                # Load existing index
+                self.index = faiss.read_index(self.index_file)
+                with open(self.metadata_file, 'rb') as f:
+                    data = pickle.load(f)
+                    self.metadata = data.get('metadata', [])
+                    self.documents = data.get('documents', [])
+                print(f"✅ Loaded existing FAISS index with {len(self.metadata)} items")
+            else:
+                print("✅ Creating new FAISS index")
+                # We'll create the index when we know the dimension
+        except Exception as e:
+            print(f"❌ Error loading FAISS index: {e}")
+    
+    def _create_index(self, dimension):
+        """Create FAISS index with given dimension"""
+        self.index = faiss.IndexFlatIP(dimension)  # Inner product (cosine similarity)
+        print(f"✅ Created FAISS index with dimension {dimension}")
+    
+    def save(self):
+        """Save FAISS index and metadata"""
+        try:
+            if self.index is not None:
+                faiss.write_index(self.index, self.index_file)
+            
+            with open(self.metadata_file, 'wb') as f:
+                pickle.dump({
+                    'metadata': self.metadata,
+                    'documents': self.documents,
+                    'total_count': len(self.metadata)
+                }, f)
+            
+            print(f"💾 Saved FAISS index with {len(self.metadata)} items")
+        except Exception as e:
+            print(f"❌ Error saving FAISS index: {e}")
+    
+    def add(self, embeddings, documents, metadatas, ids):
+        """Add items to FAISS index"""
+        if len(embeddings) == 0:
+            return
+        
+        # Convert to numpy array
+        embeddings_array = np.array(embeddings, dtype=np.float32)
+        
+        # Create index if it doesn't exist
+        if self.index is None:
+            self._create_index(embeddings_array.shape[1])
+        
+        # Add to FAISS index
+        self.index.add(embeddings_array)
+        
+        # Store metadata and documents
+        for i, (doc, metadata, vid_id) in enumerate(zip(documents, metadatas, ids)):
+            self.metadata.append({
+                **metadata,
+                'faiss_id': len(self.metadata),  # FAISS uses integer indices
+                'original_id': vid_id,
+                'document_index': len(self.documents)
+            })
+            self.documents.append(doc)
+    
+    def count(self):
+        """Get total count of items"""
+        if self.index is None:
+            return 0
+        return self.index.ntotal
+    
+    def get(self, limit=None):
+        """Get items from FAISS index"""
+        if limit is None:
+            limit = self.count()
+        
+        results = {
+            'ids': [m['original_id'] for m in self.metadata[:limit]],
+            'documents': self.documents[:limit],
+            'metadatas': self.metadata[:limit]
+        }
+        return results
+    
+    def query(self, query_embeddings, n_results=5):
+        """Query FAISS index"""
+        if self.index is None or self.index.ntotal == 0:
+            return {'ids': [], 'distances': [], 'documents': [], 'metadatas': []}
+        
+        query_array = np.array(query_embeddings, dtype=np.float32)
+        
+        # Search in FAISS
+        distances, indices = self.index.search(query_array, min(n_results, self.index.ntotal))
+        
+        results = {
+            'ids': [],
+            'distances': [],
+            'documents': [],
+            'metadatas': []
+        }
+        
+        for i, (distance_list, index_list) in enumerate(zip(distances, indices)):
+            batch_ids = []
+            batch_distances = []
+            batch_documents = []
+            batch_metadatas = []
+            
+            for dist, idx in zip(distance_list, index_list):
+                if idx < len(self.metadata):
+                    batch_ids.append(self.metadata[idx]['original_id'])
+                    batch_distances.append(float(dist))
+                    batch_documents.append(self.documents[idx])
+                    batch_metadatas.append(self.metadata[idx])
+            
+            results['ids'].append(batch_ids)
+            results['distances'].append(batch_distances)
+            results['documents'].append(batch_documents)
+            results['metadatas'].append(batch_metadatas)
+        
+        return results
+
 def create_and_save_metadata_mapping(video_details, successful_count, failed_count, embedding_dimensions, df, output_file="metadata_mapping.pkl"):
     """Create comprehensive metadata mapping and save to pickle"""
     mapping = {
@@ -71,10 +202,9 @@ def create_and_save_metadata_mapping(video_details, successful_count, failed_cou
         'embedding_dimensions': list(embedding_dimensions),
         'dataframe_columns': list(df.columns),
         'dataframe_shape': df.shape,
-        'video_details': video_details  # Add individual video details
+        'video_details': video_details
     }
     
-    # Save to pickle
     with open(output_file, 'wb') as f:
         pickle.dump(mapping, f)
     
@@ -84,7 +214,6 @@ def create_and_save_metadata_mapping(video_details, successful_count, failed_cou
 def main():
     print("📂 Loading data from CSV...")
     
-    # Make sure the CSV file exists in the current directory
     if not os.path.exists('final_embeddings.csv'):
         print("❌ Error: final_embeddings.csv not found in current directory")
         print("📁 Current directory files:")
@@ -94,16 +223,12 @@ def main():
     
     df = pd.read_csv('final_embeddings.csv')
     
-    print("🔄 Initializing ChromaDB...")
+    print("🔄 Initializing FAISS VectorDB...")
     
-    # Initialize client and collection
-    client = chromadb.PersistentClient(path="./chroma_videos_db")
-    collection = client.get_or_create_collection(
-        name="videos",
-        metadata={"description": "Video transcripts with metadata and embeddings"}
-    )
+    # Initialize FAISS database
+    faiss_db = FAISSVectorDB("./faiss_videos_db")
     
-    print("✅ ChromaDB initialized")
+    print("✅ FAISS VectorDB initialized")
     print(f"📊 Processing DataFrame with {len(df)} videos...")
     
     ids = []
@@ -128,16 +253,15 @@ def main():
                 vid_id = str(vid_id)
                 generated_id = False
             
-            # Convert embedding using NumPy
+            # Convert embedding
             embedding = convert_tensor_string(video.get('e_title_trans_tensor', ''))
             
             if not validate_embedding(embedding):
                 print(f"⚠️  Skipping video {i} - embedding conversion failed or invalid")
                 failed_conversions += 1
                 
-                # Still record failed videos in metadata
                 video_detail = {
-                    'chromadb_id': 'FAILED',
+                    'faiss_id': 'FAILED',
                     'original_id': original_id if not pd.isna(original_id) else 'unknown',
                     'title': video.get('title_cleaned', ''),
                     'channel': video.get('channel_title', ''),
@@ -148,10 +272,10 @@ def main():
                 video_details.append(video_detail)
                 continue
             
-            # Convert to numpy array for validation and standardization
+            # Convert to numpy array for validation
             embedding_array = np.array(embedding, dtype=np.float32)
             
-            # Check for NaN or Inf values in embedding
+            # Check for NaN or Inf values
             if np.any(np.isnan(embedding_array)) or np.any(np.isinf(embedding_array)):
                 print(f"⚠️  Skipping video {i} - embedding contains NaN or Inf values")
                 failed_conversions += 1
@@ -160,17 +284,17 @@ def main():
             # Track embedding dimensions
             embedding_dimensions.add(len(embedding_array))
             
-            # Prepare data for ChromaDB
+            # Prepare data for FAISS
             ids.append(vid_id)
             documents.append(str(video.get('transcript_cleaned', '')))
-            embeddings.append(embedding_array.tolist())  # Convert back to list for ChromaDB
+            embeddings.append(embedding_array.tolist())
             
             # Handle NaN values
             view_count = video.get('viewCount', 0)
             if pd.isna(view_count):
                 view_count = 0
             
-            # Prepare metadata for ChromaDB
+            # Prepare metadata
             metadata = {
                 'title': str(video.get('title_cleaned', '')),
                 'channel_title': str(video.get('channel_title', '')),
@@ -182,9 +306,9 @@ def main():
             }
             metadatas.append(metadata)
             
-            # Store detailed mapping for pickle
+            # Store detailed mapping
             video_detail = {
-                'chromadb_id': vid_id,
+                'faiss_id': vid_id,
                 'original_id': original_id if not pd.isna(original_id) else 'generated',
                 'title': video.get('title_cleaned', ''),
                 'channel': video.get('channel_title', ''),
@@ -192,7 +316,7 @@ def main():
                 'embedding_success': True,
                 'embedding_dimension': len(embedding_array),
                 'dataframe_index': i,
-                'embedding_norm': float(np.linalg.norm(embedding_array))  # Store norm for validation
+                'embedding_norm': float(np.linalg.norm(embedding_array))
             }
             video_details.append(video_detail)
             
@@ -205,9 +329,8 @@ def main():
             print(f"⚠️  Error processing video {i}: {e}")
             failed_conversions += 1
             
-            # Record error details
             video_detail = {
-                'chromadb_id': 'FAILED',
+                'faiss_id': 'FAILED',
                 'original_id': original_id if 'original_id' in locals() and not pd.isna(original_id) else 'unknown',
                 'title': video.get('title_cleaned', '') if 'video' in locals() else '',
                 'channel': video.get('channel_title', '') if 'video' in locals() else '',
@@ -218,7 +341,7 @@ def main():
             video_details.append(video_detail)
             continue
     
-    # ✅ CREATE PICKLE FILE FIRST (before ChromaDB operations)
+    # Create metadata mapping pickle file
     print("💾 Creating metadata mapping pickle file...")
     mapping = create_and_save_metadata_mapping(
         video_details, successful_count, failed_conversions, 
@@ -226,45 +349,42 @@ def main():
     )
     
     if successful_count > 0:
-        # Add to ChromaDB collection
-        print("💾 Saving to ChromaDB...")
+        # Add to FAISS database
+        print("💾 Saving to FAISS VectorDB...")
         try:
-            collection.add(
-                ids=ids,
-                documents=documents,
-                embeddings=embeddings,
-                metadatas=metadatas
-            )
-            print(f"✅ Successfully saved {successful_count} videos to vector DB")
+            faiss_db.add(embeddings, documents, metadatas, ids)
+            faiss_db.save()
+            
+            print(f"✅ Successfully saved {successful_count} videos to FAISS VectorDB")
             
             # Final verification
-            final_count = collection.count()
+            final_count = faiss_db.count()
             print(f"🎯 FINAL VERIFICATION:")
-            print(f"   Collection count: {final_count}")
+            print(f"   FAISS count: {final_count}")
             print(f"   Successful embeddings: {successful_count}")
             print(f"   Failed conversions: {failed_conversions}")
             print(f"   Embedding dimensions: {embedding_dimensions}")
             print(f"   Metadata mapping: metadata_mapping.pkl")
             
             # Test retrieval
-            test_results = collection.get(limit=2)
+            test_results = faiss_db.get(limit=2)
             print(f"   Test retrieval: {len(test_results['ids'])} items found")
             
             # Test similarity search
             if len(embeddings) > 0:
                 test_embedding = embeddings[0]
-                similar_results = collection.query(
+                similar_results = faiss_db.query(
                     query_embeddings=[test_embedding],
                     n_results=1
                 )
                 print(f"   Similarity search test: {len(similar_results['ids'][0])} result(s) found")
             
         except Exception as e:
-            print(f"❌ Error saving to ChromaDB: {e}")
+            print(f"❌ Error saving to FAISS: {e}")
             print("✅ But metadata mapping was still saved to pickle file!")
         
     else:
-        print("❌ No videos were saved to ChromaDB due to errors")
+        print("❌ No videos were saved to FAISS due to errors")
         print("✅ But metadata mapping was still saved to pickle file!")
     
     # Final confirmation
@@ -273,7 +393,6 @@ def main():
         print(f"   File: metadata_mapping.pkl")
         print(f"   Size: {os.path.getsize('metadata_mapping.pkl')} bytes")
         
-        # Show quick summary
         with open("metadata_mapping.pkl", 'rb') as f:
             metadata = pickle.load(f)
         print(f"   Contains: {len(metadata['video_details'])} video mappings")

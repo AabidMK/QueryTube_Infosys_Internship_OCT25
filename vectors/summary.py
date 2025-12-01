@@ -1,259 +1,311 @@
-import os
 import pickle
-import pandas as pd
-from dotenv import load_dotenv
+import os
 import google.generativeai as genai
-from typing import Optional, Dict, Any
+from datetime import datetime
+import json
+import faiss
 
-# Load environment variables
-load_dotenv()
 
-class SimpleVideoSummarizer:
-    def __init__(self, pickle_file: str = "metadata_mapping.pkl", csv_file: str = "final_embeddings.csv"):
-        """Initialize with correct transcript column"""
-        self.pickle_file = pickle_file
-        self.csv_file = csv_file
-        self.metadata_mapping = {}
-        self.video_details = {}
-        self.transcripts_data = {}
+# ADD THIS FUNCTION TO LOAD .env FILE
+def load_env_file():
+    """Load environment variables from .env file"""
+    try:
+        with open('.env', 'r') as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith('#') and '=' in line:
+                    key, value = line.split('=', 1)
+                    os.environ[key] = value
+        print("✅ Loaded .env file successfully")
+        return True
+    except FileNotFoundError:
+        print("❌ .env file not found")
+        return False
+    except Exception as e:
+        print(f"❌ Error loading .env file: {e}")
+        return False
+
+# Configure Gemini API
+def setup_gemini():
+    """Setup Gemini API with your API key"""
+    try:
+        # First load the .env file
+        if not load_env_file():
+            return None
         
-        try:
-            # Load data
-            self._load_metadata_mapping()
-            self._load_transcripts_data()
-            
-            # Initialize Gemini API
-            self._setup_gemini()
-            
-            print("✅ Video Summarizer initialized successfully")
-            
-        except Exception as e:
-            print(f"❌ Error initializing: {e}")
-            raise
-    
-    def _load_metadata_mapping(self):
-        """Load metadata mapping from pickle file"""
-        with open(self.pickle_file, 'rb') as f:
-            self.metadata_mapping = pickle.load(f)
-        
-        # Extract video details
-        self.video_details = {}
-        video_details_list = self.metadata_mapping.get('video_details', [])
-        
-        for video in video_details_list:
-            video_id = video.get('original_id')
-            if video_id:
-                self.video_details[video_id] = {
-                    'title': video.get('title', 'Unknown Title'),
-                    'channel_title': video.get('channel', 'Unknown Channel'),
-                    'view_count': video.get('view_count', 0),
-                    'duration': video.get('duration', ''),
-                    'description': video.get('description', '')
-                }
-    
-    def _load_transcripts_data(self):
-        """Load transcripts from CSV file with correct column"""
-        df = pd.read_csv(self.csv_file)
-        
-        # Use the actual 'transcript' column
-        transcript_column = 'transcript'
-        
-        if transcript_column in df.columns:
-            for _, row in df.iterrows():
-                video_id = row.get('id')
-                if video_id and pd.notna(video_id):
-                    transcript = row.get(transcript_column, '')
-                    if pd.notna(transcript) and transcript and transcript != 'False':
-                        self.transcripts_data[str(video_id)] = str(transcript)
-    
-    def _setup_gemini(self):
-        """Setup Google Gemini API with correct model"""
+        # Now get the API key from environment
         api_key = os.getenv('GEMINI_API_KEY')
         if not api_key:
-            raise ValueError("❌ GEMINI_API_KEY not found in .env file")
+            print("❌ GEMINI_API_KEY environment variable not set")
+            print("💡 Make sure your .env file contains: GEMINI_API_KEY=your_actual_key")
+            return None
         
+        print(f"✅ Found Gemini API key (length: {len(api_key)})")
         genai.configure(api_key=api_key)
         
-        # List available models to see what's accessible
-        try:
-            models = genai.list_models()
-            print("🔍 Available Gemini models:")
-            for model in models:
-                if 'generateContent' in model.supported_generation_methods:
-                    print(f"   ✅ {model.name}")
-            
-            # Try different model names
-            model_names = ['gemini-flash-latest']
-            self.model = None
-            
-            for model_name in model_names:
-                try:
-                    self.model = genai.GenerativeModel(model_name)
-                    print(f"✅ Using model: {model_name}")
-                    break
-                except Exception:
-                    continue
-            
-            if self.model is None:
-                # Fallback to the first available model that supports generateContent
-                for model in models:
-                    if 'generateContent' in model.supported_generation_methods:
-                        self.model = genai.GenerativeModel(model.name)
-                        print(f"✅ Using fallback model: {model.name}")
-                        break
-            
-            if self.model is None:
-                raise ValueError("No suitable Gemini model found")
-                
-        except Exception as e:
-            print(f"❌ Error setting up Gemini: {e}")
-            raise
-    
-    def get_video_data(self, video_id: str) -> Optional[Dict[str, Any]]:
-        """Get complete video data by video_id"""
-        video_id = str(video_id).strip()
-        
-        # Look in video details
-        video_metadata = self.video_details.get(video_id)
-        
-        if not video_metadata:
-            return None
-        
-        # Get transcript
-        transcript = self.transcripts_data.get(video_id, '')
-        
-        return {
-            'video_id': video_id,
-            'title': video_metadata['title'],
-            'channel_title': video_metadata['channel_title'],
-            'view_count': video_metadata['view_count'],
-            'duration': video_metadata['duration'],
-            'description': video_metadata['description'],
-            'transcript': transcript
-        }
-    
-    def summarize_video(self, video_id: str) -> Dict[str, Any]:
-        """Main function to summarize a video"""
-        print(f"🎬 Processing: {video_id}")
-        
-        # Get video data
-        video_data = self.get_video_data(video_id)
-        if not video_data:
-            return {"error": f"Video '{video_id}' not found"}
-        
-        # Check transcript
-        transcript = video_data['transcript']
-        if len(transcript.strip()) < 100:
-            return {
-                "error": f"Transcript too short ({len(transcript)} chars)",
-                "video_id": video_id,
-                "title": video_data['title']
-            }
-        
-        # Generate summary
-        print("🤖 Generating summary...")
-        summary = self._generate_summary(transcript, video_data['title'], video_data['description'])
-        
-        if not summary:
-            return {
-                "error": "Failed to generate summary",
-                "video_id": video_id,
-                "title": video_data['title']
-            }
-        
-        # Return complete result
-        return {
-            "video_id": video_id,
-            "title": video_data['title'],
-            "channel_title": video_data['channel_title'],
-            "view_count": video_data['view_count'],
-            "duration": video_data['duration'],
-            "summary": summary,
-            "transcript_length": len(transcript)
-        }
-    
-    def _generate_summary(self, transcript: str, title: str, description: str = "") -> str:
-        """Generate summary using Gemini"""
-        try:
-            context = f"Title: {title}"
-            if description:
-                context += f"\nDescription: {description}"
-            
-            prompt = f"""
-            Please provide a comprehensive summary of the following video content.
-            
-            {context}
-            
-            Transcript:
-            {transcript[:12000]}
-            
-            Please provide a well-structured summary with:
-            
-            ## Main Topic
-            What is this video primarily about?
-            
-            ## Key Points  
-            3-5 main points covered
-            
-            ## Key Takeaways
-            Important insights or conclusions
-            
-            ## Overall Summary
-            Brief 2-3 sentence overview
-            """
-            
-            response = self.model.generate_content(prompt)
-            return response.text
-            
-        except Exception as e:
-            print(f"❌ Summarization error: {e}")
-            return None
-    
-    def display_summary(self, result: Dict[str, Any]):
-        """Display the summary"""
-        if "error" in result:
-            print(f"\n❌ Error: {result['error']}")
-            return
-        
-        print(f"\n" + "="*80)
-        print("🎬 VIDEO SUMMARY")
-        print("="*80)
-        print(f"📺 Title: {result['title']}")
-        print(f"👨‍💼 Channel: {result['channel_title']}")
-        print(f"🆔 Video ID: {result['video_id']}")
-        print(f"👀 Views: {result['view_count']}")
-        print(f"⏱️ Duration: {result['duration']}")
-        print(f"📝 Transcript Length: {result['transcript_length']} characters")
-        print("\n" + "="*80)
-        print("📋 SUMMARY")
-        print("="*80)
-        print(result['summary'])
-        print("="*80)
+        # Use gemini-flash model
+        model = genai.GenerativeModel('gemini-flash-latest')            
 
-def main():
-    """Main function - simple video ID input only"""
-    print("🚀 Video Summarizer")
-    
+        print("✅ Gemini Flash model configured successfully")
+        return model
+    except Exception as e:
+        print(f"❌ Error setting up Gemini: {e}")
+        return None
+
+# ... THE REST OF YOUR CODE REMAINS EXACTLY THE SAME ...
+def generate_video_summary(model, video_data):
+    """Generate summary using Gemini Flash model"""
     try:
-        summarizer = SimpleVideoSummarizer()
+        prompt = f"""
+        Please analyze this video data and provide a comprehensive summary in the following format:
         
-        while True:
-            video_id = input("\n🔍 Enter Video ID (or 'quit' to exit): ").strip()
-            
-            if video_id.lower() in ['quit', 'exit', 'q']:
-                print("👋 Goodbye!")
-                break
-            
-            if not video_id:
+        **Video Summary**
+        
+        **Title:** [Video Title]
+        **Channel:** [Channel Name]
+        **Views:** [View Count]
+        
+        **Key Insights:**
+        - Provide 3-5 key insights about the video content
+        - Focus on main topics discussed
+        - Highlight interesting patterns or themes
+        
+        **Content Analysis:**
+        - Summarize the main content in 2-3 paragraphs
+        - Identify the primary purpose of the video
+        - Note any unique or standout elements
+        
+        **Transcript Highlights:**
+        - Extract 2-3 notable quotes or important segments
+        - Keep them concise and meaningful
+        
+        Video Data:
+        Title: {video_data['metadata'].get('title', 'N/A')}
+        Channel: {video_data['metadata'].get('channel_title', 'N/A')}
+        Views: {video_data['metadata'].get('view_count', 'N/A')}
+        Duration: {video_data['metadata'].get('duration', 'N/A')}
+        
+        Transcript:
+        {video_data['document'][:4000]}  # Limit transcript length for API
+        
+        Please provide a well-structured, insightful summary that captures the essence of this video.
+        """
+        
+        response = model.generate_content(prompt)
+        return response.text
+        
+    except Exception as e:
+        return f"❌ Error generating summary: {e}"
+
+class FAISSVectorDB:
+    def __init__(self, db_path="./faiss_videos_db"):
+        self.db_path = db_path
+        self.index_file = os.path.join(db_path, "faiss.index")
+        self.metadata_file = os.path.join(db_path, "metadata.pkl")
+        self.index = None
+        self.metadata = []
+        self.documents = []
+        
+        self._load_index()
+    
+    def _load_index(self):
+        """Load FAISS index and metadata"""
+        try:
+            if os.path.exists(self.index_file) and os.path.exists(self.metadata_file):
+                self.index = faiss.read_index(self.index_file)
+                with open(self.metadata_file, 'rb') as f:
+                    data = pickle.load(f)
+                    self.metadata = data.get('metadata', [])
+                    self.documents = data.get('documents', [])
+                print(f"✅ Loaded FAISS index with {len(self.metadata)} items")
+            else:
+                print("❌ FAISS index not found. Please run vector.py first.")
+        except Exception as e:
+            print(f"❌ Error loading FAISS index: {e}")
+    
+    def get_document_by_id(self, doc_id):
+        """Get document by ID"""
+        for i, metadata in enumerate(self.metadata):
+            if metadata.get('original_id') == doc_id:
+                return {
+                    'id': doc_id,
+                    'document': self.documents[i],
+                    'metadata': metadata
+                }
+        return None
+    
+    def get_video_statistics(self, doc_id):
+        """Get basic statistics for a video"""
+        video_data = self.get_document_by_id(doc_id)
+        if not video_data:
+            return None
+        
+        transcript = video_data['document']
+        metadata = video_data['metadata']
+        
+        stats = {
+            'id': doc_id,
+            'title': metadata.get('title', 'N/A'),
+            'channel': metadata.get('channel_title', 'N/A'),
+            'views': metadata.get('view_count', 'N/A'),
+            'duration': metadata.get('duration', 'N/A'),
+            'transcript_length': len(transcript),
+            'word_count': len(transcript.split()),
+            'sentence_count': len([s for s in transcript.split('.') if s.strip()]),
+            'avg_word_length': sum(len(word) for word in transcript.split()) / len(transcript.split()) if transcript.split() else 0
+        }
+        
+        return stats
+
+def interactive_video_summary():
+    """Interactive video summary interface using Gemini Flash"""
+    
+    print("📊 FAISS VIDEO DATABASE - AI SUMMARY GENERATOR")
+    print("=" * 50)
+    
+    # Setup Gemini model
+    print("🔄 Setting up Gemini Flash model...")
+    model = setup_gemini()
+    if model is None:
+        print("❌ Cannot proceed without Gemini API configuration")
+        return
+    
+    # Load FAISS database
+    print("🔄 Loading FAISS database...")
+    faiss_db = FAISSVectorDB("./faiss_videos_db")
+    
+    if faiss_db.index is None:
+        print("❌ Could not load FAISS database. Please run vector.py first.")
+        return
+    
+    # Load metadata mapping for additional info
+    metadata_mapping = None
+    if os.path.exists("metadata_mapping.pkl"):
+        with open("metadata_mapping.pkl", 'rb') as f:
+            metadata_mapping = pickle.load(f)
+    
+    while True:
+        print("\n" + "="*50)
+        print("🎬 VIDEO SUMMARY GENERATOR")
+        print("="*50)
+        print("1. 📝 Generate AI Summary for Video")
+        print("2. 📊 Show Video Statistics")
+        print("3. 🔍 Find Video ID (List some videos)")
+        print("4. 🚪 Exit")
+        print("-"*50)
+        
+        choice = input("Enter your choice (1-4): ").strip()
+        
+        if choice == '1':
+            # Generate AI summary
+            doc_id = input("Enter Video ID: ").strip()
+            if not doc_id:
                 print("❌ Please enter a Video ID")
                 continue
             
-            # Get and display summary
-            result = summarizer.summarize_video(video_id)
-            summarizer.display_summary(result)
+            print(f"\n🔍 Searching for video ID: {doc_id}...")
+            video_data = faiss_db.get_document_by_id(doc_id)
+            
+            if video_data:
+                print(f"✅ Video found!")
+                print(f"\n📋 BASIC VIDEO INFO:")
+                print(f"   📹 ID: {video_data['id']}")
+                print(f"   📺 Title: {video_data['metadata'].get('title', 'N/A')}")
+                print(f"   🏢 Channel: {video_data['metadata'].get('channel_title', 'N/A')}")
+                print(f"   👀 Views: {video_data['metadata'].get('view_count', 'N/A')}")
+                print(f"   ⏱️ Duration: {video_data['metadata'].get('duration', 'N/A')}")
+                print(f"   📄 Transcript length: {len(video_data['document'])} characters")
                 
-    except Exception as e:
-        print(f"❌ Failed to start: {e}")
+                print(f"\n🤖 Generating AI summary with Gemini Flash...")
+                print("⏳ This may take a few seconds...")
+                
+                summary = generate_video_summary(model, video_data)
+                
+                print("\n" + "="*80)
+                print("🎯 AI-GENERATED VIDEO SUMMARY")
+                print("="*80)
+                print(summary)
+                print("="*80)
+                
+                # Ask if user wants to save summary
+                save_choice = input("\n💾 Save this summary to file? (y/n): ").strip().lower()
+                if save_choice in ['y', 'yes']:
+                    filename = f"video_summary_{doc_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
+                    with open(filename, 'w', encoding='utf-8') as f:
+                        f.write(f"Video Summary for ID: {doc_id}\n")
+                        f.write(f"Title: {video_data['metadata'].get('title', 'N/A')}\n")
+                        f.write(f"Channel: {video_data['metadata'].get('channel_title', 'N/A')}\n")
+                        f.write(f"Generated: {datetime.now().isoformat()}\n")
+                        f.write("="*50 + "\n")
+                        f.write(summary)
+                    print(f"✅ Summary saved to {filename}")
+                
+            else:
+                print(f"❌ Video with ID '{doc_id}' not found")
+                print("💡 Use option 3 to find available Video IDs")
+        
+        elif choice == '2':
+            # Show video statistics
+            doc_id = input("Enter Video ID: ").strip()
+            if not doc_id:
+                print("❌ Please enter a Video ID")
+                continue
+            
+            stats = faiss_db.get_video_statistics(doc_id)
+            if stats:
+                print(f"\n📊 VIDEO STATISTICS:")
+                print(f"   📹 ID: {stats['id']}")
+                print(f"   📺 Title: {stats['title']}")
+                print(f"   🏢 Channel: {stats['channel']}")
+                print(f"   👀 Views: {stats['views']}")
+                print(f"   ⏱️ Duration: {stats['duration']}")
+                print(f"   📄 Transcript Length: {stats['transcript_length']} characters")
+                print(f"   🔤 Word Count: {stats['word_count']} words")
+                print(f"   📝 Sentence Count: {stats['sentence_count']} sentences")
+                print(f"   📏 Average Word Length: {stats['avg_word_length']:.1f} characters")
+                
+                # Additional insights
+                if stats['word_count'] > 0:
+                    reading_time = stats['word_count'] / 200  # Average reading speed
+                    print(f"   ⏰ Estimated Reading Time: {reading_time:.1f} minutes")
+            else:
+                print(f"❌ Video with ID '{doc_id}' not found")
+        
+        elif choice == '3':
+            # List some videos to help user find IDs
+            limit = input("How many videos to list? (default 5): ").strip()
+            try:
+                limit = int(limit) if limit else 5
+            except:
+                limit = 5
+            
+            print(f"\n📋 SAMPLE VIDEOS (showing {limit}):")
+            print("-" * 80)
+            
+            sample_count = min(limit, len(faiss_db.metadata))
+            for i in range(sample_count):
+                metadata = faiss_db.metadata[i]
+                document = faiss_db.documents[i]
+                print(f"{i+1}. 📹 ID: {metadata.get('original_id', 'N/A')}")
+                print(f"   📺 Title: {metadata.get('title', 'N/A')}")
+                print(f"   🏢 Channel: {metadata.get('channel_title', 'N/A')}")
+                print(f"   👀 Views: {metadata.get('view_count', 'N/A')}")
+                print(f"   📄 Preview: {document[:80]}...")
+                print("-" * 80)
+        
+        elif choice == '4':
+            print("👋 Goodbye!")
+            break
+        
+        else:
+            print("❌ Invalid choice. Please enter 1-4.")
+        
+        # Ask if user wants to continue
+        if choice != '4':
+            continue_analysis = input("\nContinue with another video? (y/n): ").strip().lower()
+            if continue_analysis not in ['y', 'yes']:
+                print("👋 Goodbye!")
+                break
 
 if __name__ == "__main__":
-    main()
+    interactive_video_summary()

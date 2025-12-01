@@ -2,6 +2,11 @@ from supadata import Supadata, SupadataError
 import csv
 import time
 import re
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 def extract_text_from_transcript_data(transcript_data):
     """
@@ -260,7 +265,7 @@ if __name__ == "__main__":
              'LtPP_mc9kx8', 'K3ejA0b54PU']
     
     # Your Supadata API key
-    API_KEY = ""
+    API_KEY = os.getenv("SUPADATA_API_KEY")
     
     # First, preview the structure and language distribution
     print("Previewing transcript structure and language...")

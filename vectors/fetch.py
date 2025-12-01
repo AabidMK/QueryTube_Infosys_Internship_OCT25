@@ -1,256 +1,251 @@
-import pickle
+import pandas as pd
+import faiss
 import numpy as np
+import pickle
+import os
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
-import pandas as pd
-import ast
-import re
 
-class VideoSearchEngine:
-    def __init__(self, pickle_file: str = "metadata_mapping.pkl", csv_file: str = "final_embeddings.csv"):
-        """Initialize the video search engine with optimized caching"""
-        self.model = None
-        self.embeddings_cache = None
-        self.metadata_cache = None
+class FAISSVectorDB:
+    def __init__(self, db_path="./faiss_videos_db"):
+        self.db_path = db_path
+        self.index_file = os.path.join(db_path, "faiss.index")
+        self.metadata_file = os.path.join(db_path, "metadata.pkl")
+        self.index = None
+        self.metadata = []
+        self.documents = []
+        self.embedding_model = None
         
-        # Load components
+        self._load_index()
         self._load_embedding_model()
-        self._load_and_cache_data(pickle_file, csv_file)
+    
+    def _load_index(self):
+        """Load FAISS index and metadata"""
+        try:
+            if os.path.exists(self.index_file) and os.path.exists(self.metadata_file):
+                self.index = faiss.read_index(self.index_file)
+                with open(self.metadata_file, 'rb') as f:
+                    data = pickle.load(f)
+                    self.metadata = data.get('metadata', [])
+                    self.documents = data.get('documents', [])
+                print(f"✅ Loaded FAISS database with {len(self.metadata)} videos")
+            else:
+                print("❌ FAISS index not found. Please run vector.py first.")
+                exit(1)
+        except Exception as e:
+            print(f"❌ Error loading FAISS index: {e}")
+            exit(1)
     
     def _load_embedding_model(self):
-        """Load the embedding model"""
+        """Load SentenceTransformer model for semantic search"""
         try:
-            self.model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
-            print("✅ Embedding model loaded")
+            self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
+            print("✅ Loaded SentenceTransformer model for semantic search")
         except Exception as e:
-            print(f"❌ Error loading model: {e}")
+            print(f"❌ Error loading embedding model: {e}")
+            print("❌ Semantic search requires sentence-transformers package")
+            exit(1)
     
-    def _load_and_cache_data(self, pickle_file: str, csv_file: str):
-        """Load and cache embeddings and metadata"""
+    def semantic_search(self, query, limit=10):
+        """Semantic search using SentenceTransformer embeddings and cosine similarity"""
         try:
-            # Load metadata
-            with open(pickle_file, 'rb') as f:
-                metadata_mapping = pickle.load(f)
+            # Generate query embedding
+            print(f"🧠 Generating embeddings for query: '{query}'")
+            query_embedding = self.embedding_model.encode([query])
             
-            # Load CSV data
-            df = pd.read_csv(csv_file)
+            results = []
             
-            # Create metadata lookup
-            video_details = metadata_mapping.get('video_details', [])
-            metadata_map = {vd.get('original_id'): vd for vd in video_details if vd.get('original_id')}
-            
-            # Parse embeddings
-            embedding_column = metadata_mapping.get('embedding_source', 'e_title_trans_tensor')
-            embeddings_list = []
-            metadata_list = []
-            
-            for _, row in df.iterrows():
-                video_id = row.get('id')
-                if not video_id or video_id not in metadata_map:
-                    continue
+            print("🔍 Calculating semantic similarities...")
+            for i, (doc, metadata) in enumerate(zip(self.documents, self.metadata)):
+                # Generate document embedding
+                doc_embedding = self.embedding_model.encode([doc])
                 
-                embedding_str = row.get(embedding_column, '')
-                if pd.isna(embedding_str) or not embedding_str:
-                    continue
+                # Calculate cosine similarity
+                similarity = cosine_similarity(query_embedding, doc_embedding)[0][0]
                 
-                embedding = self._parse_embedding(embedding_str)
-                if embedding is not None:
-                    embeddings_list.append(embedding)
-                    metadata = metadata_map[video_id]
-                    # Ensure title is a string
-                    title = metadata.get('title', '')
-                    if not isinstance(title, str):
-                        title = str(title) if not pd.isna(title) else ''
-                    
-                    metadata_list.append({
-                        'video_id': video_id,
-                        'title': title,
-                        'channel_title': metadata.get('channel', ''),
-                        'view_count': metadata.get('view_count', 0)
-                    })
+                # Check for keyword matches for additional context
+                title = metadata.get('title', '').lower()
+                transcript_lower = doc.lower()
+                query_lower = query.lower()
+                
+                keyword_in_title = query_lower in title
+                keyword_in_transcript = query_lower in transcript_lower
+                
+                results.append({
+                    'id': metadata.get('original_id'),
+                    'document': doc,
+                    'metadata': metadata,
+                    'similarity_score': float(similarity),
+                    'keyword_in_title': keyword_in_title,
+                    'keyword_in_transcript': keyword_in_transcript,
+                    'title': metadata.get('title', ''),
+                    'channel': metadata.get('channel_title', ''),
+                    'views': metadata.get('view_count', 'N/A'),
+                    'duration': metadata.get('duration', 'N/A')
+                })
             
-            if embeddings_list:
-                self.embeddings_cache = np.array(embeddings_list)
-                self.metadata_cache = metadata_list
-                print(f"✅ Cached {len(embeddings_list)} embeddings")
-            else:
-                print("❌ No embeddings loaded")
-                
+            # Sort by semantic similarity (highest first)
+            results.sort(key=lambda x: x['similarity_score'], reverse=True)
+            return results[:limit]
+            
         except Exception as e:
-            print(f"❌ Error loading data: {e}")
+            print(f"❌ Semantic search error: {e}")
+            return []
     
-    def _parse_embedding(self, tensor_str: str):
-        """Parse embedding string to numpy array"""
-        if not tensor_str or pd.isna(tensor_str):
-            return None
-        
-        tensor_str = str(tensor_str).strip()
-        
-        # Handle tensor([...]) format
-        if tensor_str.startswith('tensor(') and tensor_str.endswith(')'):
-            try:
-                content = tensor_str[7:-1].strip()
-                if content.startswith('[') and content.endswith(']'):
-                    content = content[1:-1]
-                numbers = [float(x) for x in content.split(',')]
-                if len(numbers) == 384:
-                    return np.array(numbers, dtype=np.float32)
-            except (ValueError, AttributeError):
-                pass
-        
-        # Handle list format
-        elif tensor_str.startswith('[') and tensor_str.endswith(']'):
-            try:
-                parsed = ast.literal_eval(tensor_str)
-                if isinstance(parsed, list) and len(parsed) == 384:
-                    return np.array(parsed, dtype=np.float32)
-            except (ValueError, SyntaxError):
-                pass
-        
+    def get_document_by_id(self, doc_id):
+        """Get document by ID"""
+        for i, metadata in enumerate(self.metadata):
+            if metadata.get('original_id') == doc_id:
+                return {
+                    'id': doc_id,
+                    'document': self.documents[i],
+                    'metadata': metadata
+                }
         return None
+
+def display_semantic_results(results, query):
+    """Display semantic search results in a formatted way"""
+    if not results:
+        print(f"❌ No results found for '{query}'")
+        return
     
-    def _expand_query(self, query: str) -> str:
-        """Expand query with synonyms and related terms"""
-        # Add context words to make query more descriptive
+    print(f"\n🎯 Found {len(results)} most relevant results for: '{query}'")
+    print("=" * 120)
+    
+    for i, result in enumerate(results, 1):
+        print(f"\n{i}. 📹 VIDEO RESULT")
+        print(f"   🆔 ID: {result['id']}")
+        print(f"   📺 Title: {result['title']}")
+        print(f"   🏢 Channel: {result['channel']}")
+        print(f"   👀 Views: {result['views']}")
+        print(f"   ⏱️ Duration: {result['duration']}")
+        print(f"   🧠 Semantic Similarity: {result['similarity_score']:.4f}")
+        
+        # Show keyword match indicators
+        keyword_indicators = []
+        if result['keyword_in_title']:
+            keyword_indicators.append("✅ Keyword in Title")
+        if result['keyword_in_transcript']:
+            keyword_indicators.append("✅ Keyword in Transcript")
+        
+        if keyword_indicators:
+            print(f"   🔍 {', '.join(keyword_indicators)}")
+        
+        # Show relevance interpretation
+        similarity = result['similarity_score']
+        if similarity >= 0.8:
+            relevance = "🎯 Highly Relevant"
+        elif similarity >= 0.6:
+            relevance = "✅ Very Relevant"
+        elif similarity >= 0.4:
+            relevance = "⚠️  Moderately Relevant"
+        elif similarity >= 0.2:
+            relevance = "📝 Somewhat Relevant"
+        else:
+            relevance = "🔍 Low Relevance"
+        
+        print(f"   📊 Relevance: {relevance}")
+        
+        # Show most relevant snippet from transcript
+        transcript = result['document']
         query_lower = query.lower()
         
-        # Common expansions for video search
-        expansions = {
-            'tutorial': 'tutorial guide how to learn',
-            'review': 'review opinion analysis',
-            'vlog': 'vlog daily life video blog',
-            'gaming': 'gaming gameplay video game',
-            'music': 'music song audio',
-            'cooking': 'cooking recipe food',
-            'fitness': 'fitness workout exercise training',
-            'travel': 'travel adventure journey trip',
-            'tech': 'technology tech gadget',
-            'news': 'news latest update',
-        }
+        # Find the best matching segment
+        sentences = transcript.split('.')
+        best_sentence = ""
+        best_score = 0
         
-        # Check if query contains any expansion triggers
-        for key, expansion in expansions.items():
-            if key in query_lower and len(query.split()) <= 2:
-                return expansion
+        for sentence in sentences:
+            if len(sentence.strip()) > 20:  # Avoid very short sentences
+                sentence_embedding = result['embedding_model'].encode([sentence])
+                query_embedding = result['embedding_model'].encode([query])
+                sentence_similarity = cosine_similarity(query_embedding, sentence_embedding)[0][0]
+                
+                if sentence_similarity > best_score:
+                    best_score = sentence_similarity
+                    best_sentence = sentence.strip()
         
-        return query
-    
-    def _get_query_embedding(self, query: str):
-        """Convert query to embedding with query expansion"""
-        if self.model is None:
-            return None
-        try:
-            # Expand query for better matching
-            expanded_query = self._expand_query(query)
-            return self.model.encode(expanded_query, convert_to_tensor=False).astype(np.float32)
-        except Exception as e:
-            print(f"❌ Error generating embedding: {e}")
-            return None
-    
-    def _calculate_keyword_boost(self, query: str, title: str) -> float:
-        """Calculate keyword matching boost"""
-        # Handle non-string titles
-        if not isinstance(title, str) or not title:
-            return 0.0
+        if best_sentence and len(best_sentence) > 0:
+            # Truncate if too long
+            if len(best_sentence) > 200:
+                best_sentence = best_sentence[:200] + "..."
+            print(f"   💡 Key Insight: {best_sentence}")
+        else:
+            # Fallback: show beginning of transcript
+            preview = transcript[:150] + "..." if len(transcript) > 150 else transcript
+            print(f"   📄 Preview: {preview}")
         
-        try:
-            query_words = set(re.findall(r'\w+', query.lower()))
-            title_words = set(re.findall(r'\w+', title.lower()))
-            
-            if not query_words:
-                return 0.0
-            
-            # Calculate word overlap with higher boost
-            overlap = len(query_words & title_words)
-            
-            # Progressive boost: more matches = higher boost
-            if overlap == len(query_words):
-                # All query words found - give maximum boost
-                boost = 0.30
-            elif overlap > 0:
-                # Partial match - scale boost
-                boost = (overlap / len(query_words)) * 0.25
-            else:
-                boost = 0.0
-            
-            return boost
-        except Exception:
-            return 0.0
-    
-    def search(self, query: str, top_k: int = 5, use_boost: bool = True):
-        """Search for similar videos with enhanced scoring"""
-        if self.embeddings_cache is None or self.metadata_cache is None:
-            print("❌ Search engine not initialized")
-            return []
-        
-        query_embedding = self._get_query_embedding(query)
-        if query_embedding is None:
-            return []
-        
-        # Calculate base similarities
-        similarities = cosine_similarity([query_embedding], self.embeddings_cache)[0]
-        
-        # Apply keyword boost if enabled
-        if use_boost:
-            for idx, metadata in enumerate(self.metadata_cache):
-                keyword_boost = self._calculate_keyword_boost(query, metadata['title'])
-                similarities[idx] = min(1.0, similarities[idx] + keyword_boost)
-        
-        # Get top K results
-        top_indices = np.argsort(similarities)[-top_k:][::-1]
-        
-        results = []
-        for idx in top_indices:
-            metadata = self.metadata_cache[idx]
-            results.append({
-                'video_id': metadata['video_id'],
-                'title': metadata['title'],
-                'channel_title': metadata['channel_title'],
-                'similarity_score': float(similarities[idx]),
-                'view_count': metadata['view_count']
-            })
-        
-        return results
-    
-    def display_results(self, results: list, query: str):
-        """Display search results"""
-        if not results:
-            print(f"❌ No results found for: '{query}'")
-            return
-        
-        print(f"\n🎬 TOP {len(results)} VIDEOS FOR: '{query}'")
-        print("=" * 60)
-        
-        for i, video in enumerate(results, 1):
-            print(f"\n🏆 Rank #{i} (Score: {video['similarity_score']:.1%})")
-            print(f"   📺 {video['title']}")
-            print(f"   👨‍💼 {video['channel_title']}")
-            print(f"   🆔 {video['video_id']}")
-            print(f"   👀 {video['view_count']} views")
+        print("-" * 120)
 
 def main():
-    """Main function to run the search engine"""
-    print("🚀 Initializing Enhanced Video Search Engine...")
-    search_engine = VideoSearchEngine()
+    """Main function - automatically uses semantic search"""
+    print("🚀 Starting Semantic Video Search Engine")
+    print("=" * 50)
+    
+    # Load database and model
+    print("🔄 Initializing system...")
+    faiss_db = FAISSVectorDB("./faiss_videos_db")
+    
+    if faiss_db.index is None or faiss_db.embedding_model is None:
+        print("❌ Failed to initialize search engine")
+        return
+    
+    print("✅ System ready for semantic search!")
+    print("\n💡 Enter your search query and press Enter")
+    print("   Example: 'machine learning tutorial', 'python programming', 'data science'")
+    print("   Type 'exit' or 'quit' to stop\n")
     
     while True:
-        print("\n" + "="*50)
-        print("🎥 VIDEO SEARCH ENGINE (Enhanced Scoring)")
-        print("="*50)
+        print("\n" + "=" * 50)
+        query = input("🔍 Enter your search query: ").strip()
         
-        query = input("\n🔍 Enter search query (or 'quit' to exit): ").strip()
-        
-        if query.lower() in ['quit', 'exit', 'q']:
-            print("👋 Goodbye!")
+        if query.lower() in ['exit', 'quit', 'q']:
+            print("👋 Thank you for using Semantic Video Search!")
             break
         
         if not query:
-            print("❌ Please enter a query")
+            print("❌ Please enter a search query")
             continue
         
-        # Perform search with enhanced scoring
-        results = search_engine.search(query, top_k=5, use_boost=True)
-        search_engine.display_results(results, query)
+        # Ask for number of results
+        limit_input = input("📊 Number of results to show (default 5): ").strip()
+        try:
+            limit = int(limit_input) if limit_input else 5
+        except:
+            limit = 5
+            print("⚠️  Using default: 5 results")
+        
+        print(f"\n🧠 Searching for: '{query}'")
+        print("⏳ Processing with AI semantic search...")
+        
+        # Perform semantic search
+        results = faiss_db.semantic_search(query, limit=limit)
+        
+        # Display results
+        display_semantic_results(results, query)
+        
+        # Show summary statistics
+        if results:
+            avg_similarity = sum(r['similarity_score'] for r in results) / len(results)
+            max_similarity = max(r['similarity_score'] for r in results)
+            min_similarity = min(r['similarity_score'] for r in results)
+            
+            print(f"\n📈 SEARCH SUMMARY:")
+            print(f"   Average Similarity: {avg_similarity:.4f}")
+            print(f"   Highest Similarity: {max_similarity:.4f}")
+            print(f"   Lowest Similarity: {min_similarity:.4f}")
+            
+            # Count keyword matches
+            title_matches = sum(1 for r in results if r['keyword_in_title'])
+            transcript_matches = sum(1 for r in results if r['keyword_in_transcript'])
+            print(f"   Keyword in Titles: {title_matches}/{len(results)}")
+            print(f"   Keyword in Transcripts: {transcript_matches}/{len(results)}")
+        
+        # Ask if user wants to search again
+        continue_search = input("\n🔍 Search again? (y/n): ").strip().lower()
+        if continue_search not in ['y', 'yes', '']:
+            print("👋 Thank you for using Semantic Video Search!")
+            break
 
 if __name__ == "__main__":
     main()

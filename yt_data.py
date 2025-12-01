@@ -3,6 +3,9 @@ import io
 import pandas as pd
 from googleapiclient.discovery import build
 from datetime import datetime
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 # Fix Windows console encoding
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
@@ -127,7 +130,7 @@ def get_channel_videos(api_key, channel_id, max_results=50):
     return all_videos
 
 # Configuration
-API_KEY = ""
+API_KEY = os.getenv("YOUTUBE_API_KEY")
 CHANNEL_ID = "UCsT0YIqwnpJCM-mx7-gSA4Q"  # TEDx Talks
 MAX_RESULTS = 50
 
@@ -145,7 +148,7 @@ if videos:
         df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0).astype(int)
     
     # Save to CSV
-    filename = "Tedx_talks_data(1).csv"
+    filename = "Tedx_talks_data.csv"
     df.to_csv(filename, index=False, encoding='utf-8')
     
     print(f"\n✅ Data saved to: {filename}")
