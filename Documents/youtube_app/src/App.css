@@ -1,0 +1,94 @@
+/* App.css */
+
+/* Page & container */
+body, html, #root {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #EFECE3; /* page background */
+  min-height: 100vh;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 40px;
+}
+
+/* Titles */
+.title {
+  color: #4A70A9;
+  font-size: 3rem;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+/* Card for each section */
+.card {
+  background-color: #8FABD4;
+  padding: 30px 40px;
+  margin: 20px 0;
+  border-radius: 15px;
+  text-align: center;
+  width: 70%;
+  max-width: 800px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  color: #000000; /* text color */
+}
+
+/* Headings inside card */
+.card h2 {
+  color: #000000;
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+/* Input fields */
+input {
+  width: 80%;
+  max-width: 500px;
+  padding: 12px;
+  font-size: 1.2rem;
+  border-radius: 8px;
+  border: 1px solid #4A70A9;
+  margin-bottom: 15px;
+  text-align: center;
+  color: #000000;
+}
+
+/* Buttons */
+button {
+  background-color: #4A70A9;
+  color: #EFECE3;
+  font-size: 1.2rem;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  background-color: #000000;
+  color: #EFECE3;
+}
+
+/* Video info or summary box */
+.video-box, .summary-box {
+  margin-top: 20px;
+  text-align: left;
+  background-color: #EFECE3;
+  color: #000000;
+  padding: 15px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+}
+
+/* Status messages */
+.status {
+  margin-top: 20px;
+  font-size: 1.1rem;
+  color: #000000;
+}
