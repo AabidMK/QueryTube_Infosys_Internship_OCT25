@@ -1,20 +1,29 @@
 from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import chromadb
 import os
 import csv
 import re
 import chardet
 from google import genai
+import chromadb
 
 # ---------------- CONFIG ----------------
-VECTOR_DB_PATH = "\chroma_db"
+VECTOR_DB_PATH = "chroma_db"
 COLLECTION_NAME = "video_analysis_collection"
 
-os.environ["GEMINI_API_KEY"] = "API_kEY"
+os.environ["GEMINI_API_KEY"] = "API_KEY_HERE"  # Replace with your actual Gemini API key
 MODEL_NAME = "gemini-2.5-flash"
 EMBED_MODEL = "text-embedding-004"
+
+# Define custom embedding function
+def embed_function(texts):
+    client_gem = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
+    embeddings = []
+    for text in texts:
+        embed_res = client_gem.models.embed_content(model=EMBED_MODEL, contents=text)
+        embeddings.append(embed_res.embeddings[0].values)
+    return embeddings
 
 # ---------------- CHROMA INIT ----------------
 try:
@@ -22,7 +31,11 @@ try:
     collection = client.get_collection(name=COLLECTION_NAME)
 except:
     client = chromadb.PersistentClient(path=VECTOR_DB_PATH)
-    collection = client.get_or_create_collection(name=COLLECTION_NAME)
+    collection = client.create_collection(
+        name=COLLECTION_NAME,
+        embedding_function=embed_function,  
+        metadata={"dimension": 384}  
+    )
 
 # ---------------- FASTAPI APP ----------------
 app = FastAPI(title="YouTube VectorDB + Gemini API")
@@ -143,7 +156,19 @@ def search(req: SearchRequest):
         if not query:
             raise HTTPException(status_code=400, detail="Query required")
 
-        results = collection.query(query_texts=[query], n_results=10, include=["documents", "metadatas", "distances"])
+        # Manually embed the query using the same model
+        client_gem = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
+        embed_res = client_gem.models.embed_content(model=EMBED_MODEL, contents=query)
+        query_embedding = embed_res.embeddings[0].values
+        
+        print(f"Query embedding dimension: {len(query_embedding)}")  # Debug
+
+        # Use query_embeddings instead of query_texts
+        results = collection.query(
+            query_embeddings=[query_embedding],
+            n_results=10,
+            include=["documents", "metadatas", "distances"]
+        )
         response = []
 
         for i in range(len(results["ids"][0])):
@@ -159,24 +184,24 @@ def search(req: SearchRequest):
 
             if isinstance(view_count, (int, float)) and view_count >= 0:
                 if view_count >= 1_000_000:
-                    formatted_views = f"{view_count/1_000_000:.1f}M"
+                    views_fmt = f"{view_count / 1_000_000:.1f}M"
                 elif view_count >= 1_000:
-                    formatted_views = f"{view_count/1_000:.1f}K"
+                    views_fmt = f"{view_count / 1_000:.1f}K"
                 else:
-                    formatted_views = str(int(view_count))
+                    views_fmt = str(view_count)
             else:
-                formatted_views = "Not available"
+                views_fmt = "N/A"
 
             response.append({
                 "video_id": vid,
                 "title": title,
                 "channel_title": channel,
-                "view_count": formatted_views,
+                "view_count": views_fmt,
                 "duration": duration,
                 "thumbnail": youtube_thumbnail_url(vid),
                 "youtube_url": youtube_watch_url(vid),
-                "snippet": (doc[:250] + "...") if doc and len(doc) > 250 else doc,
-                "score": dist
+                "score": 1 - dist,
+                "transcript_snippet": doc[:300] if doc else ""
             })
 
         # Top 5 by similarity
