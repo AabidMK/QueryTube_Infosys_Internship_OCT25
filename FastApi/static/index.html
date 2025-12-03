@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QueryTube - YouTube Semantic Search</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-size: 3em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .upload-section {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .upload-section:hover {
+            transform: translateY(-5px);
+        }
+
+        .upload-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f8f9ff;
+        }
+
+        .upload-area:hover,
+        .upload-area.dragover {
+            background: #667eea;
+            color: white;
+            border-color: #764ba2;
+        }
+
+        .upload-area.dragover {
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .upload-text {
+            font-size: 1.1em;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .upload-subtext {
+            font-size: 0.9em;
+            opacity: 0.7;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .file-name {
+            margin-top: 15px;
+            padding: 10px 15px;
+            background: #e8eaf6;
+            border-radius: 5px;
+            color: #667eea;
+            font-weight: 600;
+            display: none;
+        }
+
+        .file-name.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-upload {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-upload:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-upload:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .search-section {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-section h2 {
+            color: #667eea;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+        }
+
+        .search-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .search-input-wrapper {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.1);
+        }
+
+        input[type="number"] {
+            max-width: 100px;
+        }
+
+        .btn-search {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            align-self: flex-end;
+        }
+
+        .btn-search:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-search:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results-section {
+            margin-top: 30px;
+        }
+
+        .results-header {
+            color: #333;
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .results-count {
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .video-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            animation: cardAppear 0.5s ease;
+        }
+
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .video-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.2);
+        }
+
+        .video-rank {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1em;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .video-thumbnail {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            overflow: hidden;
+        }
+
+        .video-thumbnail img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .video-thumbnail-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .video-rank {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1em;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            z-index: 10;
+        }
+
+        .video-title {
+            color: #333;
+            font-weight: 600;
+            font-size: 1em;
+            line-height: 1.3;
+        }
+
+        .video-body {
+            padding: 20px;
+        }
+
+        .video-channel {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 0.95em;
+            margin-bottom: 12px;
+        }
+
+        .video-summary {
+            background: #f8f9ff;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 12px 0;
+            font-size: 0.9em;
+            color: #555;
+            line-height: 1.5;
+            max-height: 80px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+
+        .summary-label {
+            font-weight: 600;
+            color: #667eea;
+            font-size: 0.85em;
+            margin-bottom: 5px;
+        }
+
+        .similarity-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .similarity-label {
+            font-size: 0.9em;
+            color: #666;
+            font-weight: 600;
+            min-width: 80px;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .video-id {
+            font-size: 0.85em;
+            color: #999;
+            margin-top: 12px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .status-message {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            animation: statusAppear 0.3s ease;
+        }
+
+        @keyframes statusAppear {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status-loading {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 3px solid rgba(0, 0, 0, 0.1);
+            border-top-color: currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .empty-text {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .upload-section,
+            .search-section {
+                padding: 25px;
+            }
+
+            .search-container {
+                flex-direction: column;
+            }
+
+            .btn-search {
+                width: 100%;
+                align-self: auto;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .video-card:hover {
+                transform: translateY(-5px);
+            }
+        }
+
+        .progress-container {
+            display: none;
+            margin: 20px 0;
+        }
+
+        .progress-container.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        .progress-bar-large {
+            width: 100%;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill-large {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            animation: loading 1.5s ease-in-out infinite;
+        }
+
+        @keyframes loading {
+            0% {
+                width: 0%;
+            }
+            50% {
+                width: 100%;
+            }
+            100% {
+                width: 100%;
+            }
+        }
+
+        .progress-text {
+            text-align: center;
+            color: #667eea;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🎬 QueryTube</h1>
+        <p class="subtitle">YouTube Semantic Search Powered by AI</p>
+    </header>
+
+    <div class="container">
+        <!-- Upload Section -->
+        <div class="upload-section">
+            <h2>📤 Upload YouTube Data</h2>
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📁</div>
+                <div class="upload-text">Drag & drop your CSV file here</div>
+                <div class="upload-subtext">or click to select a file</div>
+                <input type="file" id="fileInput" accept=".csv">
+                <div class="file-name" id="fileName"></div>
+            </div>
+            <div class="button-group">
+                <button class="btn-upload" id="uploadBtn" disabled>Upload CSV</button>
+            </div>
+            <div class="progress-container" id="uploadProgress">
+                <div class="progress-bar-large">
+                    <div class="progress-fill-large"></div>
+                </div>
+                <div class="progress-text" id="uploadText">Uploading...</div>
+            </div>
+            <div id="uploadStatus"></div>
+        </div>
+
+        <!-- Search Section -->
+        <div class="search-section">
+            <h2>🔍 Search Videos</h2>
+            <div class="search-container">
+                <div class="search-input-wrapper">
+                    <input type="text" id="searchQuery" placeholder="Enter your search query (e.g., artificial intelligence, machine learning, etc.)">
+                </div>
+                <div>
+                    <input type="number" id="topK" value="5" min="1" max="50" placeholder="Number of results">
+                </div>
+                <button class="btn-search" id="searchBtn" disabled>Search</button>
+            </div>
+            <div class="progress-container" id="searchProgress">
+                <div class="progress-bar-large">
+                    <div class="progress-fill-large"></div>
+                </div>
+                <div class="progress-text">Searching...</div>
+            </div>
+            <div id="searchStatus"></div>
+
+            <!-- Results Section -->
+            <div class="results-section" id="resultsSection" style="display: none;">
+                <div class="results-header">
+                    📊 Results for "<span id="queryDisplay"></span>"
+                    <span class="results-count" id="resultCount">0</span>
+                </div>
+                <div class="results-grid" id="resultsGrid"></div>
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state" id="emptyState">
+                <div class="empty-icon">🎯</div>
+                <div class="empty-text">No results yet. Upload a CSV file and perform a search to get started!</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const fileName = document.getElementById('fileName');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const uploadStatus = document.getElementById('uploadStatus');
+        const uploadProgress = document.getElementById('uploadProgress');
+        const searchBtn = document.getElementById('searchBtn');
+        const searchQuery = document.getElementById('searchQuery');
+        const topK = document.getElementById('topK');
+        const resultsSection = document.getElementById('resultsSection');
+        const resultsGrid = document.getElementById('resultsGrid');
+        const resultsCount = document.getElementById('resultCount');
+        const queryDisplay = document.getElementById('queryDisplay');
+        const searchStatus = document.getElementById('searchStatus');
+        const searchProgress = document.getElementById('searchProgress');
+        const emptyState = document.getElementById('emptyState');
+
+        let selectedFile = null;
+
+        // Drag and drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                selectFile(files[0]);
+            }
+        });
+
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                selectFile(e.target.files[0]);
+            }
+        });
+
+        function selectFile(file) {
+            if (file.type !== 'text/csv' && !file.name.endsWith('.csv')) {
+                showStatus('uploadStatus', 'Please select a valid CSV file', 'error');
+                return;
+            }
+            selectedFile = file;
+            fileName.textContent = `✓ Selected: ${file.name}`;
+            fileName.classList.add('show');
+            uploadBtn.disabled = false;
+        }
+
+        uploadBtn.addEventListener('click', uploadFile);
+
+        function uploadFile() {
+            if (!selectedFile) return;
+
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+
+            uploadBtn.disabled = true;
+            uploadProgress.classList.add('show');
+            uploadStatus.innerHTML = '';
+
+            fetch('/ingest', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                uploadProgress.classList.remove('show');
+                if (data.status === 'success') {
+                    showStatus('uploadStatus', `✓ ${data.message}`, 'success');
+                    searchBtn.disabled = false;
+                    setTimeout(() => {
+                        fileName.textContent = '';
+                        fileName.classList.remove('show');
+                        fileInput.value = '';
+                        selectedFile = null;
+                    }, 2000);
+                } else {
+                    showStatus('uploadStatus', `✗ ${data.message}`, 'error');
+                    uploadBtn.disabled = false;
+                }
+            })
+            .catch(error => {
+                uploadProgress.classList.remove('show');
+                showStatus('uploadStatus', `✗ Error uploading file: ${error.message}`, 'error');
+                uploadBtn.disabled = false;
+            });
+        }
+
+        searchBtn.addEventListener('click', performSearch);
+
+        function performSearch() {
+            const query = searchQuery.value.trim();
+            const k = parseInt(topK.value) || 5;
+
+            if (!query) {
+                showStatus('searchStatus', 'Please enter a search query', 'error');
+                return;
+            }
+
+            searchBtn.disabled = true;
+            searchProgress.classList.add('show');
+            searchStatus.innerHTML = '';
+            emptyState.style.display = 'none';
+
+            fetch(`/search?query=${encodeURIComponent(query)}&k=${k}`)
+            .then(response => response.json())
+            .then(data => {
+                searchProgress.classList.remove('show');
+                
+                if (data.results && data.results.length > 0) {
+                    displayResults(data);
+                    resultsSection.style.display = 'block';
+                    showStatus('searchStatus', `✓ Found ${data.results.length} relevant videos`, 'success');
+                } else {
+                    resultsSection.style.display = 'none';
+                    showStatus('searchStatus', '✗ No results found. Try a different query.', 'error');
+                    emptyState.style.display = 'block';
+                }
+                searchBtn.disabled = false;
+            })
+            .catch(error => {
+                searchProgress.classList.remove('show');
+                showStatus('searchStatus', `✗ Error searching: ${error.message}`, 'error');
+                searchBtn.disabled = false;
+                emptyState.style.display = 'block';
+            });
+        }
+
+        function displayResults(data) {
+            queryDisplay.textContent = data.query;
+            resultsCount.textContent = data.results.length;
+            resultsGrid.innerHTML = '';
+
+            data.results.forEach((result, index) => {
+                const card = createVideoCard(result);
+                resultsGrid.appendChild(card);
+            });
+        }
+
+        function createVideoCard(result) {
+            const card = document.createElement('div');
+            card.className = 'video-card';
+            
+            const similarityPercent = (result.similarity_score * 100).toFixed(1);
+            
+            // Generate a summary if not provided
+            let summary = result.summary || result.description || 'No summary available';
+            if (summary && summary.length > 150) {
+                summary = summary.substring(0, 150) + '...';
+            }
+
+            // YouTube video URL for thumbnail
+            const videoId = result.video_id;
+            const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+            
+            const thumbnailHtml = `
+                <div class="video-thumbnail">
+                    <div class="video-rank">#${result.rank}</div>
+                    <img src="${thumbnailUrl}" alt="${escapeHtml(result.title)}" 
+                         onload="this.style.display='block'" 
+                         onerror="this.style.display='none'; this.parentElement.querySelector('.video-thumbnail-placeholder').style.display='flex'">
+                    <div class="video-thumbnail-placeholder" style="display:none">🎥</div>
+                </div>
+            `;
+            
+            const bodyHtml = `
+                <div class="video-body">
+                    <div class="video-title">${escapeHtml(result.title)}</div>
+                    <div class="video-channel">📺 ${escapeHtml(result.channel)}</div>
+                    <div class="summary-label">Summary</div>
+                    <div class="video-summary">${escapeHtml(summary || 'No summary available')}</div>
+                    <div class="similarity-bar">
+                        <div class="similarity-label">Match</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${similarityPercent}%"></div>
+                        </div>
+                        <div class="similarity-label" style="min-width: 50px;">${similarityPercent}%</div>
+                    </div>
+                    <div class="video-id">ID: ${result.video_id}</div>
+                </div>
+            `;
+            
+            card.innerHTML = thumbnailHtml + bodyHtml;
+            return card;
+        }
+
+        function showStatus(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="status-message status-${type}">${message}</div>`;
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        // Enable search when enter is pressed
+        searchQuery.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !searchBtn.disabled) {
+                performSearch();
+            }
+        });
+    </script>
+</body>
+</html>
