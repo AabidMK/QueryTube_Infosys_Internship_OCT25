@@ -31,6 +31,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import SummarizeIcon from '@mui/icons-material/Summarize';
 import CloseIcon from '@mui/icons-material/Close';
+import InfoIcon from '@mui/icons-material/Info';
 import api from '../api';
 
 // Helper function to format duration
@@ -48,10 +49,21 @@ function SearchVideos() {
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  
+  // Summary dialog state
   const [summaryDialog, setSummaryDialog] = useState({
     open: false,
     videoId: null,
     summary: '',
+    loading: false,
+    error: null,
+  });
+
+  // Metadata dialog state
+  const [metadataDialog, setMetadataDialog] = useState({
+    open: false,
+    videoId: null,
+    metadata: null,
     loading: false,
     error: null,
   });
@@ -102,56 +114,102 @@ function SearchVideos() {
   };
 
   const handleSummarize = async (result) => {
-  console.log('Summarize clicked for video:', result.video_id || result.id);
-  
-  if (!result || !selectedDb) {
-    console.error('Missing video data or selected database');
-    return;
-  }
+    console.log('Summarize clicked for video:', result.video_id || result.id);
+    
+    if (!result || !selectedDb) {
+      console.error('Missing video data or selected database');
+      return;
+    }
 
-  setSummaryDialog({
-    open: true,
-    videoId: result.video_id || result.id,
-    loading: true,
-    summary: '',
-    error: null
-  });
-
-  try {
-    console.log('Sending request to summarize...');
-    const response = await api.post('/summarize', {
-      video_id: result.video_id || result.id,
-      collection_name: selectedDb
-      // Don't send the transcript, let backend fetch it
+    setSummaryDialog({
+      open: true,
+      videoId: result.video_id || result.id,
+      loading: true,
+      summary: '',
+      error: null
     });
-    
-    console.log('Received summary:', response.data);
-    setSummaryDialog(prev => ({
-      ...prev,
-      summary: response.data.summary || 'No summary available',
-      loading: false
-    }));
-  } catch (err) {
-    console.error('Summarization error:', err);
-    const errorMessage = err.response?.data?.detail || err.message || 'Failed to generate summary';
-    console.error('Error details:', errorMessage);
-    
-    setSummaryDialog(prev => ({
-      ...prev,
-      error: errorMessage,
-      loading: false,
-      summary: ''
-    }));
-  }
-};
 
+    try {
+      console.log('Sending request to summarize...');
+      const response = await api.post('/summarize', {
+        video_id: result.video_id || result.id,
+        collection_name: selectedDb
+      });
       
-  
+      console.log('Received summary:', response.data);
+      setSummaryDialog(prev => ({
+        ...prev,
+        summary: response.data.summary || 'No summary available',
+        loading: false
+      }));
+    } catch (err) {
+      console.error('Summarization error:', err);
+      const errorMessage = err.response?.data?.detail || err.message || 'Failed to generate summary';
+      console.error('Error details:', errorMessage);
+      
+      setSummaryDialog(prev => ({
+        ...prev,
+        error: errorMessage,
+        loading: false,
+        summary: ''
+      }));
+    }
+  };
+
   const handleCloseSummary = () => {
     setSummaryDialog({
       open: false,
       videoId: null,
       summary: '',
+      loading: false,
+      error: null,
+    });
+  };
+
+  const handleViewMetadata = async (result) => {
+    if (!result || !selectedDb) {
+      console.error('Missing video data or selected database');
+      return;
+    }
+
+    setMetadataDialog({
+      open: true,
+      videoId: result.video_id || result.id,
+      metadata: null,
+      loading: true,
+      error: null
+    });
+
+    try {
+      const response = await api.get('/video_metadata', {
+        params: {
+          collection_name: selectedDb,
+          video_id: result.video_id || result.id
+        }
+      });
+      
+      setMetadataDialog(prev => ({
+        ...prev,
+        metadata: response.data,
+        loading: false
+      }));
+    } catch (err) {
+      console.error('Error fetching metadata:', err);
+      const errorMessage = err.response?.data?.detail || err.message || 'Failed to fetch metadata';
+      
+      setMetadataDialog(prev => ({
+        ...prev,
+        error: errorMessage,
+        loading: false
+      }));
+    }
+  };
+
+  const handleCloseMetadata = () => {
+    setMetadataDialog({
+      open: false,
+      videoId: null,
+      metadata: null,
       loading: false,
       error: null,
     });
@@ -310,25 +368,40 @@ function SearchVideos() {
                       )}
                     </CardContent>
                     <Box sx={{ p: 2, pt: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      
-                          <Tooltip title="Generate summary">
-                            <span> {/* Wrapper span for tooltip to work properly */}
-                              <Button
-                                size="small"
-                                color="secondary"
-                                variant="outlined"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  handleSummarize(result);
-                                }}
-                                startIcon={<SummarizeIcon />}
-                                sx={{ whiteSpace: 'nowrap' }}
-                              >
-                                Summarize
-                              </Button>
-                            </span>
-                          </Tooltip>
+                      <Box sx={{ display: 'flex', gap: 1 }}>
+                        <Tooltip title="Generate summary">
+                          <Button
+                            size="small"
+                            color="secondary"
+                            variant="outlined"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handleSummarize(result);
+                            }}
+                            startIcon={<SummarizeIcon />}
+                            sx={{ whiteSpace: 'nowrap' }}
+                          >
+                            Summarize
+                          </Button>
+                        </Tooltip>
+                        <Tooltip title="View metadata">
+                          <Button
+                            size="small"
+                            color="info"
+                            variant="outlined"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handleViewMetadata(result);
+                            }}
+                            startIcon={<InfoIcon />}
+                            sx={{ whiteSpace: 'nowrap' }}
+                          >
+                            Info
+                          </Button>
+                        </Tooltip>
+                      </Box>
                       <Button
                         size="small"
                         color="primary"
@@ -402,55 +475,87 @@ function SearchVideos() {
                   aria-label="close"
                   color="inherit"
                   size="small"
-                  onClick={handleCloseSummary}
+                  onClick={() => {
+                    setSummaryDialog(prev => ({ ...prev, error: null }));
+                  }}
                 >
                   <CloseIcon fontSize="inherit" />
                 </IconButton>
               }
             >
-              <Box>
-                <Typography variant="subtitle2">Error generating summary</Typography>
-                <Typography variant="body2">{summaryDialog.error}</Typography>
-              </Box>
+              {summaryDialog.error}
             </Alert>
           ) : (
-            <Box sx={{ mt: 1, maxHeight: '60vh', overflowY: 'auto' }}>
-              <ReactMarkdown
-                components={{
-                  p: ({node, ...props}) => <Typography paragraph {...props} sx={{ mb: 2, lineHeight: 1.6 }} />,
-                  h1: ({node, ...props}) => <Typography variant="h4" gutterBottom {...props} />,
-                  h2: ({node, ...props}) => <Typography variant="h5" gutterBottom {...props} />,
-                  h3: ({node, ...props}) => <Typography variant="h6" gutterBottom {...props} />,
-                  li: ({node, ...props}) => <li {...props} style={{marginBottom: 8}} />,
-                  a: ({node, ...props}) => <a {...props} target="_blank" rel="noopener noreferrer" style={{color: '#1976d2'}} />
-                }}
-                sx={{
-                  '& > *': {
-                    mb: 2,
-                    '&:last-child': { mb: 0 }
-                  },
-                  '& ul, & ol': {
-                    pl: 3,
-                    mb: 2
-                  },
-                  '& p': {
-                    mb: 2
-                  }
-                }}
-              >
-                {summaryDialog.summary}
-              </ReactMarkdown>
-            </Box>
+            <ReactMarkdown>{summaryDialog.summary}</ReactMarkdown>
           )}
         </DialogContent>
-        <DialogActions sx={{ p: 2 }}>
-          <Button 
-            onClick={handleCloseSummary} 
-            color="primary"
-            variant="outlined"
-          >
-            Close
-          </Button>
+        <DialogActions>
+          <Button onClick={handleCloseSummary}>Close</Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Metadata Dialog */}
+      <Dialog 
+        open={metadataDialog.open} 
+        onClose={handleCloseMetadata}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Typography variant="h6">Video Metadata</Typography>
+            <IconButton onClick={handleCloseMetadata} size="small">
+              <CloseIcon />
+            </IconButton>
+          </Box>
+        </DialogTitle>
+        <DialogContent>
+          {metadataDialog.loading ? (
+            <Box display="flex" justifyContent="center" my={4}>
+              <CircularProgress />
+            </Box>
+          ) : metadataDialog.error ? (
+            <Alert severity="error" sx={{ my: 2 }}>
+              {metadataDialog.error}
+            </Alert>
+          ) : metadataDialog.metadata ? (
+            <Box>
+              <Typography variant="subtitle1" gutterBottom>
+                <strong>Title:</strong> {metadataDialog.metadata.title}
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                <strong>Channel:</strong> {metadataDialog.metadata.channel}
+              </Typography>
+              <Typography variant="body2" gutterBottom>
+                <strong>Views:</strong> {parseInt(metadataDialog.metadata.view_count).toLocaleString()}
+              </Typography>
+              <Typography variant="body2" gutterBottom>
+                <strong>Duration:</strong> {formatDuration(metadataDialog.metadata.duration_seconds)}
+              </Typography>
+              <Divider sx={{ my: 2 }} />
+              <Typography variant="subtitle2" gutterBottom>
+                <strong>Transcript Preview:</strong>
+              </Typography>
+              <Box 
+                sx={{ 
+                  maxHeight: '300px', 
+                  overflowY: 'auto', 
+                  p: 1, 
+                  bgcolor: 'background.paper',
+                  borderRadius: 1,
+                  border: '1px solid',
+                  borderColor: 'divider'
+                }}
+              >
+                <Typography variant="body2" color="text.secondary">
+                  {metadataDialog.metadata.transcript || 'No transcript available'}
+                </Typography>
+              </Box>
+            </Box>
+          ) : null}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseMetadata}>Close</Button>
         </DialogActions>
       </Dialog>
     </Container>

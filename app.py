@@ -264,6 +264,35 @@ async def summarize_video(request: SummaryRequest):
 
 
 # ---------------------------------------------------
+# 🔍 Get Video Metadata
+# ---------------------------------------------------
+@app.get("/video_metadata")
+def get_video_metadata(collection_name: str = Query(..., description="Name of the database"),
+                      video_id: str = Query(..., description="ID of the video")):
+    """Get metadata for a specific video."""
+    collection_name = validate_db_name(collection_name)
+    client = get_client()
+    collection = client.get_collection(collection_name)
+    
+    try:
+        result = collection.get(ids=[video_id], include=["metadatas", "documents"])
+        if not result.get("metadatas"):
+            raise HTTPException(status_code=404, detail="Video not found")
+            
+        metadata = result["metadatas"][0]
+        return {
+            "video_id": video_id,
+            "title": metadata.get("title", "Unknown Title"),
+            "channel": metadata.get("channel_title", "Unknown Channel"),
+            "view_count": metadata.get("viewCount", 0),
+            "duration_seconds": metadata.get("duration", 0),
+            "transcript": result.get("documents", [""])[0]
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# ---------------------------------------------------
 # 🩺 Health Endpoint
 # ---------------------------------------------------
 @app.get("/health")
