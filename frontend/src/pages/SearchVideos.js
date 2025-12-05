@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import {
   Container,
@@ -26,12 +25,15 @@ import {
   DialogActions,
   IconButton,
   Tooltip,
+  InputAdornment
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import SummarizeIcon from '@mui/icons-material/Summarize';
 import CloseIcon from '@mui/icons-material/Close';
 import InfoIcon from '@mui/icons-material/Info';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import api from '../api';
 
 // Helper function to format duration
@@ -98,7 +100,6 @@ function SearchVideos() {
         `/search?collection_name=${encodeURIComponent(selectedDb)}&query=${encodeURIComponent(searchQuery)}`
       );
       
-      // Handle both array and object with results property
       const results = Array.isArray(response.data) 
         ? response.data 
         : (response.data?.results || []);
@@ -114,12 +115,7 @@ function SearchVideos() {
   };
 
   const handleSummarize = async (result) => {
-    console.log('Summarize clicked for video:', result.video_id || result.id);
-    
-    if (!result || !selectedDb) {
-      console.error('Missing video data or selected database');
-      return;
-    }
+    if (!result || !selectedDb) return;
 
     setSummaryDialog({
       open: true,
@@ -130,23 +126,18 @@ function SearchVideos() {
     });
 
     try {
-      console.log('Sending request to summarize...');
       const response = await api.post('/summarize', {
         video_id: result.video_id || result.id,
         collection_name: selectedDb
       });
       
-      console.log('Received summary:', response.data);
       setSummaryDialog(prev => ({
         ...prev,
         summary: response.data.summary || 'No summary available',
         loading: false
       }));
     } catch (err) {
-      console.error('Summarization error:', err);
       const errorMessage = err.response?.data?.detail || err.message || 'Failed to generate summary';
-      console.error('Error details:', errorMessage);
-      
       setSummaryDialog(prev => ({
         ...prev,
         error: errorMessage,
@@ -167,10 +158,7 @@ function SearchVideos() {
   };
 
   const handleViewMetadata = async (result) => {
-    if (!result || !selectedDb) {
-      console.error('Missing video data or selected database');
-      return;
-    }
+    if (!result || !selectedDb) return;
 
     setMetadataDialog({
       open: true,
@@ -194,9 +182,7 @@ function SearchVideos() {
         loading: false
       }));
     } catch (err) {
-      console.error('Error fetching metadata:', err);
       const errorMessage = err.response?.data?.detail || err.message || 'Failed to fetch metadata';
-      
       setMetadataDialog(prev => ({
         ...prev,
         error: errorMessage,
@@ -216,36 +202,53 @@ function SearchVideos() {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Typography variant="h4" component="h1" gutterBottom>
+    <Container maxWidth="lg" className="fade-in">
+      <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 800, mt: 2 }}>
         Search Videos
       </Typography>
 
-      <Paper sx={{ p: 3, mb: 4 }}>
+      <Paper 
+        elevation={0}
+        sx={{ 
+          p: 3, 
+          mb: 4, 
+          borderRadius: 4, 
+          backgroundColor: 'rgba(21, 26, 35, 0.6)', 
+          backdropFilter: 'blur(10px)',
+          border: '1px solid rgba(255,255,255,0.05)'
+        }}
+      >
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={12} sm={5}>
             <TextField
               fullWidth
-              label="Search query"
               variant="outlined"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-              placeholder="Enter your search query..."
+              placeholder="What are you looking for?"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon sx={{ color: 'text.secondary' }} />
+                  </InputAdornment>
+                ),
+              }}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
             <FormControl fullWidth>
-              <InputLabel id="database-select-label">Database</InputLabel>
+              <InputLabel id="database-select-label">Select Database</InputLabel>
               <Select
                 labelId="database-select-label"
                 value={selectedDb}
-                label="Database"
+                label="Select Database"
                 onChange={(e) => setSelectedDb(e.target.value)}
+                sx={{ borderRadius: 3 }}
               >
                 {databases.map((db) => (
                   <MenuItem key={db.name} value={db.name}>
-                    {db.name} ({db.record_count || 0} videos)
+                    {db.name} ({db.record_count || 0})
                   </MenuItem>
                 ))}
               </Select>
@@ -257,10 +260,9 @@ function SearchVideos() {
               variant="contained"
               color="primary"
               size="large"
-              startIcon={<SearchIcon />}
               onClick={handleSearch}
               disabled={!searchQuery.trim() || !selectedDb || loading}
-              sx={{ height: '56px' }}
+              sx={{ height: '56px', borderRadius: 3, fontSize: '1.1rem' }}
             >
               {loading ? 'Searching...' : 'Search'}
             </Button>
@@ -269,148 +271,186 @@ function SearchVideos() {
       </Paper>
 
       {error && (
-        <Alert severity="error" sx={{ mb: 3 }}>
+        <Alert severity="error" variant="filled" sx={{ mb: 3, borderRadius: 2 }}>
           {error}
         </Alert>
       )}
 
       {loading && (
-        <Box display="flex" justifyContent="center" my={4}>
-          <CircularProgress />
+        <Box display="flex" justifyContent="center" my={8}>
+          <CircularProgress size={60} thickness={2} sx={{ color: '#00f2ff' }} />
         </Box>
       )}
 
       {!loading && searchResults.length > 0 && (
-        <Box>
-          <Typography variant="h6" gutterBottom>
-            Found {searchResults.length} results
-          </Typography>
-          <Divider sx={{ mb: 3 }} />
+        <Box className="fade-in">
+          <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                Found <Box component="span" sx={{ color: '#00f2ff' }}>{searchResults.length}</Box> matches
+            </Typography>
+          </Box>
+          <Divider sx={{ mb: 3, borderColor: 'rgba(255,255,255,0.1)' }} />
           <Grid container spacing={3}>
             {searchResults.map((result) => (
               <Grid item xs={12} key={result.video_id || result.id}>
-                <Card sx={{ display: 'flex', height: '200px' }}>
-                  <CardMedia
-                    component="img"
+                <Card 
                     sx={{ 
-                      width: 300, 
-                      objectFit: 'cover',
-                      cursor: 'pointer'
+                        display: 'flex', 
+                        height: { xs: 'auto', md: '220px' },
+                        flexDirection: { xs: 'column', md: 'row' },
+                        overflow: 'visible'
                     }}
-                    image={result.thumbnail || `https://img.youtube.com/vi/${result.video_id || result.id}/hqdefault.jpg`}
-                    alt={result.title}
-                    onClick={() => window.open(`https://www.youtube.com/watch?v=${result.video_id || result.id}`, '_blank')}
-                  />
-                  <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
-                    <CardContent sx={{ flex: '1 0 auto' }}>
-                      <Typography 
-                        component="div" 
-                        variant="h6"
+                >
+                  <Box sx={{ position: 'relative', width: { xs: '100%', md: 320 }, flexShrink: 0 }}>
+                    <CardMedia
+                        component="img"
                         sx={{ 
-                          cursor: 'pointer',
-                          '&:hover': { textDecoration: 'underline' }
+                        width: '100%',
+                        height: '100%', 
+                        objectFit: 'cover',
+                        cursor: 'pointer',
+                        borderRadius: { xs: '16px 16px 0 0', md: '16px 0 0 16px' }
+                        }}
+                        image={result.thumbnail || `https://img.youtube.com/vi/${result.video_id || result.id}/hqdefault.jpg`}
+                        alt={result.title}
+                        onClick={() => window.open(`https://www.youtube.com/watch?v=${result.video_id || result.id}`, '_blank')}
+                    />
+                    <Box 
+                        sx={{ 
+                            position: 'absolute', 
+                            inset: 0, 
+                            bgcolor: 'rgba(0,0,0,0.3)', 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'center',
+                            opacity: 0,
+                            transition: 'opacity 0.2s',
+                            cursor: 'pointer',
+                            '&:hover': { opacity: 1 }
                         }}
                         onClick={() => window.open(`https://www.youtube.com/watch?v=${result.video_id || result.id}`, '_blank')}
-                      >
-                        {result.title}
-                      </Typography>
+                    >
+                        <PlayArrowIcon sx={{ fontSize: 60, color: '#fff', filter: 'drop-shadow(0 0 10px rgba(0,0,0,0.5))' }} />
+                    </Box>
+                  </Box>
+                  
+                  <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1, p: 2 }}>
+                    <CardContent sx={{ flex: '1 0 auto', p: '0 !important' }}>
+                      <Box display="flex" justifyContent="space-between" alignItems="flex-start">
+                        <Typography 
+                            component="div" 
+                            variant="h6"
+                            sx={{ 
+                            cursor: 'pointer',
+                            fontWeight: 700,
+                            lineHeight: 1.2,
+                            mb: 1,
+                            '&:hover': { color: '#00f2ff' },
+                            transition: 'color 0.2s'
+                            }}
+                            onClick={() => window.open(`https://www.youtube.com/watch?v=${result.video_id || result.id}`, '_blank')}
+                        >
+                            {result.title}
+                        </Typography>
+                        {result.similarity_score !== undefined && (
+                          <Chip
+                            size="small"
+                            label={`${(result.similarity_score * 100).toFixed(0)}% Match`}
+                            sx={{ 
+                                bgcolor: 'rgba(0, 242, 255, 0.1)', 
+                                color: '#00f2ff', 
+                                border: '1px solid rgba(0, 242, 255, 0.3)',
+                                fontWeight: 700
+                            }}
+                          />
+                        )}
+                      </Box>
+                      
                       <Typography 
-                        variant="subtitle1" 
+                        variant="subtitle2" 
                         color="text.secondary" 
-                        component="div"
-                        sx={{ 
-                          cursor: 'pointer',
-                          '&:hover': { textDecoration: 'underline' }
-                        }}
-                        onClick={() => window.open(`https://www.youtube.com/channel/${result.channel_id || ''}`, '_blank')}
+                        sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 0.5 }}
                       >
-                        {result.channel || result.channel_title}
+                        by <Box component="span" sx={{ color: '#fff' }}>{result.channel || result.channel_title}</Box>
                       </Typography>
-                      <Box sx={{ mt: 1, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+
+                      <Box sx={{ mb: 2, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                         {result.view_count !== undefined && (
                           <Chip
                             size="small"
-                            label={`👁️ ${parseInt(result.view_count || 0).toLocaleString()} views`}
+                            icon={<VisibilityIcon style={{ fontSize: 16 }} />}
+                            label={parseInt(result.view_count || 0).toLocaleString()}
                             variant="outlined"
+                            sx={{ borderRadius: 1 }}
                           />
                         )}
                         {result.duration_seconds && (
                           <Chip
                             size="small"
-                            label={`⏱️ ${formatDuration(result.duration_seconds)}`}
+                            icon={<AccessTimeIcon style={{ fontSize: 16 }} />}
+                            label={formatDuration(result.duration_seconds)}
                             variant="outlined"
-                          />
-                        )}
-                        {result.similarity_score !== undefined && (
-                          <Chip
-                            size="small"
-                            color="primary"
-                            label={`Relevance: ${(result.similarity_score * 100).toFixed(1)}%`}
-                            variant="outlined"
+                            sx={{ borderRadius: 1 }}
                           />
                         )}
                       </Box>
+                      
                       {result.transcript && (
                         <Typography 
                           variant="body2" 
                           color="text.secondary" 
                           sx={{ 
-                            mt: 1,
                             display: '-webkit-box',
                             WebkitLineClamp: 2,
                             WebkitBoxOrient: 'vertical',
                             overflow: 'hidden',
-                            textOverflow: 'ellipsis'
+                            fontStyle: 'italic',
+                            borderLeft: '3px solid #00f2ff',
+                            pl: 1.5
                           }}
                         >
-                          {result.transcript}
+                          "{result.transcript}"
                         </Typography>
                       )}
                     </CardContent>
-                    <Box sx={{ p: 2, pt: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Box sx={{ display: 'flex', gap: 1 }}>
-                        <Tooltip title="Generate summary">
-                          <Button
+                    
+                    <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
+                        <Button
+                            size="small"
+                            color="inherit"
+                            variant="outlined"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleViewMetadata(result);
+                            }}
+                            startIcon={<InfoIcon />}
+                            sx={{ borderRadius: 2, borderColor: 'rgba(255,255,255,0.2)' }}
+                        >
+                            Info
+                        </Button>
+                        <Button
                             size="small"
                             color="secondary"
                             variant="outlined"
                             onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              handleSummarize(result);
+                                e.stopPropagation();
+                                handleSummarize(result);
                             }}
                             startIcon={<SummarizeIcon />}
-                            sx={{ whiteSpace: 'nowrap' }}
-                          >
+                            sx={{ borderRadius: 2 }}
+                        >
                             Summarize
-                          </Button>
-                        </Tooltip>
-                        <Tooltip title="View metadata">
-                          <Button
+                        </Button>
+                        <Button
                             size="small"
-                            color="info"
-                            variant="outlined"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              handleViewMetadata(result);
-                            }}
-                            startIcon={<InfoIcon />}
-                            sx={{ whiteSpace: 'nowrap' }}
-                          >
-                            Info
-                          </Button>
-                        </Tooltip>
-                      </Box>
-                      <Button
-                        size="small"
-                        color="primary"
-                        variant="contained"
-                        onClick={() => window.open(`https://www.youtube.com/watch?v=${result.video_id || result.id}`, '_blank')}
-                        startIcon={<PlayArrowIcon />}
-                      >
-                        Watch
-                      </Button>
+                            color="primary"
+                            variant="contained"
+                            onClick={() => window.open(`https://www.youtube.com/watch?v=${result.video_id || result.id}`, '_blank')}
+                            startIcon={<PlayArrowIcon />}
+                            sx={{ borderRadius: 2 }}
+                        >
+                            Watch
+                        </Button>
                     </Box>
                   </Box>
                 </Card>
@@ -421,12 +461,12 @@ function SearchVideos() {
       )}
 
       {!loading && searchQuery && searchResults.length === 0 && (
-        <Box textAlign="center" py={8}>
-          <Typography variant="h6" color="textSecondary">
-            No results found for "{searchQuery}"
+        <Box textAlign="center" py={10}>
+          <Typography variant="h5" color="text.secondary" gutterBottom>
+            No results found
           </Typography>
-          <Typography variant="body1" color="textSecondary" sx={{ mt: 1 }}>
-            Try different keywords or check your search query.
+          <Typography variant="body1" color="text.secondary" sx={{ opacity: 0.6 }}>
+            Try adjusting your search terms or selecting a different database.
           </Typography>
         </Box>
       )}
@@ -437,60 +477,34 @@ function SearchVideos() {
         onClose={handleCloseSummary}
         maxWidth="md"
         fullWidth
-        aria-labelledby="summary-dialog-title"
-        aria-describedby="summary-dialog-description"
+        PaperProps={{ sx: { bgcolor: '#151a23', borderRadius: 4, border: '1px solid rgba(255,255,255,0.1)' } }}
       >
-        <DialogTitle id="summary-dialog-title">
-          <Box display="flex" justifyContent="space-between" alignItems="center">
-            <Typography variant="h6" component="span">
-              Video Summary
+        <DialogTitle sx={{ borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Typography variant="h6" sx={{ color: '#ff0055', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 1 }}>
+                <SummarizeIcon /> AI Summary
             </Typography>
-            <IconButton 
-              onClick={handleCloseSummary} 
-              size="small"
-              aria-label="close"
-              sx={{ ml: 2 }}
-            >
+            <IconButton onClick={handleCloseSummary} size="small" sx={{ color: 'text.secondary' }}>
               <CloseIcon />
             </IconButton>
-          </Box>
         </DialogTitle>
-        <DialogContent>
+        <DialogContent sx={{ mt: 2 }}>
           {summaryDialog.loading ? (
             <Box display="flex" justifyContent="center" my={4} flexDirection="column" alignItems="center">
-              <CircularProgress />
-              <Typography variant="body1" sx={{ mt: 2 }}>
-                Generating summary...
-              </Typography>
-              <Typography variant="caption" color="textSecondary" sx={{ mt: 1 }}>
-                This may take a few moments.
+              <CircularProgress color="secondary" />
+              <Typography variant="body1" sx={{ mt: 2, color: 'text.secondary' }}>
+                Analyzing video content...
               </Typography>
             </Box>
           ) : summaryDialog.error ? (
-            <Alert 
-              severity="error" 
-              sx={{ my: 2 }}
-              action={
-                <IconButton
-                  aria-label="close"
-                  color="inherit"
-                  size="small"
-                  onClick={() => {
-                    setSummaryDialog(prev => ({ ...prev, error: null }));
-                  }}
-                >
-                  <CloseIcon fontSize="inherit" />
-                </IconButton>
-              }
-            >
-              {summaryDialog.error}
-            </Alert>
+            <Alert severity="error" variant="filled">{summaryDialog.error}</Alert>
           ) : (
-            <ReactMarkdown>{summaryDialog.summary}</ReactMarkdown>
+            <Box sx={{ color: '#e0e0e0', lineHeight: 1.8 }}>
+                <ReactMarkdown>{summaryDialog.summary}</ReactMarkdown>
+            </Box>
           )}
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseSummary}>Close</Button>
+        <DialogActions sx={{ p: 2, borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+          <Button onClick={handleCloseSummary} color="inherit">Close</Button>
         </DialogActions>
       </Dialog>
 
@@ -500,63 +514,50 @@ function SearchVideos() {
         onClose={handleCloseMetadata}
         maxWidth="sm"
         fullWidth
+        PaperProps={{ sx: { bgcolor: '#151a23', borderRadius: 4, border: '1px solid rgba(255,255,255,0.1)' } }}
       >
-        <DialogTitle>
-          <Box display="flex" justifyContent="space-between" alignItems="center">
-            <Typography variant="h6">Video Metadata</Typography>
-            <IconButton onClick={handleCloseMetadata} size="small">
-              <CloseIcon />
-            </IconButton>
-          </Box>
+        <DialogTitle sx={{ borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between' }}>
+          <Typography variant="h6">Video Metadata</Typography>
+          <IconButton onClick={handleCloseMetadata} size="small"><CloseIcon /></IconButton>
         </DialogTitle>
-        <DialogContent>
+        <DialogContent sx={{ mt: 2 }}>
           {metadataDialog.loading ? (
-            <Box display="flex" justifyContent="center" my={4}>
-              <CircularProgress />
-            </Box>
-          ) : metadataDialog.error ? (
-            <Alert severity="error" sx={{ my: 2 }}>
-              {metadataDialog.error}
-            </Alert>
+            <Box display="flex" justifyContent="center" my={4}><CircularProgress /></Box>
           ) : metadataDialog.metadata ? (
             <Box>
-              <Typography variant="subtitle1" gutterBottom>
-                <strong>Title:</strong> {metadataDialog.metadata.title}
+              <Typography variant="subtitle1" gutterBottom sx={{ color: '#00f2ff' }}>
+                {metadataDialog.metadata.title}
               </Typography>
-              <Typography variant="body1" gutterBottom>
-                <strong>Channel:</strong> {metadataDialog.metadata.channel}
-              </Typography>
-              <Typography variant="body2" gutterBottom>
-                <strong>Views:</strong> {parseInt(metadataDialog.metadata.view_count).toLocaleString()}
-              </Typography>
-              <Typography variant="body2" gutterBottom>
-                <strong>Duration:</strong> {formatDuration(metadataDialog.metadata.duration_seconds)}
-              </Typography>
-              <Divider sx={{ my: 2 }} />
-              <Typography variant="subtitle2" gutterBottom>
-                <strong>Transcript Preview:</strong>
+              <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, my: 2 }}>
+                <Paper sx={{ p: 2, bgcolor: 'rgba(255,255,255,0.03)' }}>
+                    <Typography variant="caption" color="text.secondary">Channel</Typography>
+                    <Typography variant="body2">{metadataDialog.metadata.channel}</Typography>
+                </Paper>
+                <Paper sx={{ p: 2, bgcolor: 'rgba(255,255,255,0.03)' }}>
+                    <Typography variant="caption" color="text.secondary">Views</Typography>
+                    <Typography variant="body2">{parseInt(metadataDialog.metadata.view_count).toLocaleString()}</Typography>
+                </Paper>
+              </Box>
+              <Typography variant="subtitle2" gutterBottom sx={{ mt: 2, color: 'text.secondary' }}>
+                Transcript Snippet:
               </Typography>
               <Box 
                 sx={{ 
-                  maxHeight: '300px', 
+                  maxHeight: '200px', 
                   overflowY: 'auto', 
-                  p: 1, 
-                  bgcolor: 'background.paper',
-                  borderRadius: 1,
-                  border: '1px solid',
-                  borderColor: 'divider'
+                  p: 2, 
+                  bgcolor: 'rgba(0,0,0,0.3)',
+                  borderRadius: 2,
+                  border: '1px solid rgba(255,255,255,0.05)',
+                  fontFamily: 'monospace',
+                  fontSize: '0.85rem'
                 }}
               >
-                <Typography variant="body2" color="text.secondary">
-                  {metadataDialog.metadata.transcript || 'No transcript available'}
-                </Typography>
+                {metadataDialog.metadata.transcript || 'No transcript available'}
               </Box>
             </Box>
           ) : null}
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseMetadata}>Close</Button>
-        </DialogActions>
       </Dialog>
     </Container>
   );

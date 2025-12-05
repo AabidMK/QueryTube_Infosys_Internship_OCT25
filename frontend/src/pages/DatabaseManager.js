@@ -19,8 +19,10 @@ import {
   DialogContent,
   DialogActions,
   TextField,
+  IconButton,
+  Tooltip
 } from '@mui/material';
-import { Add as AddIcon, Delete as DeleteIcon, Refresh as RefreshIcon } from '@mui/icons-material';
+import { Add as AddIcon, Delete as DeleteIcon, Folder as FolderIcon } from '@mui/icons-material';
 import Dropzone from '../components/Dropzone';
 import api from '../api';
 
@@ -134,44 +136,60 @@ function DatabaseManager() {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h4" component="h1">
-          Video Databases
-        </Typography>
+    <Container maxWidth="lg" className="fade-in">
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4, mt: 2 }}>
+        <Box>
+            <Typography variant="h4" component="h1" sx={{ fontWeight: 800, color: '#fff' }}>
+            Databases
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+            Manage your vector collections
+            </Typography>
+        </Box>
         <Button
           variant="contained"
           startIcon={<AddIcon />}
           onClick={() => setOpenDialog(true)}
+          sx={{ height: 48, px: 3 }}
         >
           New Database
         </Button>
       </Box>
 
-      {error && <Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>}
+      {error && <Alert severity="error" variant="filled" sx={{ mb: 3, borderRadius: 2 }}>{error}</Alert>}
 
-      <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+      <Paper 
+        sx={{ 
+            width: '100%', 
+            overflow: 'hidden', 
+            borderRadius: '16px',
+            backgroundColor: 'rgba(21, 26, 35, 0.6)',
+            backdropFilter: 'blur(10px)',
+            border: '1px solid rgba(255,255,255,0.05)'
+        }}
+      >
         <TableContainer sx={{ maxHeight: 600 }}>
           <Table stickyHeader>
             <TableHead>
               <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Records</TableCell>
-                <TableCell>Actions</TableCell>
+                <TableCell sx={{ backgroundColor: '#1a1d2e', color: '#00f2ff', fontWeight: 600 }}>Name</TableCell>
+                <TableCell sx={{ backgroundColor: '#1a1d2e', color: '#b0b8c4', fontWeight: 600 }}>Records</TableCell>
+                <TableCell align="right" sx={{ backgroundColor: '#1a1d2e', color: '#b0b8c4', fontWeight: 600 }}>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={3} align="center" sx={{ py: 4 }}>
-                    <CircularProgress />
-                    <Typography variant="body2" sx={{ mt: 1 }}>Loading databases...</Typography>
+                  <TableCell colSpan={3} align="center" sx={{ py: 8 }}>
+                    <CircularProgress size={40} thickness={4} />
+                    <Typography variant="body2" sx={{ mt: 2, color: 'text.secondary' }}>Loading databases...</Typography>
                   </TableCell>
                 </TableRow>
               ) : databases.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={3} align="center" sx={{ py: 4 }}>
-                    <Typography variant="body1">No databases found</Typography>
+                  <TableCell colSpan={3} align="center" sx={{ py: 8 }}>
+                    <FolderIcon sx={{ fontSize: 48, color: 'text.secondary', opacity: 0.5, mb: 1 }} />
+                    <Typography variant="body1" color="text.secondary">No databases found</Typography>
                     <Button
                       variant="outlined"
                       startIcon={<AddIcon />}
@@ -188,18 +206,30 @@ function DatabaseManager() {
                   const recordCount = db.record_count || 0;
                   
                   return (
-                    <TableRow key={dbName} hover>
-                      <TableCell>{dbName}</TableCell>
-                      <TableCell>{recordCount} records</TableCell>
-                      <TableCell>
-                        <Button
-                          color="error"
-                          startIcon={<DeleteIcon />}
-                          onClick={() => handleDelete(dbName)}
-                          size="small"
-                        >
-                          Delete
-                        </Button>
+                    <TableRow 
+                        key={dbName} 
+                        hover
+                        sx={{ 
+                            '&:hover': { backgroundColor: 'rgba(255,255,255,0.03) !important' },
+                            transition: 'background-color 0.2s'
+                        }}
+                    >
+                      <TableCell sx={{ color: '#fff', fontSize: '1.05rem' }}>
+                        <Box display="flex" alignItems="center" gap={2}>
+                            <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#00f2ff', boxShadow: '0 0 8px #00f2ff' }} />
+                            {dbName}
+                        </Box>
+                      </TableCell>
+                      <TableCell sx={{ color: 'text.secondary' }}>{recordCount.toLocaleString()} records</TableCell>
+                      <TableCell align="right">
+                        <Tooltip title="Delete Database">
+                            <IconButton
+                            onClick={() => handleDelete(dbName)}
+                            sx={{ color: '#ef5350', '&:hover': { bgcolor: 'rgba(239, 83, 80, 0.1)' } }}
+                            >
+                            <DeleteIcon />
+                            </IconButton>
+                        </Tooltip>
                       </TableCell>
                     </TableRow>
                   );
@@ -210,30 +240,49 @@ function DatabaseManager() {
         </TableContainer>
       </Paper>
 
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="md" fullWidth>
-        <DialogTitle>Create New Database</DialogTitle>
-        <DialogContent>
+      <Dialog 
+        open={openDialog} 
+        onClose={() => setOpenDialog(false)} 
+        maxWidth="md" 
+        fullWidth
+        PaperProps={{
+            sx: {
+                borderRadius: '24px',
+                background: '#151a23',
+                border: '1px solid rgba(255,255,255,0.1)'
+            }
+        }}
+      >
+        <DialogTitle sx={{ borderBottom: '1px solid rgba(255,255,255,0.05)', pb: 2 }}>Create New Database</DialogTitle>
+        <DialogContent sx={{ pt: 4 }}>
           <Box sx={{ mt: 2, mb: 3 }}>
-            <Typography gutterBottom>Database Name</Typography>
+            <Typography gutterBottom sx={{ color: '#00f2ff', fontSize: '0.9rem', fontWeight: 600 }}>DATABASE NAME</Typography>
             <TextField
               fullWidth
               variant="outlined"
               value={dbName}
               onChange={(e) => setDbName(e.target.value)}
-              placeholder="Enter a name for your database"
+              placeholder="e.g., tutorial_videos"
+              sx={{ mt: 1 }}
             />
           </Box>
-          <Box sx={{ mt: 3, mb: 2 }}>
-            <Typography gutterBottom>Upload CSV File</Typography>
+          <Box sx={{ mt: 4, mb: 2 }}>
+            <Typography gutterBottom sx={{ color: '#00f2ff', fontSize: '0.9rem', fontWeight: 600, mb: 2 }}>UPLOAD DATASET (CSV)</Typography>
             <Dropzone onFileSelected={handleFileSelected} />
+            {selectedFile && (
+                <Typography variant="body2" sx={{ mt: 2, color: '#4caf50', display: 'flex', alignItems: 'center', gap: 1 }}>
+                    ✓ Selected: {selectedFile.name}
+                </Typography>
+            )}
           </Box>
         </DialogContent>
-        <DialogActions sx={{ p: 2 }}>
-          <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
+        <DialogActions sx={{ p: 3, borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+          <Button onClick={() => setOpenDialog(false)} sx={{ color: 'text.secondary' }}>Cancel</Button>
           <Button
             onClick={handleSubmit}
             variant="contained"
             disabled={!dbName.trim() || !selectedFile}
+            sx={{ px: 4 }}
           >
             Create Database
           </Button>
@@ -249,7 +298,8 @@ function DatabaseManager() {
         <Alert 
           onClose={handleCloseSnackbar} 
           severity={snackbar.severity} 
-          sx={{ width: '100%' }}
+          variant="filled"
+          sx={{ width: '100%', borderRadius: 2 }}
         >
           {snackbar.message}
         </Alert>

@@ -22,26 +22,37 @@ function Dropzone({ onFileSelected }) {
     <Paper
       {...getRootProps()}
       sx={{
-        p: 4,
-        border: '2px dashed #ccc',
+        p: 6,
+        border: '2px dashed',
+        borderColor: isDragActive ? '#00f2ff' : 'rgba(255, 255, 255, 0.2)',
+        borderRadius: '20px',
         textAlign: 'center',
         cursor: 'pointer',
-        backgroundColor: isDragActive ? 'action.hover' : 'background.paper',
+        backgroundColor: isDragActive ? 'rgba(0, 242, 255, 0.05)' : 'rgba(0,0,0,0.2)',
+        transition: 'all 0.3s ease',
         '&:hover': {
-          backgroundColor: 'action.hover',
+          borderColor: '#00f2ff',
+          backgroundColor: 'rgba(0, 242, 255, 0.05)',
+          transform: 'scale(1.01)'
         },
       }}
     >
       <input {...getInputProps()} />
-      <Box sx={{ color: 'text.secondary' }}>
-        <CloudUploadIcon sx={{ fontSize: 48, mb: 1 }} />
-        <Typography>
+      <Box sx={{ color: isDragActive ? '#00f2ff' : 'text.secondary' }}>
+        <CloudUploadIcon sx={{ 
+          fontSize: 64, 
+          mb: 2, 
+          color: isDragActive ? '#00f2ff' : 'rgba(255,255,255,0.5)',
+          filter: isDragActive ? 'drop-shadow(0 0 10px rgba(0,242,255,0.5))' : 'none',
+          transition: 'all 0.3s'
+        }} />
+        <Typography variant="h6" gutterBottom>
           {isDragActive
             ? 'Drop the CSV file here...'
-            : 'Drag and drop a CSV file here, or click to select'}
+            : 'Drag & Drop CSV File'}
         </Typography>
-        <Typography variant="caption" display="block" sx={{ mt: 1 }}>
-          Only .csv files are accepted
+        <Typography variant="body2" color="text.secondary" sx={{ opacity: 0.7 }}>
+          or click to browse your system
         </Typography>
       </Box>
     </Paper>
