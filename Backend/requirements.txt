@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+pydantic
+chromadb
+langchain
+langchain-google-genai
+sentence-transformers
+fastapi
+uvicorn
+chromadb
+sentence-transformers
+google-generativeai
+
+requests
