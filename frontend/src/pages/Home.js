@@ -1,153 +1,205 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Container, Typography, Box, Paper, Grid } from '@mui/material';
+import { Button, Typography, Box, Paper, useTheme, useMediaQuery } from '@mui/material';
 import StorageIcon from '@mui/icons-material/Storage';
 import SearchIcon from '@mui/icons-material/Search';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 function Home() {
+  const theme = useTheme();
+  // On mobile (md and down), stack vertically. On desktop, split horizontally.
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
   return (
-    <Container maxWidth="lg">
-      <Box
-        sx={{
-          minHeight: '80vh',
+    <Box 
+      className="fade-in"
+      sx={{ 
+        display: 'flex',
+        flexDirection: isMobile ? 'column' : 'row',
+        width: '100%', 
+        height: 'calc(100vh - 80px)', // Exactly fills remaining screen height (Navbar is 80px)
+        overflow: 'hidden',
+        position: 'relative'
+      }} 
+    >
+      
+      {/* Background Text - Fixed Position to ensure perfect center */}
+      {!isMobile && (
+        <Box 
+          sx={{ 
+            position: 'absolute', 
+            top: '50%', 
+            left: '50%', 
+            transform: 'translate(-50%, -50%)',
+            pointerEvents: 'none',
+            zIndex: 0,
+            opacity: 0.05,
+            userSelect: 'none',
+            whiteSpace: 'nowrap'
+          }}
+        >
+          <Typography 
+            variant="h1" 
+            sx={{ 
+              fontWeight: 900, 
+              fontSize: '25rem', 
+              color: '#fff',
+              letterSpacing: '-2rem',
+              lineHeight: 0.8
+            }}
+          >
+            QT
+          </Typography>
+        </Box>
+      )}
+
+      {/* LEFT SIDE - DATABASES */}
+      <Box 
+        sx={{ 
+          width: isMobile ? '100%' : '50%', // EXACTLY 50% width
+          height: isMobile ? '50%' : '100%',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
           textAlign: 'center',
+          p: 4,
+          borderRight: isMobile ? 'none' : '1px solid rgba(255, 255, 255, 0.05)',
+          borderBottom: isMobile ? '1px solid rgba(255, 255, 255, 0.05)' : 'none',
+          // Subtle Cyan Gradient on Left
+          background: 'linear-gradient(90deg, transparent 0%, rgba(0, 242, 255, 0.03) 100%)',
+          position: 'relative',
+          zIndex: 1,
+          transition: 'all 0.4s ease',
+          '&:hover': {
+            background: 'linear-gradient(90deg, transparent 0%, rgba(0, 242, 255, 0.08) 100%)',
+            '& .icon-glow': { transform: 'scale(1.1)', boxShadow: '0 0 50px rgba(0, 242, 255, 0.3)' }
+          }
         }}
-        className="fade-in"
       >
-        <Box sx={{ mb: 6, maxWidth: '800px' }}>
-          <Typography 
-            component="h1" 
-            variant="h2" 
-            gutterBottom
-            sx={{ 
-              background: 'linear-gradient(45deg, #00f2ff 10%, #ffffff 90%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              fontWeight: 800,
-              mb: 2,
-              filter: 'drop-shadow(0 0 20px rgba(0, 242, 255, 0.2))'
-            }}
-          >
-            Welcome to QueryTube
-          </Typography>
-          <Typography variant="h5" color="text.secondary" sx={{ fontWeight: 300, lineHeight: 1.6 }}>
-            The next generation video search and management system powered by 
-            <Box component="span" sx={{ color: '#ff0055', fontWeight: 600, mx: 1 }}>ChromaDB</Box>
-            Semantic Search.
-          </Typography>
-        </Box>
+        <Paper
+          elevation={0}
+          className="icon-glow"
+          sx={{
+            width: 120,
+            height: 120,
+            borderRadius: '50%',
+            bgcolor: 'rgba(0, 242, 255, 0.05)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            mb: 4,
+            border: '1px solid rgba(0, 242, 255, 0.2)',
+            transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+          }}
+        >
+          <StorageIcon sx={{ fontSize: 60, color: '#00f2ff' }} />
+        </Paper>
 
-        <Grid container spacing={4} sx={{ mt: 2 }}>
-          <Grid item xs={12} md={6}>
-            <Paper
-              elevation={0}
-              sx={{ 
-                p: 5, 
-                height: '100%', 
-                display: 'flex', 
-                flexDirection: 'column',
-                borderRadius: '24px',
-                border: '1px solid rgba(255,255,255,0.08)',
-                background: 'linear-gradient(180deg, rgba(21, 26, 35, 0.6) 0%, rgba(11, 14, 20, 0.8) 100%)',
-              }}
-            >
-              <Box 
-                sx={{ 
-                  width: 80, 
-                  height: 80, 
-                  borderRadius: '20px', 
-                  bgcolor: 'rgba(0, 242, 255, 0.1)', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  mb: 3,
-                  alignSelf: 'center',
-                  color: '#00f2ff'
-                }}
-              >
-                <StorageIcon sx={{ fontSize: 40 }} />
-              </Box>
-              <Typography variant="h4" gutterBottom align="center" sx={{ fontWeight: 700 }}>
-                Manage Databases
-              </Typography>
-              <Typography paragraph color="text.secondary" align="center" sx={{ flexGrow: 1, mb: 4 }}>
-                Create, view, and manage your video databases. Upload new datasets via CSV and monitor your existing collections with real-time stats.
-              </Typography>
-              <Button
-                variant="outlined"
-                size="large"
-                component={Link}
-                to="/databases"
-                endIcon={<ArrowForwardIcon />}
-                sx={{ 
-                  mt: 'auto', 
-                  borderColor: 'rgba(0, 242, 255, 0.5)', 
-                  color: '#00f2ff',
-                  borderWidth: 2,
-                  '&:hover': { borderWidth: 2, borderColor: '#00f2ff', bgcolor: 'rgba(0, 242, 255, 0.1)' }
-                }}
-              >
-                Manage Data
-              </Button>
-            </Paper>
-          </Grid>
+        <Typography variant="h3" gutterBottom sx={{ color: '#fff' }}>
+          Databases
+        </Typography>
+        
+        <Typography variant="h6" sx={{ color: 'text.secondary', mb: 5, maxWidth: 400, fontWeight: 300 }}>
+          Ingest and manage your video collections.
+        </Typography>
 
-          <Grid item xs={12} md={6}>
-            <Paper
-              elevation={0}
-              sx={{ 
-                p: 5, 
-                height: '100%', 
-                display: 'flex', 
-                flexDirection: 'column',
-                borderRadius: '24px',
-                border: '1px solid rgba(255,255,255,0.08)',
-                background: 'linear-gradient(180deg, rgba(21, 26, 35, 0.6) 0%, rgba(11, 14, 20, 0.8) 100%)',
-              }}
-            >
-              <Box 
-                sx={{ 
-                  width: 80, 
-                  height: 80, 
-                  borderRadius: '20px', 
-                  bgcolor: 'rgba(255, 0, 85, 0.1)', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  mb: 3,
-                  alignSelf: 'center',
-                  color: '#ff0055'
-                }}
-              >
-                <SearchIcon sx={{ fontSize: 40 }} />
-              </Box>
-              <Typography variant="h4" gutterBottom align="center" sx={{ fontWeight: 700 }}>
-                Semantic Search
-              </Typography>
-              <Typography paragraph color="text.secondary" align="center" sx={{ flexGrow: 1, mb: 4 }}>
-                Perform deep semantic search across your video collections. Find exactly what you need using natural language queries and AI summarization.
-              </Typography>
-              <Button
-                variant="contained"
-                size="large"
-                color="secondary"
-                component={Link}
-                to="/search"
-                endIcon={<ArrowForwardIcon />}
-                sx={{ mt: 'auto', boxShadow: '0 4px 20px rgba(255, 0, 85, 0.4)' }}
-              >
-                Start Searching
-              </Button>
-            </Paper>
-          </Grid>
-        </Grid>
+        <Button
+          component={Link}
+          to="/databases"
+          variant="outlined"
+          size="large"
+          endIcon={<ArrowForwardIcon />}
+          sx={{
+            borderColor: '#00f2ff',
+            color: '#00f2ff',
+            borderWidth: 2,
+            px: 5,
+            py: 1.5,
+            fontSize: '1.1rem',
+            '&:hover': {
+              borderWidth: 2,
+              borderColor: '#00f2ff',
+              bgcolor: 'rgba(0, 242, 255, 0.1)',
+              boxShadow: '0 0 20px rgba(0, 242, 255, 0.2)'
+            }
+          }}
+        >
+          Manage Data
+        </Button>
       </Box>
-    </Container>
+
+      {/* RIGHT SIDE - SEARCH */}
+      <Box 
+        sx={{ 
+          width: isMobile ? '100%' : '50%', // EXACTLY 50% width
+          height: isMobile ? '50%' : '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          textAlign: 'center',
+          p: 4,
+          // Subtle Pink Gradient on Right
+          background: 'linear-gradient(270deg, transparent 0%, rgba(255, 0, 85, 0.03) 100%)',
+          position: 'relative',
+          zIndex: 1,
+          transition: 'all 0.4s ease',
+          '&:hover': {
+            background: 'linear-gradient(270deg, transparent 0%, rgba(255, 0, 85, 0.08) 100%)',
+            '& .icon-glow': { transform: 'scale(1.1)', boxShadow: '0 0 50px rgba(255, 0, 85, 0.3)' }
+          }
+        }}
+      >
+        <Paper
+          elevation={0}
+          className="icon-glow"
+          sx={{
+            width: 120,
+            height: 120,
+            borderRadius: '50%',
+            bgcolor: 'rgba(255, 0, 85, 0.05)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            mb: 4,
+            border: '1px solid rgba(255, 0, 85, 0.2)',
+            transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+          }}
+        >
+          <SearchIcon sx={{ fontSize: 60, color: '#ff0055' }} />
+        </Paper>
+
+        <Typography variant="h3" gutterBottom sx={{ color: '#fff' }}>
+          Search
+        </Typography>
+        
+        <Typography variant="h6" sx={{ color: 'text.secondary', mb: 5, maxWidth: 400, fontWeight: 300 }}>
+          Find content using semantic AI queries.
+        </Typography>
+
+        <Button
+          component={Link}
+          to="/search"
+          variant="contained"
+          color="secondary"
+          size="large"
+          endIcon={<ArrowForwardIcon />}
+          sx={{
+            px: 6,
+            py: 1.5,
+            fontSize: '1.1rem',
+            boxShadow: '0 4px 20px rgba(255, 0, 85, 0.25)',
+            '&:hover': {
+              boxShadow: '0 4px 30px rgba(255, 0, 85, 0.5)'
+            }
+          }}
+        >
+          Start Searching
+        </Button>
+      </Box>
+
+    </Box>
   );
 }
 
