@@ -189,7 +189,6 @@ npm start
 ```
 <img width="1781" height="736" alt="Screenshot 2025-12-05 193020" src="https://github.com/user-attachments/assets/9229aa12-ea15-45c1-b8a3-fb3563515561" />
 <img width="1892" height="779" alt="Screensh<img width="1856" height="780" alt="Screenshot 2025-12-05 193200" src="https://github.com/user-attachments/assets/ca04d9f9-ab12-4455-92b0-50e1d7a07f98" />
-ot 2025-12-05 192940" src="https://github.com/user-attachments/assets/e60f1621-618e-46f1-887d-e4021604c1b3" />
 
 ---
 
