@@ -1,0 +1,91 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+  background-color: #0F0F0F;
+  color: #FFFFFF;
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1C1C1C;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #FF0000;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #FF3333;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* YouTube-like styles */
+.youtube-card {
+  transition: all 0.2s ease;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.youtube-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(255, 0, 0, 0.2);
+}
+
+/* Gradient Text */
+.gradient-text {
+  background: linear-gradient(45deg, #FF0000, #FF6B6B);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Loading Animation */
+.loading-pulse {
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
