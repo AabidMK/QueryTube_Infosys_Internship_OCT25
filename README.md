@@ -1,5 +1,6 @@
 # QueryTube_Infosys_Internship_OCT25
 AI_SemanticSearchTube. Building a Semantic Search App with YouTube Data
+
 YouTube Semantic SearchTube 🎬
 A comprehensive YouTube video search and summarization system that uses semantic search to find relevant videos and AI-powered summarization to generate concise summaries.
 
