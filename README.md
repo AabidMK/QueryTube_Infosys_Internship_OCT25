@@ -62,7 +62,6 @@ Video Metadata: Display title, channel, views, and similarity score
 AI Summary: Integrated summarization for each video
 
 Development Environment
-https://Screenshot%2520(37).png
 
 Project structure in VS Code:
 
