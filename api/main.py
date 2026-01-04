@@ -1,3 +1,5 @@
+import faiss
+from pathlib import Path
 from fastapi import FastAPI, HTTPException, UploadFile, File, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -74,23 +76,35 @@ class IngestionResponse(BaseModel):
 # Configuration
 class Config:
     def __init__(self):
-        # File path configuration - faiss_videos_db folder outside current folder
-        self.base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        self.faiss_db_path = os.path.join(self.base_dir, "vectors", "faiss_videos_db")
+        # Check if running on Render
+        self.is_render = os.environ.get('RENDER') is not None
+        
+        # Set paths based on environment
+        if self.is_render:
+            # Render production paths
+            self.base_dir = Path("/opt/render")
+            self.faiss_db_path = self.base_dir / "vectors" / "faiss_videos_db"
+            print("🚀 Running in RENDER environment")
+        else:
+            # Local development paths
+            self.base_dir = Path(__file__).parent.parent
+            self.faiss_db_path = self.base_dir / "vectors" / "faiss_videos_db"
         
         # File paths
-        self.index_file = os.path.join(self.faiss_db_path, "faiss.index")
-        self.metadata_file = os.path.join(self.faiss_db_path, "metadata.pkl")
+        self.index_file = self.faiss_db_path / "faiss.index"
+        self.metadata_file = self.faiss_db_path / "metadata.pkl"
+        
+        # Check if files exist
+        print(f"📁 Looking for FAISS files at: {self.faiss_db_path}")
+        print(f"   - Index file exists: {self.index_file.exists()}")
+        print(f"   - Metadata file exists: {self.metadata_file.exists()}")
         
         self.gemini_model = None
         self._setup_gemini()
 
-        # Create directories if they don't exist
-        os.makedirs(self.faiss_db_path, exist_ok=True)
-        
-        print(f"🔧 Configuration loaded:")
-        print(f"   - Base directory: {self.base_dir}")
-        print(f"   - FAISS DB path: {self.faiss_db_path}")
+        # Create directories if they don't exist (for local only)
+        if not self.is_render:
+            os.makedirs(self.faiss_db_path, exist_ok=True)
 
     def _setup_gemini(self):
         """Setup Gemini API for summary generation"""
@@ -133,24 +147,42 @@ class FAISSVectorDB:
     def _load_faiss_index(self):
         """Load FAISS index and metadata"""
         try:
-            if os.path.exists(self.config.index_file) and os.path.exists(self.config.metadata_file):
-                import faiss
-                self.index = faiss.read_index(self.config.index_file)
-                with open(self.config.metadata_file, 'rb') as f:
-                    data = pickle.load(f)
-                    self.metadata = data.get('metadata', [])
-                    self.documents = data.get('documents', [])
-                print(f"✅ Loaded FAISS index with {len(self.metadata)} videos")
-            else:
-                print("❌ FAISS database not found. Please run vector.py first.")
-                # Initialize empty data structures
+            print(f"📂 Attempting to load FAISS from: {self.config.index_file}")
+            
+            # Check if files exist
+            if not self.config.index_file.exists():
+                print(f"❌ FAISS index not found at: {self.config.index_file}")
+                print("   Please ensure FAISS files are properly uploaded to Render")
                 self.metadata = []
                 self.documents = []
+                return
+            
+            if not self.config.metadata_file.exists():
+                print(f"❌ Metadata file not found at: {self.config.metadata_file}")
+                self.metadata = []
+                self.documents = []
+                return
+            
+            # Load FAISS index
+            self.index = faiss.read_index(str(self.config.index_file))
+            
+            # Load metadata
+            with open(self.config.metadata_file, 'rb') as f:
+                data = pickle.load(f)
+                self.metadata = data.get('metadata', [])
+                self.documents = data.get('documents', [])
+            
+            print(f"✅ Successfully loaded FAISS index with {len(self.metadata)} videos")
+            print(f"   - Index dimension: {self.index.d}")
+            print(f"   - Total vectors: {self.index.ntotal}")
+            
         except Exception as e:
             print(f"❌ Error loading FAISS index: {e}")
-            # Initialize empty data structures even if loading fails
+            print(traceback.format_exc())
+            # Initialize empty data structures
             self.metadata = []
             self.documents = []
+            self.index = None
     
     def semantic_search(self, query: str, top_k: int = 5) -> List[Dict[str, Any]]:
         """Perform semantic search using SentenceTransformer and cosine similarity"""
@@ -345,12 +377,24 @@ async def api_root():
 @api_router.get("/health")
 async def health_check():
     info = vector_db.get_database_info()
+    
+    # Check FAISS status
+    faiss_status = "loaded" if vector_db.index is not None else "not_loaded"
+    
     return {
         "status": "healthy",
         "timestamp": datetime.now().isoformat(),
+        "environment": "production" if vector_db.config.is_render else "development",
         "total_videos": info.get("total_videos", 0),
-        "search_engine_ready": info.get("status") == "ready",
-        "api_version": "1.0.0"
+        "faiss_status": faiss_status,
+        "faiss_index_exists": vector_db.config.index_file.exists(),
+        "metadata_exists": vector_db.config.metadata_file.exists(),
+        "api_version": "1.0.0",
+        "paths": {
+            "faiss_db_path": str(vector_db.config.faiss_db_path),
+            "index_file": str(vector_db.config.index_file),
+            "is_render": vector_db.config.is_render
+        }
     }
 
 @api_router.post("/search", response_model=SearchResponse)
@@ -576,21 +620,21 @@ async def get_video_summary(video_id: str):
 # Include the router with /api prefix
 app.include_router(api_router)
 
-if __name__ == "__main__":
-    import uvicorn
+#if __name__ == "__main__":
+#    import uvicorn
+#    
+#    print("🚀 Starting Semantic Video Search API Server...")
+#    print("📚 API Endpoints (all under /api):")
+#    print("   GET  /api/          - API information")
+#    print("   GET  /api/health    - Health check")
+#    print("   POST /api/search    - Semantic search")
+#    print("   POST /api/ingest    - Upload CSV file")
+#    print("   GET  /api/summary/{video_id} - Get AI-generated video summary")
+#    print("\n🔧 Configuration:")
+#    print(f"   - Database path: {vector_db.config.faiss_db_path}")
+#    print(f"   - Search engine: SentenceTransformer + Cosine Similarity")
+#    print(f"   - Embedding model: all-MiniLM-L6-v2")
+#    print(f"   - Gemini model: {'Configured' if vector_db.config.gemini_model else 'Not Configured'}")
+#    print(f"\n🔗 API Base URL: http://localhost:8000/api")
     
-    print("🚀 Starting Semantic Video Search API Server...")
-    print("📚 API Endpoints (all under /api):")
-    print("   GET  /api/          - API information")
-    print("   GET  /api/health    - Health check")
-    print("   POST /api/search    - Semantic search")
-    print("   POST /api/ingest    - Upload CSV file")
-    print("   GET  /api/summary/{video_id} - Get AI-generated video summary")
-    print("\n🔧 Configuration:")
-    print(f"   - Database path: {vector_db.config.faiss_db_path}")
-    print(f"   - Search engine: SentenceTransformer + Cosine Similarity")
-    print(f"   - Embedding model: all-MiniLM-L6-v2")
-    print(f"   - Gemini model: {'Configured' if vector_db.config.gemini_model else 'Not Configured'}")
-    print(f"\n🔗 API Base URL: http://localhost:8000/api")
-    
-    uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)
+#    uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)

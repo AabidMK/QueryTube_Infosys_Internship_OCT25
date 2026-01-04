@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: querytube-backend
+    env: python
+    rootDir: ./api  # Tell Render where your FastAPI code is
+    buildCommand: |
+      pip install --upgrade pip
+      pip install -r requirements.txt
+    startCommand: gunicorn main:app --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.0
+    disk:
+      name: faiss-disk
+      mountPath: /opt/render/vectors
+      sizeGB: 2  # FAISS files need space
