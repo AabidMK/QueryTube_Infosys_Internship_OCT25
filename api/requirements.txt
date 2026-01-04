@@ -10,7 +10,10 @@ python-dotenv==1.0.0
 faiss-cpu==1.8.0
 numpy==1.24.3
 
-# ADD THESE FIXED VERSIONS:
-huggingface-hub==0.19.4  # Compatible with sentence-transformers 2.2.2
-transformers==4.36.2     # Compatible version
-torch==2.1.2             # Stable version
+# Compatibility fixes
+huggingface-hub==0.19.4
+transformers==4.36.2
+torch==2.1.2
+
+# Add Google Generative AI
+google-generativeai==0.3.2
