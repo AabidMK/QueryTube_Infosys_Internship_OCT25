@@ -1,0 +1,2 @@
+vectors/faiss_videos_db/*.index filter=lfs diff=lfs merge=lfs -text
+vectors/faiss_videos_db/*.pkl filter=lfs diff=lfs merge=lfs -text
