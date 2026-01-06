@@ -2,15 +2,33 @@ services:
   - type: web
     name: querytube-backend
     env: python
-    rootDir: ./api  # Tell Render where your FastAPI code is
+    rootDir: ./api
     buildCommand: |
+      # 1. Upgrade pip and install dependencies
       pip install --upgrade pip
       pip install -r requirements.txt
-    startCommand: gunicorn main:app --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT
+      
+      # 2. Go to root directory to access FAISS files
+      cd ..
+      
+      # 3. Pull Git LFS files (they're in the repo)
+      git lfs pull
+      
+      # 4. Copy FAISS files to mounted disk (creates dir if needed)
+      mkdir -p /opt/render/vectors/faiss_videos_db
+      cp -f vectors/faiss_videos_db/* /opt/render/vectors/faiss_videos_db/ 2>/dev/null || echo "No FAISS files to copy"
+      
+      # 5. Verify files were copied
+      echo "📁 Checking mounted disk:"
+      ls -la /opt/render/vectors/faiss_videos_db/ 2>/dev/null || echo "FAISS directory not found"
+      
+      # 6. Go back to api directory for the rest of the build
+      cd api
+    startCommand: gunicorn main:app --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT --timeout 120
     envVars:
       - key: PYTHON_VERSION
         value: 3.9.0
     disk:
       name: faiss-disk
       mountPath: /opt/render/vectors
-      sizeGB: 2  # FAISS files need space
+      sizeGB: 2
