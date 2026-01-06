@@ -2,29 +2,44 @@ services:
   - type: web
     name: querytube-backend
     env: python
-    rootDir: ./api
     buildCommand: |
-      # 1. Upgrade pip and install dependencies
+      # 0. Start from root (important!)
+      echo "📁 Current directory: $(pwd)"
+      echo "📁 Listing files:"
+      ls -la
+      
+      # 1. Install dependencies in api folder
+      cd api
       pip install --upgrade pip
       pip install -r requirements.txt
       
-      # 2. Go to root directory to access FAISS files
+      # 2. Go back to root for FAISS files
       cd ..
       
-      # 3. Pull Git LFS files (they're in the repo)
-      git lfs pull
+      # 3. Check if FAISS files exist in git
+      echo "🔍 Looking for FAISS files:"
+      find . -name "*.index" -o -name "*.pkl" 2>/dev/null | head -10
       
-      # 4. Copy FAISS files to mounted disk (creates dir if needed)
+      # 4. Copy FAISS files to mounted disk
+      echo "📋 Copying FAISS files..."
       mkdir -p /opt/render/vectors/faiss_videos_db
-      cp -f vectors/faiss_videos_db/* /opt/render/vectors/faiss_videos_db/ 2>/dev/null || echo "No FAISS files to copy"
       
-      # 5. Verify files were copied
-      echo "📁 Checking mounted disk:"
-      ls -la /opt/render/vectors/faiss_videos_db/ 2>/dev/null || echo "FAISS directory not found"
+      # Check vectors directory exists
+      if [ -d "vectors/faiss_videos_db" ]; then
+        echo "✅ Found vectors/faiss_videos_db directory"
+        cp -r vectors/faiss_videos_db/* /opt/render/vectors/faiss_videos_db/ 2>/dev/null || echo "⚠️ Some files couldn't be copied"
+      else
+        echo "❌ vectors/faiss_videos_db not found!"
+        echo "📁 Current directory contents:"
+        ls -la
+        echo "📁 Vectors directory:"
+        ls -la vectors/ 2>/dev/null || echo "No vectors directory"
+      fi
       
-      # 6. Go back to api directory for the rest of the build
-      cd api
-    startCommand: gunicorn main:app --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT --timeout 120
+      # 5. Verify copy worked
+      echo "✅ Verifying copied files:"
+      ls -la /opt/render/vectors/faiss_videos_db/ 2>/dev/null || echo "Failed to list mounted disk"
+    startCommand: cd api && gunicorn main:app --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT --timeout 120
     envVars:
       - key: PYTHON_VERSION
         value: 3.9.0
