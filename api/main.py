@@ -286,21 +286,21 @@ class FAISSVectorDB:
         print(f"✅ Added {len(documents)} documents to in-memory database")
     
     def get_database_info(self) -> Dict[str, Any]:
-    """Get database information"""
-    total_videos = len(self.metadata)
+        """Get database information"""
+        total_videos = len(self.metadata)
     
-    return {
-        "total_videos": total_videos,
-        "database_path": str(self.config.faiss_cache_dir),  # Changed from faiss_db_path to faiss_cache_dir
-        "search_engine": "SentenceTransformer + Cosine Similarity",
-        "status": "ready" if self.embedding_model else "error",
-        "faiss_index_loaded": self.index is not None,
-        "total_vectors": self.index.ntotal if self.index else 0,
-        "embedding_dimension": self.index.d if self.index else 0
-    }
-    
+        return {
+            "total_videos": total_videos,
+            "database_path": str(self.config.faiss_cache_dir),  # Changed from faiss_db_path to faiss_cache_dir
+            "search_engine": "SentenceTransformer + Cosine Similarity",
+            "status": "ready" if self.embedding_model else "error",
+            "faiss_index_loaded": self.index is not None,
+            "total_vectors": self.index.ntotal if self.index else 0,
+            "embedding_dimension": self.index.d if self.index else 0
+        }
+
     def get_document_by_id(self, doc_id):
-        """Get document by ID"""
+        """Get document and metadata by original ID"""
         for i, metadata in enumerate(self.metadata):
             if metadata.get('original_id') == doc_id:
                 return {
