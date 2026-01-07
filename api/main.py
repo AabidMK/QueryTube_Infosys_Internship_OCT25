@@ -32,7 +32,10 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "https://querytube-ai.vercel.app",  # Your Vercel frontend
+        "http://localhost:3000",  # Local development
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
