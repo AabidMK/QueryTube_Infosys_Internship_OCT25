@@ -311,7 +311,9 @@ class FAISSVectorDB:
     def get_database_info(self) -> Dict[str, Any]:
         """Get database information"""
         total_videos = len(self.metadata)
-        model_status = "ready"
+    
+        # Check if model is actually functional by testing a small encode
+        model_status = "not_loaded"
         if self.embedding_model:
             try:
                 # Test if model actually works
@@ -319,14 +321,12 @@ class FAISSVectorDB:
                 model_status = "ready"
             except:
                 model_status = "error"
-        else:
-            model_status = "not_loaded"
     
         return {
             "total_videos": total_videos,
-            "database_path": str(self.config.faiss_cache_dir),  # Changed from faiss_db_path to faiss_cache_dir
+            "database_path": str(self.config.faiss_cache_dir),
             "search_engine": "SentenceTransformer + Cosine Similarity",
-            "status": "ready" if self.embedding_model else "error",
+            "status": model_status,  # Use the model_status we calculated
             "faiss_index_loaded": self.index is not None,
             "total_vectors": self.index.ntotal if self.index else 0,
             "embedding_dimension": self.index.d if self.index else 0,
