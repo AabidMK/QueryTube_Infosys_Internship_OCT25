@@ -2,19 +2,38 @@ services:
   - type: web
     name: querytube-backend
     env: python
-    rootDirectory: api # Assuming your code is in an "api" folder
     buildCommand: |
       echo "🚀 Installing Python dependencies..."
+      cd api
       pip install --upgrade pip
       pip install -r requirements.txt
     startCommand: |
       echo "🚀 Starting QueryTube Backend..."
       echo "🔗 Hugging Face Repository: karunya-3/faiss-video-db"
-      echo "📂 Cache directory: $(pwd)/faiss_cache"
-      gunicorn main:app --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT --timeout 120
+      echo "📂 Current directory: $(pwd)"
+      ls -la
+      cd api
+      echo "🔧 Setting environment variables..."
+      export TOKENIZERS_PARALLELISM=false
+      export OMP_NUM_THREADS=1
+      export TRANSFORMERS_CACHE=/tmp/transformers_cache
+      export HF_HOME=/tmp/huggingface
+      echo "🚀 Starting Gunicorn with increased timeout..."
+      gunicorn main:app --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT --timeout 300 --workers 1 --threads 2
     envVars:
       - key: PYTHON_VERSION
-        value: 3.9.0
+        value: 3.10.0
       - key: GEMINI_API_KEY
-        sync: false  
+        sync: false
+      # Memory optimization
+      - key: TOKENIZERS_PARALLELISM
+        value: "false"
+      - key: OMP_NUM_THREADS
+        value: "1"
+      - key: TRANSFORMERS_CACHE
+        value: /tmp/transformers_cache
+      - key: HF_HOME
+        value: /tmp/huggingface
+      - key: PORT
+        value: 10000
     autoDeploy: true
