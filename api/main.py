@@ -142,10 +142,33 @@ class FAISSVectorDB:
     def _load_embedding_model(self):
         """Load SentenceTransformer model for semantic search"""
         try:
-            self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
+            print("🤖 Attempting to load SentenceTransformer model 'all-MiniLM-L6-v2'...")
+        
+            # Add device specification and disable gradients to save memory
+            import torch
+            torch.set_grad_enabled(False)
+        
+            # Try loading with explicit CPU device and reduced memory usage
+            self.embedding_model = SentenceTransformer(
+                'all-MiniLM-L6-v2',
+                device='cpu',  # Force CPU usage
+                cache_folder=str(self.config.faiss_cache_dir / 'sentence_transformers')
+            )
+        
             print("✅ Loaded SentenceTransformer model for semantic search")
+            print(f"   - Model: {self.embedding_model.model_name}")
+            print(f"   - Device: cpu")
+            print(f"   - Max sequence length: {self.embedding_model.max_seq_length}")
+        
+            # Test the model with a small sample
+            test_embedding = self.embedding_model.encode(["test"])
+            print(f"   - Test embedding shape: {test_embedding.shape}")
+        
         except Exception as e:
             print(f"❌ Failed to load embedding model: {e}")
+            print(f"📋 Full traceback:")
+            import traceback
+            traceback.print_exc()
             self.embedding_model = None
     
     def _load_faiss_index(self):
