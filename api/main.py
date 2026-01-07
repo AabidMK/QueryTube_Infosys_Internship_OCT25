@@ -21,9 +21,6 @@ from dotenv import load_dotenv  # Add this import
 # Load environment variables from .env file
 load_dotenv()
 
-# Create router with API prefix
-api_router = APIRouter(prefix="/api")
-
 app = FastAPI(
     title="Semantic Video Search API",
     description="API for semantic search and analysis of video content using AI embeddings",
@@ -34,12 +31,15 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "https://querytube-ai.vercel.app",  # Your Vercel frontend
-        "http://localhost:3000",  # Local development
+        "http://localhost:3000",
+        "http://127.0.0.1:3000"  # Local development
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+# Create router with API prefix
+api_router = APIRouter(prefix="/api")
 
 # Pydantic models
 class SearchQuery(BaseModel):
