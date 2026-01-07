@@ -17,3 +17,5 @@ torch==2.1.2
 
 # Add Google Generative AI
 google-generativeai==0.3.2
+
+huggingface-hub==0.19.4 

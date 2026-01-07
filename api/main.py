@@ -74,43 +74,46 @@ class IngestionResponse(BaseModel):
     total_chunks: int
 
 # Configuration
+# Configuration
 class Config:
     def __init__(self):
         # Check if running on Render
         self.is_render = os.environ.get('RENDER') is not None
         
+        # Hugging Face Repository Info
+        self.hf_repo_id = "karunya-3/faiss-video-db"  # Your repository
+        self.hf_files = {
+            "index": "faiss.index",
+            "metadata": "metadata.pkl"
+        }
+        
         # Set paths based on environment
         if self.is_render:
-            # Render production paths
+            # Render production paths - use a persistent directory
             self.base_dir = Path("/opt/render")
-            self.faiss_db_path = self.base_dir / "vectors" / "faiss_videos_db"
+            self.faiss_cache_dir = self.base_dir / "faiss_cache"
             print("🚀 Running in RENDER environment")
+            print(f"📂 Cache directory: {self.faiss_cache_dir}")
         else:
             # Local development paths
             self.base_dir = Path(__file__).parent.parent
-            self.faiss_db_path = self.base_dir / "vectors" / "faiss_videos_db"
+            self.faiss_cache_dir = self.base_dir / "faiss_cache"
         
-        # File paths
-        self.index_file = self.faiss_db_path / "faiss.index"
-        self.metadata_file = self.faiss_db_path / "metadata.pkl"
+        # Create cache directory if it doesn't exist
+        os.makedirs(self.faiss_cache_dir, exist_ok=True)
         
-        # Check if files exist
-        print(f"📁 Looking for FAISS files at: {self.faiss_db_path}")
-        print(f"   - Index file exists: {self.index_file.exists()}")
-        print(f"   - Metadata file exists: {self.metadata_file.exists()}")
+        # File paths (will be set after download)
+        self.index_file = None
+        self.metadata_file = None
         
         self.gemini_model = None
         self._setup_gemini()
-
-        # Create directories if they don't exist (for local only)
-        if not self.is_render:
-            os.makedirs(self.faiss_db_path, exist_ok=True)
 
     def _setup_gemini(self):
         """Setup Gemini API for summary generation"""
         try:
             # Load API key from environment
-            api_key = os.getenv('GEMINI_API_KEY')
+            api_key = os.environ.get('GEMINI_API_KEY')
             if not api_key:
                 print("❌ GEMINI_API_KEY environment variable not set")
                 return
@@ -121,6 +124,7 @@ class Config:
         except Exception as e:
             print(f"❌ Error setting up Gemini: {e}")
 
+# FAISS Vector Database with Semantic Search
 # FAISS Vector Database with Semantic Search
 class FAISSVectorDB:
     def __init__(self):
@@ -145,25 +149,41 @@ class FAISSVectorDB:
             self.embedding_model = None
     
     def _load_faiss_index(self):
-        """Load FAISS index and metadata"""
+        """Load FAISS index and metadata from Hugging Face Hub"""
         try:
-            print(f"📂 Attempting to load FAISS from: {self.config.index_file}")
+            print(f"📂 Downloading FAISS files from Hugging Face Hub...")
+            print(f"   Repository: {self.config.hf_repo_id}")
             
-            # Check if files exist
-            if not self.config.index_file.exists():
-                print(f"❌ FAISS index not found at: {self.config.index_file}")
-                print("   Please ensure FAISS files are properly uploaded to Render")
-                self.metadata = []
-                self.documents = []
-                return
+            # Import huggingface_hub here to avoid dependency issues
+            from huggingface_hub import hf_hub_download
             
-            if not self.config.metadata_file.exists():
-                print(f"❌ Metadata file not found at: {self.config.metadata_file}")
-                self.metadata = []
-                self.documents = []
-                return
+            # Download files from Hugging Face
+            print("📥 Downloading faiss.index...")
+            index_path = hf_hub_download(
+                repo_id=self.config.hf_repo_id,
+                filename=self.config.hf_files["index"],
+                cache_dir=str(self.config.faiss_cache_dir),
+                force_download=False  # Use cache if available
+            )
+            
+            print("📥 Downloading metadata.pkl...")
+            metadata_path = hf_hub_download(
+                repo_id=self.config.hf_repo_id,
+                filename=self.config.hf_files["metadata"],
+                cache_dir=str(self.config.faiss_cache_dir),
+                force_download=False
+            )
+            
+            # Update config paths
+            self.config.index_file = Path(index_path)
+            self.config.metadata_file = Path(metadata_path)
+            
+            print(f"✅ Files downloaded:")
+            print(f"   - Index: {self.config.index_file}")
+            print(f"   - Metadata: {self.config.metadata_file}")
             
             # Load FAISS index
+            print("🔧 Loading FAISS index...")
             self.index = faiss.read_index(str(self.config.index_file))
             
             # Load metadata
@@ -176,13 +196,21 @@ class FAISSVectorDB:
             print(f"   - Index dimension: {self.index.d}")
             print(f"   - Total vectors: {self.index.ntotal}")
             
+        except ImportError as e:
+            print(f"❌ huggingface-hub not installed: {e}")
+            print("   Install with: pip install huggingface-hub")
+            self._setup_empty_data()
         except Exception as e:
-            print(f"❌ Error loading FAISS index: {e}")
+            print(f"❌ Error loading FAISS from Hugging Face: {e}")
             print(traceback.format_exc())
-            # Initialize empty data structures
-            self.metadata = []
-            self.documents = []
-            self.index = None
+            self._setup_empty_data()
+    
+    def _setup_empty_data(self):
+        """Setup empty data structures if loading fails"""
+        self.metadata = []
+        self.documents = []
+        self.index = None
+        print("⚠️ Using empty database - upload CSV to add data")
     
     def semantic_search(self, query: str, top_k: int = 5) -> List[Dict[str, Any]]:
         """Perform semantic search using SentenceTransformer and cosine similarity"""
@@ -387,12 +415,11 @@ async def health_check():
         "environment": "production" if vector_db.config.is_render else "development",
         "total_videos": info.get("total_videos", 0),
         "faiss_status": faiss_status,
-        "faiss_index_exists": vector_db.config.index_file.exists(),
-        "metadata_exists": vector_db.config.metadata_file.exists(),
+        "faiss_source": "huggingface_hub",
+        "huggingface_repo": vector_db.config.hf_repo_id,
         "api_version": "1.0.0",
         "paths": {
-            "faiss_db_path": str(vector_db.config.faiss_db_path),
-            "index_file": str(vector_db.config.index_file),
+            "faiss_cache_dir": str(vector_db.config.faiss_cache_dir),
             "is_render": vector_db.config.is_render
         }
     }
