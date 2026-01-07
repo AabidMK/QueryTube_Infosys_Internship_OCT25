@@ -156,13 +156,13 @@ class FAISSVectorDB:
             )
         
             print("✅ Loaded SentenceTransformer model for semantic search")
-            print(f"   - Model: {self.embedding_model.model_name}")
             print(f"   - Device: cpu")
             print(f"   - Max sequence length: {self.embedding_model.max_seq_length}")
         
             # Test the model with a small sample
             test_embedding = self.embedding_model.encode(["test"])
             print(f"   - Test embedding shape: {test_embedding.shape}")
+            print(f" - Embedding dimension: {test_embedding.shape[1]}")
         
         except Exception as e:
             print(f"❌ Failed to load embedding model: {e}")
@@ -311,6 +311,16 @@ class FAISSVectorDB:
     def get_database_info(self) -> Dict[str, Any]:
         """Get database information"""
         total_videos = len(self.metadata)
+        model_status = "ready"
+        if self.embedding_model:
+            try:
+                # Test if model actually works
+                test_result = self.embedding_model.encode(["test"])
+                model_status = "ready"
+            except:
+                model_status = "error"
+        else:
+            model_status = "not_loaded"
     
         return {
             "total_videos": total_videos,
@@ -319,7 +329,9 @@ class FAISSVectorDB:
             "status": "ready" if self.embedding_model else "error",
             "faiss_index_loaded": self.index is not None,
             "total_vectors": self.index.ntotal if self.index else 0,
-            "embedding_dimension": self.index.d if self.index else 0
+            "embedding_dimension": self.index.d if self.index else 0,
+            "documents_count": len(self.documents),
+            "metadata_count": len(self.metadata)
         }
 
     def get_document_by_id(self, doc_id):
