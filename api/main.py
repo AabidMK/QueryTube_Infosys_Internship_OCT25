@@ -1,6 +1,6 @@
 """
 QueryTube Backend - Semantic Video Search API
-Main application file with guaranteed CORS fix
+Enhanced search functionality with better debugging
 """
 
 import faiss
@@ -23,9 +23,9 @@ from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 import google.generativeai as genai
 from dotenv import load_dotenv
-import asyncio
+import re
 
-# Load environment variables from .env file
+# Load environment variables
 load_dotenv()
 
 print("=" * 60)
@@ -37,12 +37,10 @@ print("=" * 60)
 # =============================================
 
 class SearchQuery(BaseModel):
-    """Model for search request body"""
     query: str
     top_k: int = 5
 
 class SearchResult(BaseModel):
-    """Model for individual search result"""
     id: str
     title: str
     channel: str
@@ -56,7 +54,6 @@ class SearchResult(BaseModel):
     metadata: Dict[str, Any]
 
 class SearchResponse(BaseModel):
-    """Model for search response"""
     results: List[SearchResult]
     query: str
     total_results: int
@@ -65,7 +62,6 @@ class SearchResponse(BaseModel):
     search_type: str
 
 class IngestionResponse(BaseModel):
-    """Model for ingestion response"""
     id: str
     status: str
     message: str
@@ -75,7 +71,6 @@ class IngestionResponse(BaseModel):
     total_chunks: int
 
 class VideoSummaryResponse(BaseModel):
-    """Model for video summary response"""
     id: str
     title: str
     channel: str
@@ -90,7 +85,6 @@ class VideoSummaryResponse(BaseModel):
 # =============================================
 
 class Config:
-    """Configuration manager"""
     def __init__(self):
         self.is_render = os.environ.get('RENDER') is not None
         
@@ -139,13 +133,12 @@ class Config:
             print(f"❌ Gemini setup error: {e}")
 
 # =============================================
-# FAISS VECTOR DATABASE
+# FAISS VECTOR DATABASE WITH ENHANCED SEARCH
 # =============================================
 
 class FAISSVectorDB:
-    """FAISS-based vector database"""
     def __init__(self):
-        print("🤖 Initializing FAISS VectorDB...")
+        print("🤖 Initializing FAISS VectorDB with Enhanced Search...")
         self.config = Config()
         self.embedding_model = None
         self.index = None
@@ -161,50 +154,57 @@ class FAISSVectorDB:
             print(f"⚠️ Partial initialization: {e}")
     
     def _load_embedding_model(self):
-        """Load embedding model"""
-        try:
-            import torch
-            torch.set_grad_enabled(False)
-            
-            # Try multiple models
-            models_to_try = [
-                'all-MiniLM-L6-v2',
-                'paraphrase-MiniLM-L3-v2',
-                'all-mpnet-base-v2'
-            ]
-            
-            for model_name in models_to_try:
-                try:
-                    print(f"   Trying model: {model_name}")
-                    self.embedding_model = SentenceTransformer(
-                        model_name,
-                        device='cpu',
-                        cache_folder=str(self.config.faiss_cache_dir / 'models')
-                    )
-                    
-                    # Test the model
-                    test_embedding = self.embedding_model.encode(["test"])
-                    print(f"✅ Loaded {model_name}")
-                    print(f"   - Dimension: {test_embedding.shape[1]}")
-                    return
-                    
-                except Exception as e:
-                    print(f"   ❌ {model_name} failed: {str(e)[:100]}")
-                    continue
-            
-            print("⚠️ All models failed, using keyword search only")
-            self.embedding_model = None
-            
-        except Exception as e:
-            print(f"❌ Model loading failed: {e}")
-            self.embedding_model = None
+        """Load embedding model with multiple retries"""
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                print(f"   Attempt {attempt + 1}/{max_retries} to load embedding model...")
+                
+                import torch
+                torch.set_grad_enabled(False)
+                
+                # Try different models
+                models_to_try = [
+                    'all-MiniLM-L6-v2',
+                    'paraphrase-MiniLM-L3-v2',
+                    'all-mpnet-base-v2'
+                ]
+                
+                for model_name in models_to_try:
+                    try:
+                        print(f"     Trying model: {model_name}")
+                        self.embedding_model = SentenceTransformer(
+                            model_name,
+                            device='cpu',
+                            cache_folder=str(self.config.faiss_cache_dir / 'models')
+                        )
+                        
+                        # Test the model
+                        test_embedding = self.embedding_model.encode(["test"], normalize_embeddings=True)
+                        print(f"✅ Loaded {model_name}")
+                        print(f"     - Dimension: {test_embedding.shape[1]}")
+                        return
+                        
+                    except Exception as e:
+                        print(f"     ❌ {model_name} failed: {str(e)[:100]}")
+                        continue
+                
+                print("⚠️ All models failed, using keyword search only")
+                self.embedding_model = None
+                return
+                
+            except Exception as e:
+                print(f"❌ Attempt {attempt + 1} failed: {e}")
+                if attempt == max_retries - 1:
+                    print("⚠️ Using keyword search only")
+                    self.embedding_model = None
     
     def _load_faiss_index(self):
         """Load FAISS index from Hugging Face"""
         try:
             from huggingface_hub import hf_hub_download
             
-            print(f"📥 Downloading FAISS files...")
+            print(f"📥 Downloading FAISS files from Hugging Face...")
             
             # Download index
             index_path = hf_hub_download(
@@ -239,6 +239,11 @@ class FAISSVectorDB:
             print(f"   - Vectors: {self.index.ntotal}")
             print(f"   - Dimension: {self.index.d}")
             
+            # Log some sample titles for debugging
+            print("\n📊 Sample video titles:")
+            for i, meta in enumerate(self.metadata[:5]):
+                print(f"   {i+1}. {meta.get('title', 'Unknown')[:50]}...")
+            
         except Exception as e:
             print(f"❌ FAISS loading error: {e}")
             print("⚠️ Using empty database")
@@ -247,40 +252,69 @@ class FAISSVectorDB:
             self.index = None
     
     def semantic_search(self, query: str, top_k: int = 5) -> List[Dict[str, Any]]:
-        """Perform semantic search"""
+        """Enhanced semantic search with better similarity scoring"""
+        print(f"\n🔍 Starting semantic search for: '{query}'")
+        
         # Fallback to keyword search if no model
         if self.embedding_model is None:
+            print("⚠️ Embedding model not available, using keyword fallback")
             return self.keyword_fallback_search(query, top_k)
         
         if not self.documents:
+            print("⚠️ No documents in database")
             return []
         
         try:
-            # Generate embeddings
-            query_embedding = self.embedding_model.encode([query])
+            # Generate query embedding with normalization
+            print(f"   Generating query embedding...")
+            query_embedding = self.embedding_model.encode([query], normalize_embeddings=True)
+            
             results = []
             
+            print(f"   Processing {len(self.documents)} documents...")
+            
             for i, (doc, metadata) in enumerate(zip(self.documents, self.metadata)):
-                doc_embedding = self.embedding_model.encode([doc])
+                # Generate document embedding
+                doc_embedding = self.embedding_model.encode([doc], normalize_embeddings=True)
+                
+                # Calculate cosine similarity
                 similarity = cosine_similarity(query_embedding, doc_embedding)[0][0]
                 
-                # Calculate relevance
+                # Enhanced similarity scoring
                 similarity_score = float(similarity)
-                if similarity_score >= 0.8:
+                
+                # Check for keyword matches with fuzzy matching
+                title = metadata.get('title', '').lower()
+                transcript = doc.lower()
+                query_lower = query.lower()
+                
+                # Fuzzy keyword matching
+                keyword_in_title = self._fuzzy_keyword_match(query_lower, title)
+                keyword_in_transcript = self._fuzzy_keyword_match(query_lower, transcript)
+                
+                # Boost score for keyword matches
+                if keyword_in_title:
+                    similarity_score += 0.1
+                if keyword_in_transcript:
+                    similarity_score += 0.05
+                
+                # Ensure score is within [0, 1]
+                similarity_score = min(max(similarity_score, 0), 1)
+                
+                # Determine relevance level
+                if similarity_score >= 0.7:
                     relevance = "Highly Relevant"
-                elif similarity_score >= 0.6:
+                elif similarity_score >= 0.5:
                     relevance = "Very Relevant"
-                elif similarity_score >= 0.4:
-                    relevance = "Moderately Relevant"
-                elif similarity_score >= 0.2:
+                elif similarity_score >= 0.3:
+                    relevance = "Relevant"
+                elif similarity_score >= 0.1:
                     relevance = "Somewhat Relevant"
                 else:
                     relevance = "Low Relevance"
                 
-                # Keyword matches
-                title = metadata.get('title', '').lower()
-                transcript = doc.lower()
-                query_lower = query.lower()
+                # Create preview snippet
+                preview = doc[:200] + "..." if len(doc) > 200 else doc
                 
                 results.append({
                     'id': metadata.get('original_id', f"video_{i}"),
@@ -288,27 +322,58 @@ class FAISSVectorDB:
                     'channel': metadata.get('channel_title', 'Unknown'),
                     'views': metadata.get('view_count', 'N/A'),
                     'duration': metadata.get('duration', 'N/A'),
-                    'similarity_score': similarity_score,
-                    'keyword_in_title': query_lower in title,
-                    'keyword_in_transcript': query_lower in transcript,
+                    'similarity_score': round(similarity_score, 4),
+                    'keyword_in_title': keyword_in_title,
+                    'keyword_in_transcript': keyword_in_transcript,
                     'relevance': relevance,
-                    'preview': doc[:200] + "..." if len(doc) > 200 else doc,
+                    'preview': preview,
                     'metadata': metadata
                 })
             
-            # Sort and return top results
+            # Sort by similarity score (highest first)
             results.sort(key=lambda x: x['similarity_score'], reverse=True)
+            
+            print(f"✅ Found {len(results)} potential matches")
+            if results:
+                print(f"   Top score: {results[0]['similarity_score']}")
+                print(f"   Top title: {results[0]['title'][:50]}...")
+            
             return results[:top_k]
             
         except Exception as e:
             print(f"❌ Semantic search error: {e}")
             return self.keyword_fallback_search(query, top_k)
     
+    def _fuzzy_keyword_match(self, query: str, text: str) -> bool:
+        """Fuzzy keyword matching"""
+        # Split query into words
+        query_words = query.lower().split()
+        text_lower = text.lower()
+        
+        # Check if any query word is in text
+        for word in query_words:
+            if len(word) > 2 and word in text_lower:
+                return True
+        
+        # Check for partial matches
+        for word in query_words:
+            if len(word) > 3:
+                for i in range(len(text_lower) - len(word) + 1):
+                    if text_lower[i:i+len(word)] == word:
+                        return True
+        
+        return False
+    
     def keyword_fallback_search(self, query: str, top_k: int = 5) -> List[Dict[str, Any]]:
-        """Keyword fallback search"""
+        """Enhanced keyword search with better scoring"""
+        print(f"🔍 Starting keyword search for: '{query}'")
+        
         try:
             query_lower = query.lower()
+            query_words = query_lower.split()
             results = []
+            
+            print(f"   Searching through {len(self.documents)} documents...")
             
             for i, (doc, metadata) in enumerate(zip(self.documents, self.metadata)):
                 title = metadata.get('title', '').lower()
@@ -316,28 +381,56 @@ class FAISSVectorDB:
                 
                 # Calculate score based on keyword matches
                 score = 0.0
+                
+                # Title matches get highest weight
+                for word in query_words:
+                    if len(word) > 2 and word in title:
+                        score += 0.4
+                
+                # Transcript matches
+                for word in query_words:
+                    if len(word) > 2 and word in transcript:
+                        score += 0.1
+                        # Bonus for multiple occurrences
+                        count = transcript.count(word)
+                        score += min(0.05, count * 0.01)
+                
+                # Exact phrase match bonus
                 if query_lower in title:
-                    score += 0.5
+                    score += 0.2
                 if query_lower in transcript:
-                    score += 0.3
-                    score += min(0.2, transcript.count(query_lower) * 0.05)
+                    score += 0.1
+                
+                # Boost for shorter, more precise queries
+                if len(query_words) == 1 and len(query_words[0]) > 3:
+                    score *= 1.2
                 
                 if score > 0:
+                    # Create preview snippet
+                    preview = doc[:200] + "..." if len(doc) > 200 else doc
+                    
                     results.append({
                         'id': metadata.get('original_id', f"video_{i}"),
                         'title': metadata.get('title', 'Unknown'),
                         'channel': metadata.get('channel_title', 'Unknown'),
                         'views': metadata.get('view_count', 'N/A'),
                         'duration': metadata.get('duration', 'N/A'),
-                        'similarity_score': score,
-                        'keyword_in_title': query_lower in title,
-                        'keyword_in_transcript': query_lower in transcript,
+                        'similarity_score': round(score, 4),
+                        'keyword_in_title': any(word in title for word in query_words),
+                        'keyword_in_transcript': any(word in transcript for word in query_words),
                         'relevance': "Keyword Match",
-                        'preview': doc[:200] + "..." if len(doc) > 200 else doc,
+                        'preview': preview,
                         'metadata': metadata
                     })
             
+            # Sort by score
             results.sort(key=lambda x: x['similarity_score'], reverse=True)
+            
+            print(f"✅ Found {len(results)} keyword matches")
+            if results:
+                print(f"   Top score: {results[0]['similarity_score']}")
+                print(f"   Top title: {results[0]['title'][:50]}...")
+            
             return results[:top_k]
             
         except Exception as e:
@@ -424,10 +517,9 @@ def generate_video_summary(model, video_data):
         return f"Summary generation error: {str(e)[:100]}"
 
 # =============================================
-# FASTAPI APP WITH CORS FIX
+# FASTAPI APP
 # =============================================
 
-# Initialize FastAPI app FIRST
 app = FastAPI(
     title="QueryTube API",
     description="Semantic Video Search Engine",
@@ -436,13 +528,13 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
-# Add CORS middleware IMMEDIATELY after creating app
+# CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["*"],  # Allow all methods
-    allow_headers=["*"],  # Allow all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Create router
@@ -512,7 +604,8 @@ async def api_root():
             "summary": "GET /api/summary/{id}",
             "debug": "GET /api/debug"
         },
-        "status": "operational"
+        "status": "operational",
+        "version": "1.0.0"
     }
 
 @api_router.get("/health")
@@ -525,7 +618,8 @@ async def api_health():
         "database": info,
         "cors": "enabled",
         "timestamp": datetime.now().isoformat(),
-        "environment": "production" if vector_db.config.is_render else "development"
+        "environment": "production" if vector_db.config.is_render else "development",
+        "api_version": "1.0.0"
     }
 
 @api_router.get("/debug")
@@ -541,23 +635,55 @@ async def debug_info():
 
 @api_router.post("/search", response_model=SearchResponse)
 async def search_videos(search_query: SearchQuery):
-    """Search videos"""
+    """Search videos with enhanced semantic search"""
     try:
-        print(f"🔍 Searching for: '{search_query.query}'")
+        print(f"\n" + "="*50)
+        print(f"🔍 SEARCH REQUEST: '{search_query.query}' (top_k={search_query.top_k})")
+        print("="*50)
         
+        # Perform search
         results = vector_db.semantic_search(
             query=search_query.query,
             top_k=search_query.top_k
         )
         
-        # Calculate stats
-        if results:
-            similarities = [r['similarity_score'] for r in results]
-            avg_sim = sum(similarities) / len(similarities)
-            max_sim = max(similarities)
-        else:
-            avg_sim = 0.0
-            max_sim = 0.0
+        # Determine search type
+        search_type = "semantic" if vector_db.embedding_model else "keyword"
+        
+        if not results:
+            print(f"❌ No results found for: '{search_query.query}'")
+            print("="*50)
+            
+            return SearchResponse(
+                results=[],
+                query=search_query.query,
+                total_results=0,
+                average_similarity=0.0,
+                max_similarity=0.0,
+                search_type=search_type
+            )
+        
+        # Calculate statistics
+        similarities = [r['similarity_score'] for r in results]
+        avg_sim = sum(similarities) / len(similarities)
+        max_sim = max(similarities)
+        
+        print(f"\n📊 SEARCH RESULTS:")
+        print(f"   - Total matches: {len(results)}")
+        print(f"   - Search type: {search_type}")
+        print(f"   - Avg similarity: {avg_sim:.4f}")
+        print(f"   - Max similarity: {max_sim:.4f}")
+        
+        # Log top results
+        for i, result in enumerate(results[:3]):
+            print(f"\n   Top {i+1}:")
+            print(f"     Title: {result['title'][:50]}...")
+            print(f"     Score: {result['similarity_score']:.4f}")
+            print(f"     Relevance: {result['relevance']}")
+            print(f"     Keyword in title: {result['keyword_in_title']}")
+            print(f"     Keyword in transcript: {result['keyword_in_transcript']}")
+        
+        print("="*50)
         
         return SearchResponse(
             results=results,
@@ -565,11 +691,13 @@ async def search_videos(search_query: SearchQuery):
             total_results=len(results),
             average_similarity=round(avg_sim, 4),
             max_similarity=round(max_sim, 4),
-            search_type="semantic" if vector_db.embedding_model else "keyword"
+            search_type=search_type
         )
         
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        print(f"❌ Search error: {str(e)}")
+        print(traceback.format_exc())
+        raise HTTPException(status_code=500, detail=f"Search failed: {str(e)}")
 
 @api_router.post("/ingest", response_model=IngestionResponse)
 async def ingest_document(file: UploadFile = File(...)):
