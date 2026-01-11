@@ -1,7 +1,13 @@
+"""
+QueryTube Backend - Semantic Video Search API
+Main application file with guaranteed CORS fix
+"""
+
 import faiss
 from pathlib import Path
-from fastapi import FastAPI, HTTPException, UploadFile, File, APIRouter
+from fastapi import FastAPI, HTTPException, UploadFile, File, APIRouter, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 import pandas as pd
 import io
@@ -17,41 +23,17 @@ from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 import google.generativeai as genai
 from dotenv import load_dotenv
+import asyncio
 
 # Load environment variables from .env file
 load_dotenv()
 
-# Create router with API prefix
-api_router = APIRouter(prefix="/api")
-
-# Initialize FastAPI app
-app = FastAPI(
-    title="Semantic Video Search API",
-    description="API for semantic search and analysis of video content using AI embeddings",
-    version="1.0.0"
-)
-
-# Root endpoint
-@app.get("/")
-async def root():
-    return {
-        "message": "QueryTube Semantic Search API",
-        "status": "running",
-        "version": "1.0.0",
-        "api_base": "/api"
-    }
-
-# Add CORS middleware to allow frontend connections
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins for development
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+print("=" * 60)
+print("🚀 Starting QueryTube Semantic Search Backend")
+print("=" * 60)
 
 # =============================================
-# PYDANTIC MODELS FOR REQUEST/RESPONSE VALIDATION
+# PYDANTIC MODELS
 # =============================================
 
 class SearchQuery(BaseModel):
@@ -104,258 +86,185 @@ class VideoSummaryResponse(BaseModel):
     generated_at: str
 
 # =============================================
-# CONFIGURATION CLASS
+# CONFIGURATION
 # =============================================
 
 class Config:
-    """Configuration manager for environment-specific settings"""
+    """Configuration manager"""
     def __init__(self):
-        # Check if running on Render
         self.is_render = os.environ.get('RENDER') is not None
         
-        # Hugging Face Repository Info
+        # Hugging Face Repository
         self.hf_repo_id = "karunya-3/faiss-video-db"
         self.hf_files = {
             "index": "faiss.index",
             "metadata": "metadata.pkl"
         }
         
-        # Set paths based on environment
+        # Paths
         if self.is_render:
-            # Render production paths - use /tmp for better compatibility
             self.base_dir = Path("/tmp")
             self.faiss_cache_dir = self.base_dir / "faiss_cache"
             print("🚀 Running in RENDER environment")
-            print(f"📂 Cache directory: {self.faiss_cache_dir}")
-            
-            # Set environment variables for better performance on Render
+        else:
+            self.base_dir = Path(__file__).parent
+            self.faiss_cache_dir = self.base_dir / "faiss_cache"
+        
+        # Create directories
+        os.makedirs(self.faiss_cache_dir, exist_ok=True)
+        
+        # Set environment variables for Render
+        if self.is_render:
             os.environ['HF_HUB_DISABLE_SYMLINKS_WARNING'] = '1'
             os.environ['TOKENIZERS_PARALLELISM'] = 'false'
             os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-        else:
-            # Local development paths
-            self.base_dir = Path(__file__).parent.parent
-            self.faiss_cache_dir = self.base_dir / "faiss_cache"
         
-        # Create cache directory if it doesn't exist
-        os.makedirs(self.faiss_cache_dir, exist_ok=True)
-        
-        # File paths (will be set after download)
         self.index_file = None
         self.metadata_file = None
-        
         self.gemini_model = None
         self._setup_gemini()
 
     def _setup_gemini(self):
-        """Setup Gemini API for summary generation"""
+        """Setup Gemini API"""
         try:
-            # Load API key from environment
             api_key = os.environ.get('GEMINI_API_KEY')
             if not api_key:
-                print("⚠️ GEMINI_API_KEY environment variable not set")
-                print("   Summary generation will be disabled")
+                print("⚠️ GEMINI_API_KEY not set")
                 return
             
             genai.configure(api_key=api_key)
             self.gemini_model = genai.GenerativeModel('gemini-flash-latest')
-            print("✅ Gemini Flash model configured successfully")
+            print("✅ Gemini model configured")
         except Exception as e:
-            print(f"❌ Error setting up Gemini: {e}")
+            print(f"❌ Gemini setup error: {e}")
 
 # =============================================
-# FAISS VECTOR DATABASE CLASS
+# FAISS VECTOR DATABASE
 # =============================================
 
 class FAISSVectorDB:
-    """FAISS-based vector database with semantic search capabilities"""
+    """FAISS-based vector database"""
     def __init__(self):
-        print("🚀 Initializing FAISS VectorDB with Semantic Search...")
+        print("🤖 Initializing FAISS VectorDB...")
         self.config = Config()
         self.embedding_model = None
         self.index = None
         self.metadata = []
         self.documents = []
         
-        self._load_embedding_model()
-        self._load_faiss_index()
-        print("✅ FAISS VectorDB initialized successfully!")
+        # Load components with error handling
+        try:
+            self._load_embedding_model()
+            self._load_faiss_index()
+            print("✅ FAISS VectorDB initialized!")
+        except Exception as e:
+            print(f"⚠️ Partial initialization: {e}")
     
     def _load_embedding_model(self):
-        """Load SentenceTransformer model for semantic search with retry logic"""
-        max_retries = 3
-        for attempt in range(max_retries):
-            try:
-                print(f"🤖 Attempt {attempt + 1}/{max_retries} to load SentenceTransformer model...")
-                
-                import torch
-                
-                # Clear CUDA cache if available
-                if torch.cuda.is_available():
-                    torch.cuda.empty_cache()
-                
-                # Force CPU on Render
-                device = 'cpu' if self.config.is_render else 'cpu'
-                
-                # Disable gradients to save memory
-                torch.set_grad_enabled(False)
-                
-                # Try different models if primary fails
-                if attempt == 0:
-                    model_name = 'all-MiniLM-L6-v2'  # Primary model
-                elif attempt == 1:
-                    model_name = 'paraphrase-MiniLM-L3-v2'  # Smaller model
-                else:
-                    model_name = 'all-MiniLM-L6-v2'  # Try primary again
-                
-                print(f"   Loading model: {model_name}")
-                print(f"   Device: {device}")
-                
-                # Load the model
-                self.embedding_model = SentenceTransformer(
-                    model_name,
-                    device=device,
-                    cache_folder=str(self.config.faiss_cache_dir / 'sentence_transformers')
-                )
-                
-                # Test the model with a simple embedding
-                test_text = ["test embedding for verification"]
-                test_embedding = self.embedding_model.encode(
-                    test_text, 
-                    show_progress_bar=False,
-                    normalize_embeddings=True
-                )
-                
-                print(f"✅ Successfully loaded embedding model")
-                print(f"   - Model: {model_name}")
-                print(f"   - Device: {device}")
-                print(f"   - Embedding dimension: {test_embedding.shape[1]}")
-                
-                return
-                
-            except Exception as e:
-                print(f"❌ Attempt {attempt + 1} failed: {e}")
-                if attempt == max_retries - 1:
-                    print("⚠️ Could not load embedding model. Using keyword fallback search.")
-                    print("📋 Last error details:")
-                    traceback.print_exc()
-                    self.embedding_model = None
-                else:
-                    import time
-                    time.sleep(2)  # Wait before retry
+        """Load embedding model"""
+        try:
+            import torch
+            torch.set_grad_enabled(False)
+            
+            # Try multiple models
+            models_to_try = [
+                'all-MiniLM-L6-v2',
+                'paraphrase-MiniLM-L3-v2',
+                'all-mpnet-base-v2'
+            ]
+            
+            for model_name in models_to_try:
+                try:
+                    print(f"   Trying model: {model_name}")
+                    self.embedding_model = SentenceTransformer(
+                        model_name,
+                        device='cpu',
+                        cache_folder=str(self.config.faiss_cache_dir / 'models')
+                    )
+                    
+                    # Test the model
+                    test_embedding = self.embedding_model.encode(["test"])
+                    print(f"✅ Loaded {model_name}")
+                    print(f"   - Dimension: {test_embedding.shape[1]}")
+                    return
+                    
+                except Exception as e:
+                    print(f"   ❌ {model_name} failed: {str(e)[:100]}")
+                    continue
+            
+            print("⚠️ All models failed, using keyword search only")
+            self.embedding_model = None
+            
+        except Exception as e:
+            print(f"❌ Model loading failed: {e}")
+            self.embedding_model = None
     
     def _load_faiss_index(self):
-        """Load FAISS index and metadata from Hugging Face Hub"""
+        """Load FAISS index from Hugging Face"""
         try:
-            print(f"📂 Downloading FAISS files from Hugging Face Hub...")
-            print(f"   Repository: {self.config.hf_repo_id}")
-            
-            # Import huggingface_hub
             from huggingface_hub import hf_hub_download
             
-            # Download files from Hugging Face
-            print("📥 Downloading faiss.index...")
+            print(f"📥 Downloading FAISS files...")
+            
+            # Download index
             index_path = hf_hub_download(
                 repo_id=self.config.hf_repo_id,
                 filename=self.config.hf_files["index"],
                 cache_dir=str(self.config.faiss_cache_dir),
-                force_download=False,
-                local_files_only=False
+                force_download=False
             )
             
-            print("📥 Downloading metadata.pkl...")
+            # Download metadata
             metadata_path = hf_hub_download(
                 repo_id=self.config.hf_repo_id,
                 filename=self.config.hf_files["metadata"],
                 cache_dir=str(self.config.faiss_cache_dir),
-                force_download=False,
-                local_files_only=False
+                force_download=False
             )
             
-            # Update config paths
             self.config.index_file = Path(index_path)
             self.config.metadata_file = Path(metadata_path)
-            
-            print(f"✅ Files downloaded:")
-            print(f"   - Index: {self.config.index_file}")
-            print(f"   - Metadata: {self.config.metadata_file}")
             
             # Load FAISS index
             print("🔧 Loading FAISS index...")
             self.index = faiss.read_index(str(self.config.index_file))
             
             # Load metadata
-            print("📖 Loading metadata...")
             with open(self.config.metadata_file, 'rb') as f:
                 data = pickle.load(f)
                 self.metadata = data.get('metadata', [])
                 self.documents = data.get('documents', [])
             
-            print(f"✅ Successfully loaded FAISS index with {len(self.metadata)} videos")
-            print(f"   - Index dimension: {self.index.d}")
-            print(f"   - Total vectors: {self.index.ntotal}")
+            print(f"✅ Loaded {len(self.metadata)} videos")
+            print(f"   - Vectors: {self.index.ntotal}")
+            print(f"   - Dimension: {self.index.d}")
             
-        except ImportError as e:
-            print(f"❌ huggingface-hub not installed: {e}")
-            print("   Install with: pip install huggingface-hub")
-            self._setup_empty_data()
         except Exception as e:
-            print(f"❌ Error loading FAISS from Hugging Face: {e}")
-            print("📋 Traceback:")
-            traceback.print_exc()
-            self._setup_empty_data()
-    
-    def _setup_empty_data(self):
-        """Setup empty data structures if loading fails"""
-        self.metadata = []
-        self.documents = []
-        self.index = None
-        print("⚠️ Using empty database - upload CSV to add data")
+            print(f"❌ FAISS loading error: {e}")
+            print("⚠️ Using empty database")
+            self.metadata = []
+            self.documents = []
+            self.index = None
     
     def semantic_search(self, query: str, top_k: int = 5) -> List[Dict[str, Any]]:
-        """
-        Perform semantic search using SentenceTransformer embeddings
-        Falls back to keyword search if embedding model fails
-        """
-        # Check if embedding model is available
+        """Perform semantic search"""
+        # Fallback to keyword search if no model
         if self.embedding_model is None:
-            print("⚠️ Embedding model not available, using keyword fallback")
             return self.keyword_fallback_search(query, top_k)
         
         if not self.documents:
             return []
         
         try:
-            # Generate query embedding
-            query_embedding = self.embedding_model.encode(
-                [query], 
-                show_progress_bar=False,
-                normalize_embeddings=True
-            )
-            
+            # Generate embeddings
+            query_embedding = self.embedding_model.encode([query])
             results = []
             
-            # Process each document
             for i, (doc, metadata) in enumerate(zip(self.documents, self.metadata)):
-                # Generate document embedding
-                doc_embedding = self.embedding_model.encode(
-                    [doc], 
-                    show_progress_bar=False,
-                    normalize_embeddings=True
-                )
-                
-                # Calculate cosine similarity
+                doc_embedding = self.embedding_model.encode([doc])
                 similarity = cosine_similarity(query_embedding, doc_embedding)[0][0]
                 
-                # Check for keyword matches
-                title = metadata.get('title', '').lower()
-                transcript_lower = doc.lower()
-                query_lower = query.lower()
-                
-                keyword_in_title = query_lower in title
-                keyword_in_transcript = query_lower in transcript_lower
-                
-                # Determine relevance level based on similarity score
+                # Calculate relevance
                 similarity_score = float(similarity)
                 if similarity_score >= 0.8:
                     relevance = "Highly Relevant"
@@ -368,114 +277,93 @@ class FAISSVectorDB:
                 else:
                     relevance = "Low Relevance"
                 
-                # Create preview snippet
-                preview = doc[:200] + "..." if len(doc) > 200 else doc
+                # Keyword matches
+                title = metadata.get('title', '').lower()
+                transcript = doc.lower()
+                query_lower = query.lower()
                 
                 results.append({
                     'id': metadata.get('original_id', f"video_{i}"),
-                    'title': metadata.get('title', 'Unknown Title'),
-                    'channel': metadata.get('channel_title', 'Unknown Channel'),
+                    'title': metadata.get('title', 'Unknown'),
+                    'channel': metadata.get('channel_title', 'Unknown'),
                     'views': metadata.get('view_count', 'N/A'),
                     'duration': metadata.get('duration', 'N/A'),
                     'similarity_score': similarity_score,
-                    'keyword_in_title': keyword_in_title,
-                    'keyword_in_transcript': keyword_in_transcript,
+                    'keyword_in_title': query_lower in title,
+                    'keyword_in_transcript': query_lower in transcript,
                     'relevance': relevance,
-                    'preview': preview,
+                    'preview': doc[:200] + "..." if len(doc) > 200 else doc,
                     'metadata': metadata
                 })
             
-            # Sort by similarity score (highest first)
+            # Sort and return top results
             results.sort(key=lambda x: x['similarity_score'], reverse=True)
             return results[:top_k]
             
         except Exception as e:
-            print(f"❌ Semantic search error: {e}, falling back to keyword search")
+            print(f"❌ Semantic search error: {e}")
             return self.keyword_fallback_search(query, top_k)
     
     def keyword_fallback_search(self, query: str, top_k: int = 5) -> List[Dict[str, Any]]:
-        """
-        Fallback keyword search when embedding model is unavailable
-        Uses simple text matching with scoring
-        """
+        """Keyword fallback search"""
         try:
             query_lower = query.lower()
             results = []
             
             for i, (doc, metadata) in enumerate(zip(self.documents, self.metadata)):
                 title = metadata.get('title', '').lower()
-                transcript_lower = doc.lower()
+                transcript = doc.lower()
                 
-                # Simple keyword matching score
+                # Calculate score based on keyword matches
                 score = 0.0
                 if query_lower in title:
                     score += 0.5
-                if query_lower in transcript_lower:
+                if query_lower in transcript:
                     score += 0.3
-                    # Bonus for multiple occurrences
-                    score += min(0.2, transcript_lower.count(query_lower) * 0.05)
+                    score += min(0.2, transcript.count(query_lower) * 0.05)
                 
-                # Only include results with some match
                 if score > 0:
-                    preview = doc[:200] + "..." if len(doc) > 200 else doc
-                    
                     results.append({
                         'id': metadata.get('original_id', f"video_{i}"),
-                        'title': metadata.get('title', 'Unknown Title'),
-                        'channel': metadata.get('channel_title', 'Unknown Channel'),
+                        'title': metadata.get('title', 'Unknown'),
+                        'channel': metadata.get('channel_title', 'Unknown'),
                         'views': metadata.get('view_count', 'N/A'),
                         'duration': metadata.get('duration', 'N/A'),
                         'similarity_score': score,
                         'keyword_in_title': query_lower in title,
-                        'keyword_in_transcript': query_lower in transcript_lower,
+                        'keyword_in_transcript': query_lower in transcript,
                         'relevance': "Keyword Match",
-                        'preview': preview,
+                        'preview': doc[:200] + "..." if len(doc) > 200 else doc,
                         'metadata': metadata
                     })
             
-            # Sort by score
             results.sort(key=lambda x: x['similarity_score'], reverse=True)
             return results[:top_k]
             
         except Exception as e:
-            print(f"❌ Keyword fallback search error: {e}")
+            print(f"❌ Keyword search error: {e}")
             return []
     
     def add_documents(self, documents: List[str], metadatas: List[Dict[str, Any]]):
-        """Add documents to the in-memory database (for demo purposes)"""
+        """Add documents to database"""
         self.documents.extend(documents)
         self.metadata.extend(metadatas)
-        print(f"✅ Added {len(documents)} documents to in-memory database")
+        print(f"✅ Added {len(documents)} documents")
     
     def get_database_info(self) -> Dict[str, Any]:
-        """Get comprehensive database information"""
-        total_videos = len(self.metadata)
-        
-        # Check model status
-        model_status = "not_loaded"
-        if self.embedding_model:
-            try:
-                # Test if model actually works
-                test_result = self.embedding_model.encode(["test"])
-                model_status = "ready"
-            except Exception as e:
-                model_status = f"error: {str(e)[:50]}"
-        
+        """Get database info"""
         return {
-            "total_videos": total_videos,
-            "database_path": str(self.config.faiss_cache_dir),
-            "search_engine": "SentenceTransformer + Cosine Similarity",
-            "model_status": model_status,
-            "faiss_index_loaded": self.index is not None,
+            "total_videos": len(self.metadata),
+            "model_loaded": self.embedding_model is not None,
+            "model_status": "ready" if self.embedding_model else "not_loaded",
+            "faiss_loaded": self.index is not None,
             "total_vectors": self.index.ntotal if self.index else 0,
-            "embedding_dimension": self.index.d if self.index else 0,
-            "documents_count": len(self.documents),
-            "metadata_count": len(self.metadata),
-            "is_render": self.config.is_render
+            "documents": len(self.documents),
+            "environment": "render" if self.config.is_render else "local"
         }
-
+    
     def get_document_by_id(self, doc_id):
-        """Get document and metadata by original ID"""
+        """Get document by ID"""
         for i, metadata in enumerate(self.metadata):
             if metadata.get('original_id') == doc_id:
                 return {
@@ -486,7 +374,7 @@ class FAISSVectorDB:
         return None
     
     def get_video_statistics(self, doc_id):
-        """Get basic statistics for a video"""
+        """Get video statistics"""
         video_data = self.get_document_by_id(doc_id)
         if not video_data:
             return None
@@ -494,11 +382,10 @@ class FAISSVectorDB:
         transcript = video_data['document']
         metadata = video_data['metadata']
         
-        # Calculate statistics
         words = transcript.split()
         sentences = [s for s in transcript.split('.') if s.strip()]
         
-        stats = {
+        return {
             'id': doc_id,
             'title': metadata.get('title', 'N/A'),
             'channel': metadata.get('channel_title', 'N/A'),
@@ -507,70 +394,107 @@ class FAISSVectorDB:
             'transcript_length': len(transcript),
             'word_count': len(words),
             'sentence_count': len(sentences),
-            'avg_word_length': sum(len(word) for word in words) / len(words) if words else 0,
+            'avg_word_length': sum(len(w) for w in words) / len(words) if words else 0,
             'avg_sentence_length': sum(len(s) for s in sentences) / len(sentences) if sentences else 0
         }
-        
-        return stats
 
 # =============================================
 # HELPER FUNCTIONS
 # =============================================
 
 def generate_video_summary(model, video_data):
-    """Generate summary using Gemini Flash model"""
+    """Generate summary using Gemini"""
     try:
         prompt = f"""
-        Please analyze this video data and provide a comprehensive summary in the following format:
+        Summarize this video:
         
-        **Video Summary**
-        
-        **Title:** [Video Title]
-        **Channel:** [Channel Name]
-        **Views:** [View Count]
-        
-        **Key Insights:**
-        - Provide 3 key insights about the video content
-        - Focus on main topics discussed
-        - Highlight interesting patterns or themes
-        
-        **Content Analysis:**
-        - Summarize the main content in 2-3 paragraphs
-        - Identify the primary purpose of the video
-        - Note any unique or standout elements
-        
-        
-        Video Data:
         Title: {video_data['metadata'].get('title', 'N/A')}
         Channel: {video_data['metadata'].get('channel_title', 'N/A')}
         Views: {video_data['metadata'].get('view_count', 'N/A')}
-        Duration: {video_data['metadata'].get('duration', 'N/A')}
         
-        Transcript:
-        {video_data['document'][:4000]}  # Limit transcript length for API
+        Transcript (first 3000 chars):
+        {video_data['document'][:3000]}
         
-        Please provide a well-structured, insightful summary that captures the essence of this video.
+        Provide a concise, informative summary.
         """
         
         response = model.generate_content(prompt)
         return response.text
-        
     except Exception as e:
-        return f"❌ Error generating summary: {e}"
+        return f"Summary generation error: {str(e)[:100]}"
 
 # =============================================
-# INITIALIZE DATABASE
+# FASTAPI APP WITH CORS FIX
 # =============================================
 
-print("=" * 60)
-print("🚀 Starting QueryTube Semantic Search Backend")
-print("=" * 60)
+# Initialize FastAPI app FIRST
+app = FastAPI(
+    title="QueryTube API",
+    description="Semantic Video Search Engine",
+    version="1.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc"
+)
 
+# Add CORS middleware IMMEDIATELY after creating app
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all methods
+    allow_headers=["*"],  # Allow all headers
+)
+
+# Create router
+api_router = APIRouter(prefix="/api")
+
+# Initialize database
+print("🔄 Initializing database...")
 vector_db = FAISSVectorDB()
+print("✅ Database ready!")
 
-print("=" * 60)
-print("✅ Backend initialization complete")
-print("=" * 60)
+# =============================================
+# CUSTOM MIDDLEWARE FOR CORS HEADERS
+# =============================================
+
+@app.middleware("http")
+async def add_cors_headers(request: Request, call_next):
+    """Add CORS headers to all responses"""
+    response = await call_next(request)
+    
+    # Add CORS headers
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS, PATCH"
+    response.headers["Access-Control-Allow-Headers"] = "*"
+    response.headers["Access-Control-Allow-Credentials"] = "true"
+    response.headers["Access-Control-Max-Age"] = "600"
+    
+    return response
+
+# =============================================
+# ROOT ENDPOINTS
+# =============================================
+
+@app.get("/")
+async def root():
+    """Root endpoint"""
+    return {
+        "service": "QueryTube Semantic Search",
+        "status": "running",
+        "version": "1.0.0",
+        "docs": "/docs",
+        "api_base": "/api",
+        "message": "Welcome to QueryTube API"
+    }
+
+@app.get("/health")
+async def health():
+    """Health check endpoint"""
+    return {
+        "status": "healthy",
+        "timestamp": datetime.now().isoformat(),
+        "service": "QueryTube API"
+    }
 
 # =============================================
 # API ENDPOINTS
@@ -578,287 +502,201 @@ print("=" * 60)
 
 @api_router.get("/")
 async def api_root():
-    """API root endpoint"""
+    """API root"""
     return {
-        "message": "Semantic Video Search API",
-        "status": "running",
-        "version": "1.0.0",
+        "api": "QueryTube Semantic Search API",
         "endpoints": {
             "health": "GET /api/health",
             "search": "POST /api/search",
-            "ingest": "POST /api/ingest",
-            "summary": "GET /api/summary/{video_id}",
-            "debug": "GET /api/debug/model"
+            "upload": "POST /api/ingest",
+            "summary": "GET /api/summary/{id}",
+            "debug": "GET /api/debug"
         },
-        "search_engine": "Semantic Search with SentenceTransformer"
+        "status": "operational"
     }
 
 @api_router.get("/health")
-async def health_check():
-    """Health check endpoint for monitoring"""
+async def api_health():
+    """API health check"""
     info = vector_db.get_database_info()
     
-    # Check FAISS status
-    faiss_status = "loaded" if vector_db.index is not None else "not_loaded"
-    
     return {
-        "status": "healthy" if info["model_status"] == "ready" else "degraded",
+        "status": "healthy",
+        "database": info,
+        "cors": "enabled",
         "timestamp": datetime.now().isoformat(),
-        "environment": "production" if vector_db.config.is_render else "development",
-        "total_videos": info.get("total_videos", 0),
-        "model_status": info.get("model_status", "unknown"),
-        "faiss_status": faiss_status,
-        "faiss_source": "huggingface_hub",
-        "huggingface_repo": vector_db.config.hf_repo_id,
-        "api_version": "1.0.0",
-        "service": "QueryTube Semantic Search"
+        "environment": "production" if vector_db.config.is_render else "development"
     }
 
-@api_router.get("/debug/model")
-async def debug_model():
-    """Debug endpoint to check model status"""
-    try:
-        model_status = "not_loaded"
-        error_message = None
-        test_success = False
-        test_shape = None
-        
-        if vector_db.embedding_model:
-            try:
-                # Test the model
-                test_result = vector_db.embedding_model.encode(["test sentence for debugging"])
-                model_status = "ready"
-                test_shape = test_result.shape
-                test_success = True
-            except Exception as e:
-                model_status = "error"
-                error_message = str(e)
-        else:
-            error_message = "Model not initialized"
-        
-        return {
-            "model_loaded": vector_db.embedding_model is not None,
-            "model_status": model_status,
-            "error": error_message,
-            "test_successful": test_success,
-            "test_shape": str(test_shape) if test_shape else None,
-            "total_documents": len(vector_db.documents),
-            "total_metadata": len(vector_db.metadata),
-            "environment": "render" if vector_db.config.is_render else "local",
-            "cache_dir": str(vector_db.config.faiss_cache_dir),
-            "cache_exists": os.path.exists(vector_db.config.faiss_cache_dir),
-            "python_version": os.sys.version,
-            "memory_info": {
-                "available_mb": os.sys.getsizeof(vector_db) // 1024 // 1024,
-                "total_vectors": vector_db.index.ntotal if vector_db.index else 0
-            }
-        }
-    except Exception as e:
-        return {"error": str(e)}
+@api_router.get("/debug")
+async def debug_info():
+    """Debug information"""
+    return {
+        "database_info": vector_db.get_database_info(),
+        "cors_enabled": True,
+        "render_environment": vector_db.config.is_render,
+        "python_version": os.sys.version,
+        "total_endpoints": len(app.routes)
+    }
 
 @api_router.post("/search", response_model=SearchResponse)
 async def search_videos(search_query: SearchQuery):
-    """Search videos using semantic or keyword search"""
+    """Search videos"""
     try:
-        print(f"🔍 Search request: '{search_query.query}' (top_k={search_query.top_k})")
+        print(f"🔍 Searching for: '{search_query.query}'")
         
-        # Perform search
         results = vector_db.semantic_search(
             query=search_query.query,
             top_k=search_query.top_k
         )
         
-        # Determine search type
-        search_type = "semantic" if vector_db.embedding_model else "keyword"
-        
-        if not results:
-            return SearchResponse(
-                results=[],
-                query=search_query.query,
-                total_results=0,
-                average_similarity=0.0,
-                max_similarity=0.0,
-                search_type=search_type
-            )
-        
-        # Calculate statistics
-        similarities = [r['similarity_score'] for r in results]
-        avg_similarity = sum(similarities) / len(similarities)
-        max_similarity = max(similarities)
-        
-        print(f"✅ Found {len(results)} results (type: {search_type})")
+        # Calculate stats
+        if results:
+            similarities = [r['similarity_score'] for r in results]
+            avg_sim = sum(similarities) / len(similarities)
+            max_sim = max(similarities)
+        else:
+            avg_sim = 0.0
+            max_sim = 0.0
         
         return SearchResponse(
             results=results,
             query=search_query.query,
             total_results=len(results),
-            average_similarity=round(avg_similarity, 4),
-            max_similarity=round(max_similarity, 4),
-            search_type=search_type
+            average_similarity=round(avg_sim, 4),
+            max_similarity=round(max_sim, 4),
+            search_type="semantic" if vector_db.embedding_model else "keyword"
         )
         
     except Exception as e:
-        print(f"❌ Search error: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Search failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.post("/ingest", response_model=IngestionResponse)
 async def ingest_document(file: UploadFile = File(...)):
-    """
-    Ingest documents from a CSV file
-    CSV must have columns including 'transcript'
-    """
+    """Ingest CSV file"""
     try:
-        print(f"📥 Starting ingestion: {file.filename}")
-        
-        # Validate file type
-        if not file.filename.lower().endswith('.csv'):
-            raise HTTPException(status_code=400, detail="File must be a CSV")
-        
-        # Read file
+        # Read and parse CSV
         contents = await file.read()
+        df = pd.read_csv(io.BytesIO(contents))
         
-        if len(contents) == 0:
-            raise HTTPException(status_code=400, detail="File is empty")
-        
-        # Parse CSV
-        try:
-            df = pd.read_csv(io.BytesIO(contents))
-            print(f"✅ CSV read successfully. Shape: {df.shape}")
-        except Exception as e:
-            raise HTTPException(status_code=400, detail=f"Invalid CSV format: {str(e)}")
-        
-        # Check required columns
-        if 'transcript' not in df.columns:
-            raise HTTPException(status_code=400, detail="CSV must contain 'transcript' column")
-        
-        # Determine available columns
-        text_column = 'transcript'
-        id_column = 'id' if 'id' in df.columns else None
-        title_column = 'title' if 'title' in df.columns else 'title_cleaned' if 'title_cleaned' in df.columns else None
-        channel_column = 'channel_title' if 'channel_title' in df.columns else 'channel' if 'channel' in df.columns else None
-        views_column = 'view_count' if 'view_count' in df.columns else 'views' if 'views' in df.columns else None
-        duration_column = 'duration' if 'duration' in df.columns else 'duration_seconds' if 'duration_seconds' in df.columns else None
-        
-        ingested_count = 0
-        error_count = 0
+        ingested = 0
+        errors = 0
         documents = []
         metadatas = []
         
         # Process each row
-        for index, row in df.iterrows():
+        for idx, row in df.iterrows():
             try:
-                text = str(row[text_column]).strip()
-                if not text or text.lower() in ['nan', 'none', '']:
-                    error_count += 1
+                # Extract text
+                text = str(row.get('transcript', '')).strip()
+                if not text:
+                    errors += 1
                     continue
                 
                 # Extract metadata
                 metadata = {
-                    'original_id': str(row[id_column]) if id_column and pd.notna(row.get(id_column)) else f"doc_{index}_{uuid.uuid4().hex[:8]}",
-                    'title': str(row[title_column]) if title_column and pd.notna(row.get(title_column)) else f"Document {index}",
-                    'channel_title': str(row[channel_column]) if channel_column and pd.notna(row.get(channel_column)) else "Unknown Channel",
-                    'view_count': int(row[views_column]) if views_column and pd.notna(row.get(views_column)) and str(row[views_column]).replace('.','').isdigit() else "N/A",
-                    'duration': str(row[duration_column]) if duration_column and pd.notna(row.get(duration_column)) else "N/A"
+                    'original_id': str(row.get('id', f"doc_{idx}")),
+                    'title': str(row.get('title', f"Video {idx}")),
+                    'channel_title': str(row.get('channel_title', 'Unknown')),
+                    'view_count': str(row.get('view_count', 'N/A')),
+                    'duration': str(row.get('duration', 'N/A'))
                 }
                 
-                # Add to collections
                 documents.append(text)
                 metadatas.append(metadata)
-                ingested_count += 1
+                ingested += 1
                 
-                if ingested_count % 100 == 0:
-                    print(f"✅ Processed {ingested_count} rows...")
-                
-            except Exception as e:
-                error_count += 1
+            except Exception:
+                errors += 1
         
-        # Add documents to vector database
+        # Add to database
         if documents:
             vector_db.add_documents(documents, metadatas)
-        
-        print(f"✅ Ingestion complete: {ingested_count} documents, {error_count} errors")
         
         return IngestionResponse(
             id=str(uuid.uuid4()),
             status="success",
-            message=f"CSV processed successfully. {ingested_count} documents added to vector database.",
+            message=f"Processed {ingested} documents",
             timestamp=datetime.now().isoformat(),
-            ingested_count=ingested_count,
-            error_count=error_count,
-            total_chunks=ingested_count
+            ingested_count=ingested,
+            error_count=errors,
+            total_chunks=ingested
         )
         
-    except HTTPException:
-        raise
     except Exception as e:
-        print(f"❌ Ingestion error: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+        raise HTTPException(status_code=400, detail=f"CSV processing error: {str(e)}")
 
 @api_router.get("/summary/{video_id}", response_model=VideoSummaryResponse)
 async def get_video_summary(video_id: str):
-    """Get AI-generated summary for a specific video"""
+    """Get video summary"""
     try:
-        print(f"📝 Generating summary for video: {video_id}")
-        
         # Get video data
         video_data = vector_db.get_document_by_id(video_id)
         if not video_data:
-            raise HTTPException(status_code=404, detail=f"Video with ID '{video_id}' not found")
+            raise HTTPException(status_code=404, detail="Video not found")
         
-        # Get video statistics
-        statistics = vector_db.get_video_statistics(video_id)
-        if not statistics:
-            raise HTTPException(status_code=404, detail=f"Could not retrieve statistics for video '{video_id}'")
+        # Get statistics
+        stats = vector_db.get_video_statistics(video_id)
+        if not stats:
+            stats = {}
         
-        # Generate AI summary
-        summary = "Summary generation not available"
+        # Generate summary
+        summary = "Summary not available"
         if vector_db.config.gemini_model:
             try:
                 summary = generate_video_summary(vector_db.config.gemini_model, video_data)
             except Exception as e:
-                summary = f"❌ Error generating AI summary: {str(e)[:100]}"
-        else:
-            summary = "⚠️ Gemini API not configured - cannot generate AI summary"
+                summary = f"Summary error: {str(e)[:100]}"
         
         return VideoSummaryResponse(
             id=video_id,
-            title=statistics['title'],
-            channel=statistics['channel'],
-            views=statistics['views'],
-            duration=statistics['duration'],
+            title=stats.get('title', 'Unknown'),
+            channel=stats.get('channel', 'Unknown'),
+            views=stats.get('views', 'N/A'),
+            duration=stats.get('duration', 'N/A'),
             summary=summary,
-            statistics=statistics,
+            statistics=stats,
             generated_at=datetime.now().isoformat()
         )
         
     except HTTPException:
         raise
     except Exception as e:
-        print(f"❌ Summary generation error: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Failed to generate summary: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 # =============================================
 # REGISTER ROUTER AND FINAL SETUP
 # =============================================
 
-# Include the router with /api prefix
+# Include API router
 app.include_router(api_router)
 
+# Add OPTIONS handler for CORS preflight
+@app.options("/{path:path}")
+async def options_handler(path: str):
+    """Handle OPTIONS requests for CORS"""
+    return JSONResponse(
+        content={"message": "CORS preflight successful"},
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "*",
+            "Access-Control-Allow-Headers": "*",
+            "Access-Control-Max-Age": "600"
+        }
+    )
+
 print("\n" + "=" * 60)
-print("✅ API Endpoints Registered:")
+print("✅ API Setup Complete")
 print("=" * 60)
-print("   GET  /api/                - API information")
-print("   GET  /api/health          - Health check")
-print("   GET  /api/debug/model     - Debug model status")
-print("   POST /api/search          - Semantic search")
-print("   POST /api/ingest          - Upload CSV file")
-print("   GET  /api/summary/{id}    - Get video summary")
-print("\n🔗 Primary URL: https://querytube-backend-37mk.onrender.com")
-print("🔗 API Base URL: https://querytube-backend-37mk.onrender.com/api")
-print("📚 Documentation: https://querytube-backend-37mk.onrender.com/docs")
+print(f"📊 Database: {len(vector_db.metadata)} videos loaded")
+print(f"🤖 Model: {'Loaded' if vector_db.embedding_model else 'Not loaded'}")
+print(f"🔗 URL: https://querytube-backend-37mk.onrender.com")
+print(f"📚 Docs: https://querytube-backend-37mk.onrender.com/docs")
 print("=" * 60)
-print("🚀 Server is ready to accept requests!")
+print("🚀 Ready to accept requests!")
 print("=" * 60)
 
-# Note: Render runs the app using gunicorn command specified in render.yaml
-# The app will be served at the PORT environment variable
+# If running directly
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
