@@ -2,38 +2,92 @@ services:
   - type: web
     name: querytube-backend
     env: python
+    region: oregon # or your preferred region
+    plan: starter # or your plan
+    
     buildCommand: |
       echo "🚀 Installing Python dependencies..."
       cd api
       pip install --upgrade pip
       pip install -r requirements.txt
+      echo "✅ Dependencies installed"
+    
     startCommand: |
-      echo "🚀 Starting QueryTube Backend..."
-      echo "🔗 Hugging Face Repository: karunya-3/faiss-video-db"
-      echo "📂 Current directory: $(pwd)"
-      ls -la
+      echo "=========================================="
+      echo "🚀 Starting QueryTube Backend (Lazy Load)"
+      echo "=========================================="
+      echo "🔗 Hugging Face: karunya-3/faiss-video-db"
+      echo "📂 Working directory: $(pwd)"
       cd api
-      echo "🔧 Setting environment variables..."
+      echo "🔧 Environment setup..."
       export TOKENIZERS_PARALLELISM=false
       export OMP_NUM_THREADS=1
       export TRANSFORMERS_CACHE=/tmp/transformers_cache
       export HF_HOME=/tmp/huggingface
-      echo "🚀 Starting Gunicorn with increased timeout..."
-      gunicorn main:app --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT --timeout 300 --workers 1 --threads 2
+      export HF_HUB_DISABLE_SYMLINKS_WARNING=1
+      export HF_HUB_DISABLE_PROGRESS_BARS=1
+      export TF_CPP_MIN_LOG_LEVEL=3
+      echo "🚀 Starting server with lazy loading..."
+      echo "⏱️  Timeout: 300s | Workers: 1 | Threads: 2"
+      gunicorn main:app \
+        --worker-class uvicorn.workers.UvicornWorker \
+        --bind 0.0.0.0:$PORT \
+        --timeout 300 \
+        --workers 1 \
+        --threads 2 \
+        --worker-tmp-dir /dev/shm \
+        --log-level info \
+        --access-logfile - \
+        --error-logfile -
+      
     envVars:
+      # Python version
       - key: PYTHON_VERSION
         value: 3.10.0
+      
+      # API Keys
       - key: GEMINI_API_KEY
         sync: false
-      # Memory optimization
+      
+      # Render environment
+      - key: RENDER
+        value: "true"
+      
+      # Memory & Performance Optimization
       - key: TOKENIZERS_PARALLELISM
         value: "false"
+      
       - key: OMP_NUM_THREADS
         value: "1"
+      
       - key: TRANSFORMERS_CACHE
         value: /tmp/transformers_cache
+      
       - key: HF_HOME
         value: /tmp/huggingface
+      
+      - key: HF_HUB_DISABLE_SYMLINKS_WARNING
+        value: "1"
+      
+      - key: HF_HUB_DISABLE_PROGRESS_BARS
+        value: "1"
+      
+      - key: TF_CPP_MIN_LOG_LEVEL
+        value: "3"
+      
+      # Server Configuration
       - key: PORT
         value: 10000
+      
+      - key: WEB_CONCURRENCY
+        value: "1"
+      
+      # Lazy Loading Flag (enables on-demand loading)
+      - key: LAZY_LOAD
+        value: "true"
+    
+    # Health check configuration
+    healthCheckPath: /health
+    
+    # Auto-deploy on push
     autoDeploy: true
